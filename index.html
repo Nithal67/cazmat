@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cazmat-Studio | Jeux & Consoles</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0a0a0f;
+      color: #f5f5f5;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #0f0f0f;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #007bff;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(270deg, #007bff, #ff6600);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s ease infinite;
+    }
+
+    nav a {
+      color: #f5f5f5;
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: #ff6600; }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      background: url('fonder.jpg') no-repeat center center/cover;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      padding: 2rem;
+    }
+
+    .hero img.logo {
+      width: 200px;
+      margin-bottom: 20px;
+      animation: floatLogo 3s ease-in-out infinite;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(270deg, #007bff, #ff6600);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s ease infinite;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(270deg, #007bff, #ff6600);
+      background-size: 400% 400%;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: transform 0.3s;
+      animation: gradientMove 5s ease infinite;
+    }
+    .btn:hover { transform: scale(1.1); }
+
+    footer {
+      background: #0f0f0f;
+      padding: 1rem;
+      text-align: center;
+      border-top: 2px solid #ff6600;
+      font-size: 0.9rem;
+    }
+
+    /* --- Animations --- */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes floatLogo {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Cazmat-Studio</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="jeux.html">Nos Jeux</a>
+      <a href="consoles.html">Nos Consoles</a>
+      <a href="apropos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <!-- LOGO -->
+      <img src="logo.png" alt="Logo Cazmat-Studio" class="logo">
+
+      <h2>Bienvenue dans l’univers Cazmat-Studio</h2>
+      <p>Des jeux vidéo immersifs et des consoles innovantes.</p>
+      <a href="jeux.html" class="btn">Découvrir nos Jeux</a>
+      <a <a href="consoles.html" class="btn" style="margin-left:10px;">Nos Consoles</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Cazmat-Studio - Tous droits réservés</p>
+  </footer>
+
+</body>
+</html>
+

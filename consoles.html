@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cazmat-Studio | Nos Consoles</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0a0a0f;
+      color: #f5f5f5;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #0f0f0f;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #007bff;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(270deg, #007bff, #ff6600);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s ease infinite;
+    }
+
+    nav a {
+      color: #f5f5f5;
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: #ff6600; }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      background: linear-gradient(270deg, #007bff, #ff6600);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s ease infinite;
+    }
+
+    .consoles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .console {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .console:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
+    }
+
+    .console img {
+      width: 220px;
+      height: auto;
+      margin-bottom: 1rem;
+      animation: floatConsole 4s ease-in-out infinite;
+    }
+
+    .console h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .console p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(270deg, #007bff, #ff6600);
+      background-size: 400% 400%;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: transform 0.3s;
+      animation: gradientMove 5s ease infinite;
+    }
+    .btn:hover { transform: scale(1.1); }
+
+    footer {
+      background: #0f0f0f;
+      padding: 1rem;
+      text-align: center;
+      border-top: 2px solid #ff6600;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+
+    /* --- Animations --- */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes floatConsole {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Cazmat-Studio</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="jeux.html">Nos Jeux</a>
+      <a href="consoles.html">Nos Consoles</a>
+      <a href="apropos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- CONTENU -->
+  <div class="container">
+    <h2>Nos Consoles</h2>
+
+    <div class="consoles">
+      <!-- C.G.S-One -->
+      <div class="console">
+        <img src="C.G.S-One.png" alt="C.G.S-One">
+        <h3>C.G.S-One</h3>
+        <p>La première console révolutionnaire de Cazmat-Studio.  
+        Pensée pour la performance et la polyvalence.  
+        Ultra rapide, design futuriste et expérience fluide, elle servira aussi bien en PC qu'en console de jeu !
+        Découvre cette révolution dès maintenant...'.</p>
+        <a href="#" class="btn">En savoir plus</a>
+      </div>
+
+      <!-- Traga-One -->
+      <div class="console">
+        <img src="traga-one.png" alt="Traga-One">
+        <h3>Traga-One</h3>
+        <p>Une console portable de nouvelle génération, plus puissante, plus immersive et plus polyvalente.  
+        Graphismes 4K HDR, ludothèque exclusive et surtout un pc ET une console dans un dispositif portable !  
+        Une nouvelle ère du gaming commence...</p>
+        <a href="#" class="btn">En savoir plus</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Cazmat-Studio - Tous droits réservés</p>
+  </footer>
+
+</body>
+</html>
+
