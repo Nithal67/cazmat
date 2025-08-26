@@ -15,30 +15,85 @@
     }
 
     header {
-      background: #0f0f0f;
-      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: center; /* centre le logo et hamburger */
       align-items: center;
+      padding: 1rem 2rem;
+      background: #0f0f0f;
       border-bottom: 2px solid #007bff;
+      position: relative;
+      flex-wrap: wrap;
+      z-index: 10;
     }
 
-    header h1 {
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .logo h1 {
       font-size: 1.8rem;
       background: linear-gradient(270deg, #007bff, #ff6600);
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: gradientMove 5s ease infinite;
+      text-align: center;
+    }
+
+    /* NAVIGATION */
+    nav {
+      display: flex;
+      gap: 1.5rem;
     }
 
     nav a {
       color: #f5f5f5;
       text-decoration: none;
-      margin: 0 1rem;
-      transition: color 0.3s;
+      font-weight: bold;
+      position: relative;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #007bff, 0 0 10px #ff6600;
     }
-    nav a:hover { color: #ff6600; }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, #007bff, #ff6600);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after { width: 100%; }
+    nav a:hover { text-shadow: 0 0 15px #007bff, 0 0 25px #ff6600; transform: scale(1.1); }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      position: absolute;
+      right: 1rem;
+    }
+
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: linear-gradient(90deg, #007bff, #ff6600);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
 
     .container {
       max-width: 1200px;
@@ -72,10 +127,7 @@
       transition: transform 0.3s, box-shadow 0.3s;
     }
 
-    .console:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
-    }
+    .console:hover { transform: translateY(-10px); box-shadow: 0 0 30px rgba(255, 102, 0, 0.6); }
 
     .console img {
       width: 220px;
@@ -84,16 +136,8 @@
       animation: floatConsole 4s ease-in-out infinite;
     }
 
-    .console h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #fff;
-    }
-
-    .console p {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
+    .console h3 { font-size: 1.8rem; margin-bottom: 1rem; color: #fff; }
+    .console p { font-size: 1rem; margin-bottom: 1rem; }
 
     .btn {
       display: inline-block;
@@ -118,7 +162,6 @@
       margin-top: 2rem;
     }
 
-    /* --- Animations --- */
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -130,14 +173,43 @@
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0); }
     }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        flex-direction: column;
+        background: #0f0f0f;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 100%;
+        text-align: center;
+        border-left: none;
+        padding: 1rem 0;
+      }
+      nav.active { display: flex; }
+      .hamburger { display: flex; }
+      header { flex-wrap: wrap; }
+      .console img { width: 150px; }
+      .console { padding: 1rem; }
+      .btn { width: 80%; }
+    }
   </style>
 </head>
 <body>
 
   <!-- HEADER -->
   <header>
-    <h1>Cazmat-Studio</h1>
-    <nav>
+    <div class="logo">
+      <h1>Cazmat-Studio</h1>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <nav id="nav-links">
       <a href="index.html">Accueil</a>
       <a href="jeux.html">Nos Jeux</a>
       <a href="consoles.html">Nos Consoles</a>
@@ -151,24 +223,17 @@
     <h2>Nos Consoles</h2>
 
     <div class="consoles">
-      <!-- C.G.S-One -->
       <div class="console">
         <img src="C.G.S-One.png" alt="C.G.S-One">
         <h3>C.G.S-One</h3>
-        <p>La première console révolutionnaire de Cazmat-Studio.  
-        Pensée pour la performance et la polyvalence.  
-        Ultra rapide, design futuriste et expérience fluide, elle servira aussi bien en PC qu'en console de jeu !
-        Découvre cette révolution dès maintenant...'.</p>
+        <p>La première console révolutionnaire de Cazmat-Studio. Ultra rapide, design futuriste et expérience fluide.</p>
         <a href="#" class="btn">En savoir plus</a>
       </div>
 
-      <!-- Traga-One -->
       <div class="console">
         <img src="traga-one.png" alt="Traga-One">
         <h3>Traga-One</h3>
-        <p>Une console portable de nouvelle génération, plus puissante, plus immersive et plus polyvalente.  
-        Graphismes 4K HDR, ludothèque exclusive et surtout un pc ET une console dans un dispositif portable !  
-        Une nouvelle ère du gaming commence...</p>
+        <p>Une console portable de nouvelle génération, puissante et immersive. PC ET console dans un dispositif portable !</p>
         <a href="#" class="btn">En savoir plus</a>
       </div>
     </div>
@@ -179,6 +244,15 @@
     <p>© 2025 Cazmat-Studio - Tous droits réservés</p>
   </footer>
 
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('open');
+    });
+  </script>
+
 </body>
 </html>
-
