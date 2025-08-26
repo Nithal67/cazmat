@@ -15,16 +15,18 @@
     }
 
     header {
-      background: #0f0f0f;
-      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1rem 2rem;
+      background: #0f0f0f;
       border-bottom: 2px solid #007bff;
-      flex-wrap: wrap;
+      position: relative;
+      z-index: 10;
     }
 
-    header h1 {
+    /* LOGO */
+    .logo h1 {
       font-size: 1.8rem;
       background: linear-gradient(270deg, #007bff, #ff6600);
       background-size: 400% 400%;
@@ -33,14 +35,69 @@
       animation: gradientMove 5s ease infinite;
     }
 
+    /* NAVIGATION */
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
     nav a {
       color: #f5f5f5;
       text-decoration: none;
-      margin: 0.5rem 1rem;
-      transition: color 0.3s;
+      font-weight: bold;
+      position: relative;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #007bff, 0 0 10px #ff6600;
     }
-    nav a:hover { color: #ff6600; }
 
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, #007bff, #ff6600);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      text-shadow: 0 0 15px #007bff, 0 0 25px #ff6600;
+      transform: scale(1.1);
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: linear-gradient(90deg, #007bff, #ff6600);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px,5px);
+    }
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px,-6px);
+    }
+
+    /* HERO */
     .hero {
       height: 100vh;
       display: flex;
@@ -48,7 +105,6 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-
       background: url('fonder.jpg') no-repeat center center/cover;
       position: relative;
     }
@@ -110,7 +166,7 @@
       font-size: 0.9rem;
     }
 
-    /* --- Animations --- */
+    /* Animations */
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -122,37 +178,46 @@
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0); }
     }
-   
+
+    /* --- Responsive --- */
     @media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero h2 {
-    font-size: 1.8rem;
-  }
-
-  .hero p {
-    font-size: 0.95rem;
-  }
-
-  .hero-content {
-    padding: 1rem;
-  }
-
-  .btn {
-    margin-bottom: 0.5rem;
-  }
-}
+      nav {
+        display: none;
+        flex-direction: column;
+        background: #0f0f0f;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 200px;
+        text-align: center;
+        border-left: 2px solid #ff6600;
+        padding: 1rem 0;
+      }
+      nav.active {
+        display: flex;
+      }
+      .hamburger {
+        display: flex;
+      }
+      header {
+        flex-wrap: wrap;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- HEADER -->
   <header>
-    <h1>Cazmat-Studio</h1>
-    <nav>
+    <div class="logo">
+      <h1>Cazmat-Studio</h1>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <nav id="nav-links">
       <a href="index.html">Accueil</a>
       <a href="jeux.html">Nos Jeux</a>
       <a href="consoles.html">Nos Consoles</a>
@@ -164,13 +229,11 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
-      <!-- LOGO -->
       <img src="logo.png" alt="Logo Cazmat-Studio" class="logo">
-
       <h2>Bienvenue dans l’univers Cazmat-Studio</h2>
       <p>Des jeux vidéo immersifs et des consoles innovantes.</p>
       <a href="jeux.html" class="btn">Découvrir nos Jeux</a>
-      <a <a href="consoles.html" class="btn" style="margin-left:10px;">Nos Consoles</a>
+      <a href="consoles.html" class="btn" style="margin-left:10px;">Nos Consoles</a>
     </div>
   </section>
 
@@ -178,6 +241,16 @@
   <footer>
     <p>© 2025 Cazmat-Studio - Tous droits réservés</p>
   </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('open');
+    });
+  </script>
 
 </body>
 </html>
