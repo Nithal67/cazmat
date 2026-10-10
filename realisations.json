@@ -1,12 +1,17 @@
-[
-    {
-        "title": "Réparation d'un lanceur de tondeuse",
-        "image": "images/tondeuse1.jpg",
-        "date": "Octobre 2026"
+{
+    "jardinage": {
+        "title": "Réparation d'une tondeuse'",
+        "description": "Remplacement cable lanceur + ressort.",
+        "items": [
+            { "type": "image", "src": "images/tondeuse1.jpg", "name": "lanceur démonté + ressort neuf et graissé" },
+            { "type": "video", "src": "images/tondeuse2.mp4", "name": "montage remplacement cable" }
+        ]
     },
-    {
-        "title": "Réparation d'un Karcher",
-        "image": "images/karcher1.jpg",
-        "date": "Septembre 2026"
+    "Jardinage": {
+        "title": "Réparation d'un Karcher'",
+        "description": "Remplacement du contacteur.",
+        "items": [
+            { "type": "image", "src": "images/karcher1.jpg", "name": "contacteur cassé" },
+      ]
     }
-]
+}
