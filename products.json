@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Pack Eau & Boissons",
+        "price_week": 12.50,
+        "icon": "fa-bottle-water"
+    },
+    {
+        "id": 2,
+        "name": "Pack Entretien & Hygiène",
+        "price_week": 15.00,
+        "icon": "fa-pump-soap"
+    },
+    {
+        "id": 3,
+        "name": "Pack Épicerie de première nécessité",
+        "price_week": 22.00,
+        "icon": "fa-basket-shopping"
+    },
+    {
+        "id": 4,
+        "name": "Pack Consommables & Piles",
+        "price_week": 9.50,
+        "icon": "fa-battery-full"
+    }
+]

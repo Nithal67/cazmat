@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAZMAT | Demande de résiliation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body style="background-color: #1A1D24;" class="text-blue-400 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <header class="bg-[#000000]/90 backdrop-blur-md sticky top-0 z-40 border-b border-blue-900/20">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-8 h-8 object-contain">
+                <span class="font-semibold tracking-tight text-white text-lg">CAZMAT</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200">
+                <a href="index.html" class="hover:text-blue-400 transition-colors">Accueil</a>
+                <a href="packs.html" class="hover:text-blue-400 transition-colors">Pack Essentiels</a>
+                <a href="maintenance.html" class="hover:text-blue-400 transition-colors">Maintenance</a>
+                <a href="faq.html" class="hover:text-blue-400 transition-colors">FAQ</a>
+                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            </nav>
+            <a href="dashboard.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-medium">Résilier</a>
+        </div>
+    </header>
+
+    <!-- FORMULAIRE DE RÉSILIATION -->
+    <main class="flex-grow py-16 px-6 max-w-xl mx-auto w-full">
+        <div class="text-center mb-10 space-y-2">
+            <span class="text-xs font-semibold tracking-wider uppercase text-blue-300">Résiliation</span>
+            <h1 class="text-3xl font-semibold text-white">Demande de résiliation</h1>
+            <p class="text-blue-200 text-sm">Remplissez les informations ci-dessous pour transmettre votre demande.</p>
+        </div>
+
+        <div class="bg-[#384345] border border-blue-900/30 p-8 rounded-2xl shadow-sm space-y-6">
+            <div id="alert-success" class="hidden p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs">
+                Demande transmise avec succès !
+            </div>
+            <div id="alert-error" class="hidden p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                Une erreur s'est produite. Veuillez réessayer.
+            </div>
+
+            <form id="resiliation-form" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="nom" class="block text-xs font-medium text-blue-200 mb-1">Nom *</label>
+                        <input type="text" id="nom" name="nom" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="prenom" class="block text-xs font-medium text-blue-200 mb-1">Prénom *</label>
+                        <input type="text" id="prenom" name="prenom" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label for="telephone" class="block text-xs font-medium text-blue-200 mb-1">Téléphone *</label>
+                    <input type="tel" id="telephone" name="telephone" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-xs transition">
+                    <span id="btn-text">Envoyer la demande</span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
+        <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
+    </footer>
+
+    <!-- SCRIPT EMAILJS -->
+    <script>
+        (function() { emailjs.init("oSstg-IAyj_8SX1Ep"); })();
+
+        document.getElementById('resiliation-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            const alertSuccess = document.getElementById('alert-success');
+            const alertError = document.getElementById('alert-error');
+
+            alertSuccess.classList.add('hidden');
+            alertError.classList.add('hidden');
+            submitBtn.disabled = true;
+
+            emailjs.sendForm('service_988n3j9', 'template_5d4ptix', this)
+                .then(() => {
+                    submitBtn.disabled = false;
+                    alertSuccess.classList.remove('hidden');
+                    document.getElementById('resiliation-form').reset();
+                }, () => {
+                    submitBtn.disabled = false;
+                    alertError.classList.remove('hidden');
+                });
+        });
+    </script>
+</body>
+</html>

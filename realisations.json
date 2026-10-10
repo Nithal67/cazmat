@@ -1,0 +1,17 @@
+[
+    {
+        "title": "Réparation carte électronique",
+        "image": "images/atelier.jpeg",
+        "date": "Octobre 2026"
+    },
+    {
+        "title": "Maintenance poste informatique",
+        "image": "images/bannier.jpeg",
+        "date": "Septembre 2026"
+    },
+    {
+        "title": "Restauration petit électroménager",
+        "image": "images/atelier.jpeg",
+        "date": "Août 2026"
+    }
+]

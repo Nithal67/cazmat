@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAZMAT | Maintenance & Réparation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #1A1D24;" class="text-blue-400 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <header class="bg-[#000000]/90 backdrop-blur-md sticky top-0 z-40 border-b border-blue-900/20">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-8 h-8 object-contain">
+                <span class="font-semibold tracking-tight text-white text-lg">CAZMAT</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200">
+                <a href="index.html" class="hover:text-blue-400 transition-colors">Accueil</a>
+                <a href="packs.html" class="hover:text-blue-400 transition-colors">Pack Essentiels</a>
+                <a href="maintenance.html" class="text-blue-400 font-semibold">Maintenance</a>
+                <a href="faq.html" class="hover:text-blue-400 transition-colors">FAQ</a>
+                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            </nav>
+            <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+                Résilier
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-grow py-16 px-6 max-w-5xl mx-auto w-full space-y-16">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h1 class="text-3xl font-semibold tracking-tight text-white">Maintenance & Réparation</h1>
+                <p class="text-blue-200 text-sm leading-relaxed">
+                    Basé à Duppigheim, l'atelier vous accompagne pour diagnostiquer, entretenir et réparer vos matériels afin de prolonger leur durée de vie.
+                </p>
+                <div>
+                    <a href="contact.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-xs font-medium transition shadow-sm inline-flex items-center gap-2">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>Demander un diagnostic ou devis</span>
+                    </a>
+                </div>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-blue-900/30 bg-[#384345] shadow-sm">
+                <img src="images/atelier.jpeg" alt="Atelier CAZMAT" class="object-cover w-full h-[320px]">
+            </div>
+        </div>
+
+        <!-- DOMAINES D'INTERVENTION -->
+        <div class="space-y-4">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-blue-300">Domaines d'intervention</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-laptop text-sm"></i>
+                    </div>
+                    <span class="text-xs font-medium text-white">Informatique & PC</span>
+                </div>
+
+                <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-microchip text-sm"></i>
+                    </div>
+                    <span class="text-xs font-medium text-white">Électronique</span>
+                </div>
+
+                <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-gears text-sm"></i>
+                    </div>
+                    <span class="text-xs font-medium text-white">Électromécanique</span>
+                </div>
+
+                <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-plug text-sm"></i>
+                    </div>
+                    <span class="text-xs font-medium text-white">Petit électroménager</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MES DERNIÈRES RÉALISATIONS (Chargées depuis realisations.json) -->
+        <div class="space-y-4 pt-4">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-blue-300">Mes dernières réalisations</h2>
+            <div id="realisations-container" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="text-blue-200 text-xs bg-[#384345] border border-blue-900/30 p-6 rounded-xl text-center col-span-3">
+                    <i class="fa-solid fa-circle-notch fa-spin text-blue-400 mr-2"></i> Chargement des réalisations...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
+        <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
+    </footer>
+
+    <!-- SCRIPT CHARGEMENT RÉALISATIONS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('realisations-container');
+            try {
+                const response = await fetch('realisations.json');
+                const data = await response.json();
+                container.innerHTML = '';
+                data.forEach(item => {
+                    container.innerHTML += `
+                        <div class="bg-[#384345] border border-blue-900/30 rounded-2xl overflow-hidden shadow-sm group">
+                            <div class="h-48 overflow-hidden bg-[#2f383a]">
+                                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                            </div>
+                            <div class="p-4 space-y-1">
+                                <span class="text-[10px] text-blue-300 uppercase tracking-wider font-semibold">${item.date}</span>
+                                <h3 class="text-xs font-medium text-white">${item.title}</h3>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = `<div class="text-xs text-blue-300 col-span-3 p-4 text-center">Impossible de charger les réalisations.</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

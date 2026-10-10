@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAZMAT | Questions Fréquentes (FAQ)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #1A1D24;" class="text-blue-400 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <header class="bg-[#000000]/90 backdrop-blur-md sticky top-0 z-40 border-b border-blue-900/20">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-8 h-8 object-contain">
+                <span class="font-semibold tracking-tight text-white text-lg">CAZMAT</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200">
+                <a href="index.html" class="hover:text-blue-400 transition-colors">Accueil</a>
+                <a href="packs.html" class="hover:text-blue-400 transition-colors">Pack Essentiels</a>
+                <a href="maintenance.html" class="hover:text-blue-400 transition-colors">Maintenance</a>
+                <a href="faq.html" class="text-blue-400 font-semibold">FAQ</a>
+                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            </nav>
+            <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-medium">Résilier</a>
+        </div>
+    </header>
+
+    <!-- FAQ -->
+    <main class="flex-grow py-16 px-6 max-w-3xl mx-auto w-full">
+        <div class="text-center mb-12 space-y-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-blue-300">Support</span>
+            <h1 class="text-3xl font-semibold text-white">Foire Aux Questions</h1>
+            <p class="text-blue-200 text-sm">Les réponses à vos interrogations sur nos services à Duppigheim.</p>
+        </div>
+
+        <div id="faq-container" class="space-y-4">
+            <div class="bg-[#384345] border border-blue-900/30 p-6 rounded-2xl text-center text-blue-200 text-xs">
+                <i class="fa-solid fa-circle-notch fa-spin text-blue-400 mr-2"></i> Chargement des questions...
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
+        <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
+    </footer>
+
+    <!-- SCRIPT FAQ.JSON -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const faqContainer = document.getElementById('faq-container');
+            try {
+                const response = await fetch('faq.json');
+                const data = await response.json();
+                faqContainer.innerHTML = '';
+                data.forEach(item => {
+                    faqContainer.innerHTML += `
+                        <div class="bg-[#384345] border border-blue-900/30 rounded-xl p-6 space-y-2 shadow-sm">
+                            <h3 class="font-medium text-sm text-white">${item.question}</h3>
+                            <p class="text-xs text-blue-200 leading-relaxed">${item.answer}</p>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                faqContainer.innerHTML = `<div class="bg-[#384345] border border-blue-900/30 p-6 rounded-xl text-xs text-blue-300">Impossible de charger la FAQ.</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

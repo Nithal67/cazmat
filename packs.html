@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAZMAT | Composer mon pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body style="background-color: #1A1D24;" class="text-blue-400 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <header class="bg-[#000000]/90 backdrop-blur-md sticky top-0 z-40 border-b border-blue-900/20">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-8 h-8 object-contain">
+                <span class="font-semibold tracking-tight text-white text-lg">CAZMAT</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200">
+                <a href="index.html" class="hover:text-blue-400 transition-colors">Accueil</a>
+                <a href="packs.html" class="text-blue-400 font-semibold">Pack Essentiels</a>
+                <a href="maintenance.html" class="hover:text-blue-400 transition-colors">Maintenance</a>
+                <a href="faq.html" class="hover:text-blue-400 transition-colors">FAQ</a>
+                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            </nav>
+            <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+                Résilier
+            </a>
+        </div>
+    </header>
+
+    <!-- SECTION PRINCIPALE -->
+    <main class="flex-grow py-16 px-6 max-w-6xl mx-auto w-full">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div class="space-y-2">
+                <h1 class="text-3xl font-semibold tracking-tight text-white">Composer votre pack</h1>
+                <p class="text-blue-200 text-sm">Sélectionnez vos articles. Paiement unique à la livraison, sans engagement.</p>
+            </div>
+            <!-- Bouton Photos de nos produits -->
+            <button onclick="openGalleryModal()" class="bg-[#384345] hover:bg-[#303a3c] border border-blue-900/30 text-white px-5 py-2.5 rounded-xl text-xs font-medium transition shadow-sm inline-flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-images text-blue-400"></i>
+                <span>Photos de nos produits</span>
+            </button>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-12 items-start">
+            
+            <!-- CATALOGUE -->
+            <div class="lg:col-span-7 space-y-3">
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-4">Catalogue des produits</h2>
+                <div id="products-catalog-container" class="space-y-3">
+                    <div class="text-blue-200 text-sm bg-[#384345] border border-blue-900/30 p-6 rounded-xl text-center">
+                        <i class="fa-solid fa-circle-notch fa-spin text-blue-400 mr-2"></i> Chargement...
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANIER & FORMULAIRE -->
+            <div class="lg:col-span-5 bg-[#384345] border border-blue-900/30 rounded-2xl p-6 shadow-sm sticky top-28 space-y-6">
+                <div class="flex items-center justify-between pb-4 border-b border-blue-900/20">
+                    <h3 class="font-medium text-sm text-white">Récapitulatif</h3>
+                    <span id="items-count" class="text-xs text-blue-300 bg-blue-950/60 px-2.5 py-1 rounded-full border border-blue-900/30">0 article</span>
+                </div>
+
+                <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto pr-1 text-xs text-blue-200">
+                    <p class="text-blue-400/60 italic text-center py-4">Votre panier est vide.</p>
+                </div>
+
+                <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-4 pt-2">
+                    <div class="bg-[#2f383a] p-3 rounded-xl border border-blue-900/20 space-y-2">
+                        <label class="block text-[11px] font-medium text-blue-300">Fréquence du montant :</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="price_period" value="hebdo" checked onchange="updateCartDisplay()" class="peer sr-only">
+                                <div class="text-center py-1.5 px-2 text-xs font-medium rounded-lg border border-blue-900/20 bg-[#384345] text-blue-300 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-500 transition">
+                                    Hebdomadaire
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="price_period" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
+                                <div class="text-center py-1.5 px-2 text-xs font-medium rounded-lg border border-blue-900/20 bg-[#384345] text-blue-300 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-500 transition">
+                                    Mensuel (x4)
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 px-4 bg-[#2f383a] rounded-xl border border-blue-900/20">
+                        <div>
+                            <span class="block text-[11px] text-blue-300">Total à la livraison</span>
+                            <span id="period-label" class="text-[10px] text-blue-400">Prix hebdomadaire</span>
+                        </div>
+                        <span id="cart-total" class="font-semibold text-xl text-white">0.00 €</span>
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-medium text-blue-200 mb-1">Prénom *</label>
+                                <input type="text" id="client-prenom" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-blue-200 mb-1">Nom *</label>
+                                <input type="text" id="client-nom" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-blue-200 mb-1">Adresse complète *</label>
+                            <input type="text" id="client-adresse" required placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-blue-200 mb-1">Téléphone *</label>
+                            <input type="tel" id="client-telephone" required placeholder="06 12 34 56 78" class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl text-xs font-medium transition shadow-sm">
+                        Valider la commande
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL GALERIE PRODUITS (Fond transparent / grille) -->
+    <div id="gallery-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#384345] border border-blue-900/30 p-6 md:p-8 rounded-2xl max-w-3xl w-full shadow-2xl space-y-6 relative">
+            <div class="flex justify-between items-center pb-3 border-b border-blue-900/20">
+                <h3 class="font-semibold text-sm text-white">Photos de nos produits</h3>
+                <button onclick="closeGalleryModal()" class="text-blue-300 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <!-- Grille de photos avec fond transparent -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-1">
+                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
+                    <img src="images/bannier.jpeg" alt="Pack Eau & Boissons" class="w-full h-28 object-contain bg-transparent rounded-lg">
+                    <span class="text-[11px] text-white mt-2 text-center">Pack Eau & Boissons</span>
+                </div>
+                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
+                    <img src="images/atelier.jpeg" alt="Pack Entretien" class="w-full h-28 object-contain bg-transparent rounded-lg">
+                    <span class="text-[11px] text-white mt-2 text-center">Pack Entretien & Hygiène</span>
+                </div>
+                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
+                    <img src="images/bannier.jpeg" alt="Pack Épicerie" class="w-full h-28 object-contain bg-transparent rounded-lg">
+                    <span class="text-[11px] text-white mt-2 text-center">Pack Épicerie</span>
+                </div>
+                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
+                    <img src="images/atelier.jpeg" alt="Pack Consommables" class="w-full h-28 object-contain bg-transparent rounded-lg">
+                    <span class="text-[11px] text-white mt-2 text-center">Pack Consommables</span>
+                </div>
+            </div>
+            <button onclick="closeGalleryModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-medium transition">Fermer</button>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX POUR OUVRIR EN GRAND -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightboxModal()">
+        <div class="relative max-w-4xl w-full flex flex-col items-center">
+            <button onclick="closeLightboxModal()" class="absolute -top-10 right-0 text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <img id="lightbox-img" src="" alt="Agrandissement produit" class="max-h-[80vh] max-w-full object-contain rounded-xl bg-transparent">
+        </div>
+    </div>
+
+    <!-- MODAL DE SUCCÈS COMMANDE -->
+    <div id="modal-success" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#384345] border border-blue-900/30 p-8 rounded-2xl max-w-md w-full text-center shadow-xl space-y-4">
+            <h2 class="text-lg font-semibold text-white">Commande enregistrée</h2>
+            <p class="text-xs text-blue-200">Montant à régler à la livraison : <span id="modal-price-tag" class="font-semibold text-white">0.00€</span></p>
+            <p class="text-[11px] text-blue-300 bg-[#2f383a] p-3 rounded-lg text-left">Nous vous contacterons très rapidement pour convenir d'une date de livraison.</p>
+            <button onclick="closeModalAndReset()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-medium">Fermer</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
+        <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        emailjs.init("oSstg-IAyj_8SX1Ep");
+
+        let catalogProducts = [];
+        let selectedCart = {};
+        let currentCalculatedTotal = 0;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('products-catalog-container');
+            try {
+                const response = await fetch('products.json');
+                const data = await response.json();
+                catalogProducts = data;
+                container.innerHTML = '';
+                
+                catalogProducts.forEach(prod => {
+                    container.innerHTML += `
+                        <div class="bg-[#384345] border border-blue-900/30 rounded-xl p-4 flex items-center justify-between hover:border-blue-700/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center text-xs">
+                                    <i class="fa-solid ${prod.icon || 'fa-box'}"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-xs text-white">${prod.name}</h4>
+                                    <span class="text-[11px] text-blue-300">${Number(prod.price_week).toFixed(2)} € / sem.</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 bg-[#2f383a] p-1 rounded-lg border border-blue-900/20">
+                                <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-6 h-6 rounded bg-[#384345] text-blue-300 text-xs font-bold hover:bg-[#252c2e]">-</button>
+                                <span id="qty-${prod.id}" class="text-xs font-semibold w-4 text-center text-white">0</span>
+                                <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-6 h-6 rounded bg-blue-600 text-white text-xs font-bold hover:bg-blue-500">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = `<div class="text-red-400 text-xs bg-red-950/40 p-4 rounded-xl">Erreur de chargement du catalogue.</div>`;
+            }
+        });
+
+        function updateCart(productId, delta) {
+            const prod = catalogProducts.find(p => p.id === productId);
+            if (!prod) return;
+            if (!selectedCart[productId]) selectedCart[productId] = { ...prod, quantity: 0 };
+            selectedCart[productId].quantity += delta;
+            if (selectedCart[productId].quantity <= 0) {
+                delete selectedCart[productId];
+                document.getElementById(`qty-${productId}`).textContent = '0';
+            } else {
+                document.getElementById(`qty-${productId}`).textContent = selectedCart[productId].quantity;
+            }
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartContainer = document.getElementById('cart-items');
+            const periodType = document.querySelector('input[name="price_period"]:checked').value;
+            const periodLabel = document.getElementById('period-label');
+            cartContainer.innerHTML = '';
+            let weeklyTotal = 0, totalItemsCount = 0;
+
+            const keys = Object.keys(selectedCart);
+            if (keys.length === 0) {
+                cartContainer.innerHTML = '<p class="text-blue-400/60 italic text-center py-4">Votre panier est vide.</p>';
+                document.getElementById('cart-total').textContent = '0.00 €';
+                document.getElementById('items-count').textContent = '0 article';
+                currentCalculatedTotal = 0;
+                return;
+            }
+
+            keys.forEach(id => {
+                const item = selectedCart[id];
+                const itemWeeklyPrice = item.price_week * item.quantity;
+                weeklyTotal += itemWeeklyPrice;
+                totalItemsCount += item.quantity;
+                cartContainer.innerHTML += `
+                    <div class="flex justify-between items-center text-xs py-1 border-b border-blue-900/20 last:border-0">
+                        <span class="text-blue-200">${item.quantity}x ${item.name}</span>
+                        <span class="font-medium text-white">${itemWeeklyPrice.toFixed(2)} €</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
+            currentCalculatedTotal = periodType === 'mensuel' ? weeklyTotal * 4 : weeklyTotal;
+            periodLabel.textContent = periodType === 'mensuel' ? 'Estimation mensuelle (x4)' : 'Prix hebdomadaire';
+            document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+        }
+
+        async function handleOrderSubmit(e) {
+            e.preventDefault();
+            if (Object.keys(selectedCart).length === 0) return alert('Panier vide.');
+            const prenom = document.getElementById('client-prenom').value;
+            const nom = document.getElementById('client-nom').value;
+            const adresse = document.getElementById('client-adresse').value;
+            const telephone = document.getElementById('client-telephone').value;
+            const itemsSummary = Object.values(selectedCart).map(i => `${i.quantity}x ${i.name}`).join(', ');
+            const priceString = currentCalculatedTotal.toFixed(2) + ' €';
+
+            emailjs.send("service_988n3j9", "template_p6qhejv", {
+                to_email: "thomanathan@outlook.fr",
+                client_name: `${prenom} ${nom}`,
+                client_address: adresse,
+                client_phone: telephone,
+                cart_summary: itemsSummary,
+                total_price: priceString
+            }).catch(err => {});
+
+            document.getElementById('modal-price-tag').textContent = priceString;
+            document.getElementById('modal-success').classList.remove('hidden');
+        }
+
+        function closeModalAndReset() {
+            document.getElementById('modal-success').classList.add('hidden');
+            selectedCart = {};
+            document.getElementById('order-form').reset();
+            catalogProducts.forEach(p => {
+                const el = document.getElementById(`qty-${p.id}`);
+                if (el) el.textContent = '0';
+            });
+            updateCartDisplay();
+        }
+
+        // Gestion de la galerie modale produits
+        function openGalleryModal() {
+            document.getElementById('gallery-modal').classList.remove('hidden');
+        }
+        function closeGalleryModal() {
+            document.getElementById('gallery-modal').classList.add('hidden');
+        }
+        function openLightbox(imgSrc) {
+            document.getElementById('lightbox-img').src = imgSrc;
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+        function closeLightboxModal() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
