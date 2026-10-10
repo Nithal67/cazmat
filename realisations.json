@@ -1,17 +1,17 @@
 {
-    "jardinage": {
-        "title": "Réparation d'une tondeuse'",
+    "tondeuse": {
+        "title": "Réparation d'une tondeuse",
         "description": "Remplacement cable lanceur + ressort.",
         "items": [
             { "type": "image", "src": "images/tondeuse1.jpg", "name": "lanceur démonté + ressort neuf et graissé" },
-            { "type": "video", "src": "images/tondeuse2.mp4", "name": "vidéo pour youtube" }
+            { "type": "video", "src": "images/tondeuse2.mp4", "name": "montage remplacement cable" }
         ]
     },
-    "Jardinage": {
-        "title": "Réparation d'un Karcher'",
+    "karcher": {
+        "title": "Réparation d'un Karcher",
         "description": "Remplacement du contacteur.",
         "items": [
-            { "type": "image", "src": "images/karcher1.jpg", "name": "contacteur cassé" },
-      ]
+            { "type": "image", "src": "images/karcher1.jpg", "name": "contacteur cassé" }
+        ]
     }
 }
