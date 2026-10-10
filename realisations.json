@@ -1,17 +1,12 @@
 [
     {
-        "title": "Réparation carte électronique",
-        "image": "images/atelier.jpeg",
+        "title": "Réparation d'un lanceur de tondeuse'",
+        "image": "images/tondeuse.jpg",
         "date": "Octobre 2026"
     },
     {
-        "title": "Maintenance poste informatique",
-        "image": "images/bannier.jpeg",
+        "title": "Réparation d'un Karcher'",
+        "image": "images/karcher1.jpg",
         "date": "Septembre 2026"
-    },
-    {
-        "title": "Restauration petit électroménager",
-        "image": "images/atelier.jpeg",
-        "date": "Août 2026"
     }
 ]
