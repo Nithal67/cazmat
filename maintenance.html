@@ -47,15 +47,20 @@
     <main class="flex-grow py-16 px-6 max-w-5xl mx-auto w-full space-y-16">
         <div class="grid md:grid-cols-2 gap-12 items-center">
             <div class="space-y-6">
+                <span class="text-xs font-semibold uppercase tracking-wider text-blue-300 bg-blue-950/40 px-3.5 py-1.5 rounded-full border border-blue-900/30">Atelier technique • Duppigheim</span>
                 <h1 class="text-3xl font-semibold tracking-tight text-white">Maintenance & Réparation</h1>
                 <p class="text-blue-200 text-sm leading-relaxed">
                     Basé à Duppigheim, l'atelier vous accompagne pour diagnostiquer, entretenir et réparer vos matériels afin de prolonger leur durée de vie.
                 </p>
-                <div>
+                <div class="flex flex-wrap gap-3">
                     <a href="contact.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-xs font-medium transition shadow-sm inline-flex items-center gap-2">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Demander un diagnostic ou devis</span>
                     </a>
+                    <button onclick="openReparationsModal()" class="bg-[#384345] hover:bg-[#303a3c] border border-blue-900/30 text-white px-6 py-3 rounded-xl text-xs font-medium transition shadow-sm inline-flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-blue-400"></i>
+                        <span>Mes réparations</span>
+                    </button>
                 </div>
             </div>
             <div class="rounded-2xl overflow-hidden border border-blue-900/30 bg-[#384345] shadow-sm">
@@ -73,21 +78,18 @@
                     </div>
                     <span class="text-xs font-medium text-white">Informatique & PC</span>
                 </div>
-
                 <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
                     <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
                         <i class="fa-solid fa-microchip text-sm"></i>
                     </div>
                     <span class="text-xs font-medium text-white">Électronique</span>
                 </div>
-
                 <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
                     <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
                         <i class="fa-solid fa-gears text-sm"></i>
                     </div>
                     <span class="text-xs font-medium text-white">Électromécanique</span>
                 </div>
-
                 <div class="bg-[#384345] border border-blue-900/30 p-4 rounded-xl flex items-center gap-3 shadow-sm">
                     <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center shrink-0">
                         <i class="fa-solid fa-plug text-sm"></i>
@@ -96,48 +98,172 @@
                 </div>
             </div>
         </div>
+    </main>
 
-        <!-- MES DERNIÈRES RÉALISATIONS (Chargées depuis realisations.json) -->
-        <div class="space-y-4 pt-4">
-            <h2 class="text-xs font-semibold uppercase tracking-wider text-blue-300">Mes dernières réalisations</h2>
-            <div id="realisations-container" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="text-blue-200 text-xs bg-[#384345] border border-blue-900/30 p-6 rounded-xl text-center col-span-3">
-                    <i class="fa-solid fa-circle-notch fa-spin text-blue-400 mr-2"></i> Chargement des réalisations...
+    <!-- MODAL "MES RÉPARATIONS" (Dynamique depuis reparations.json) -->
+    <div id="reparations-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#384345] border border-blue-900/30 p-6 md:p-8 rounded-2xl max-w-3xl w-full shadow-2xl space-y-6 relative max-h-[85vh] flex flex-col">
+            
+            <div class="flex justify-between items-center pb-3 border-b border-blue-900/20 shrink-0">
+                <div class="flex items-center gap-3">
+                    <button id="back-folders-btn" onclick="showFolderList()" class="hidden text-blue-400 hover:text-white text-xs transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Retour aux dossiers
+                    </button>
+                    <h3 id="modal-title" class="font-semibold text-sm text-white">Sélectionnez un dossier de réparation</h3>
+                </div>
+                <button onclick="closeReparationsModal()" class="text-blue-300 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Vue Liste des Dossiers -->
+            <div id="folders-view" class="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto pr-1">
+                <div class="text-blue-200 text-xs text-center py-8 col-span-2">
+                    <i class="fa-solid fa-circle-notch fa-spin text-blue-400 mr-2"></i> Chargement des dossiers...
                 </div>
             </div>
+
+            <!-- Vue Grille des Médias -->
+            <div id="media-view" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-4 overflow-y-auto pr-1"></div>
+
+            <button onclick="closeReparationsModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-medium transition shrink-0">Fermer</button>
         </div>
-    </main>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="media-lightbox" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden" onclick="closeMediaLightbox()">
+        <div class="relative max-w-4xl w-full flex flex-col items-center">
+            <button onclick="closeMediaLightbox()" class="absolute -top-10 right-0 text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div id="lightbox-content-container" class="w-full flex justify-center"></div>
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
         <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
     </footer>
 
-    <!-- SCRIPT CHARGEMENT RÉALISATIONS -->
+    <!-- SCRIPT DE CHARGEMENT DEPUIS LE JSON -->
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const container = document.getElementById('realisations-container');
+        let reparationsData = {};
+
+        async function loadReparationsData() {
             try {
-                const response = await fetch('realisations.json');
-                const data = await response.json();
-                container.innerHTML = '';
-                data.forEach(item => {
-                    container.innerHTML += `
-                        <div class="bg-[#384345] border border-blue-900/30 rounded-2xl overflow-hidden shadow-sm group">
-                            <div class="h-48 overflow-hidden bg-[#2f383a]">
-                                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                const response = await fetch('reparations.json');
+                reparationsData = await response.json();
+            } catch (err) {
+                console.error("Erreur chargement reparations.json", err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadReparationsData);
+
+        async function openReparationsModal() {
+            document.getElementById('reparations-modal').classList.remove('hidden');
+            if (Object.keys(reparationsData).length === 0) {
+                await loadReparationsData();
+            }
+            renderFolderList();
+        }
+
+        function closeReparationsModal() {
+            document.getElementById('reparations-modal').classList.add('hidden');
+        }
+
+        function renderFolderList() {
+            const foldersView = document.getElementById('folders-view');
+            foldersView.innerHTML = '';
+            
+            const keys = Object.keys(reparationsData);
+            if (keys.length === 0) {
+                foldersView.innerHTML = `<p class="text-xs text-blue-300 col-span-2 text-center py-4">Aucun dossier trouvé.</p>`;
+                return;
+            }
+
+            keys.forEach(key => {
+                const folder = reparationsData[key];
+                foldersView.innerHTML += `
+                    <div onclick="openFolder('${key}')" class="cursor-pointer bg-[#2f383a] border border-blue-900/30 p-4 rounded-xl flex items-center gap-4 hover:border-blue-500 transition group">
+                        <div class="w-12 h-12 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-xs text-white group-hover:text-blue-300 transition">${folder.title}</h4>
+                            <span class="text-[10px] text-blue-300/70">${folder.items.length} fichier(s)</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            showFolderList();
+        }
+
+        function showFolderList() {
+            document.getElementById('folders-view').classList.remove('hidden');
+            document.getElementById('media-view').classList.add('hidden');
+            document.getElementById('back-folders-btn').classList.add('hidden');
+            document.getElementById('modal-title').textContent = "Sélectionnez un dossier de réparation";
+        }
+
+        function openFolder(folderKey) {
+            const folder = reparationsData[folderKey];
+            if (!folder) return;
+
+            document.getElementById('folders-view').classList.add('hidden');
+            document.getElementById('media-view').classList.remove('hidden');
+            document.getElementById('back-folders-btn').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = folder.title;
+
+            const mediaView = document.getElementById('media-view');
+            mediaView.innerHTML = '';
+
+            if (folder.items.length === 0) {
+                mediaView.innerHTML = `<p class="text-xs text-blue-300 col-span-3 text-center py-8">Ce dossier est vide.</p>`;
+                return;
+            }
+
+            folder.items.forEach(item => {
+                if (item.type === 'image') {
+                    mediaView.innerHTML += `
+                        <div onclick="openMediaLightbox('image', '${item.src}')" class="cursor-pointer bg-[#2f383a] border border-blue-900/30 rounded-xl overflow-hidden hover:border-blue-500 transition group">
+                            <div class="h-28 overflow-hidden bg-black/40">
+                                <img src="${item.src}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                             </div>
-                            <div class="p-4 space-y-1">
-                                <span class="text-[10px] text-blue-300 uppercase tracking-wider font-semibold">${item.date}</span>
-                                <h3 class="text-xs font-medium text-white">${item.title}</h3>
+                            <div class="p-2">
+                                <span class="text-[10px] text-white truncate block">${item.name}</span>
                             </div>
                         </div>
                     `;
-                });
-            } catch (err) {
-                container.innerHTML = `<div class="text-xs text-blue-300 col-span-3 p-4 text-center">Impossible de charger les réalisations.</div>`;
+                } else if (item.type === 'video') {
+                    mediaView.innerHTML += `
+                        <div onclick="openMediaLightbox('video', '${item.src}')" class="cursor-pointer bg-[#2f383a] border border-blue-900/30 rounded-xl overflow-hidden hover:border-blue-500 transition group relative">
+                            <div class="h-28 overflow-hidden bg-black/40 flex items-center justify-center">
+                                <video src="${item.src}" class="w-full h-full object-cover"></video>
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                                    <i class="fa-solid fa-play text-white text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <span class="text-[10px] text-white truncate block">${item.name}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function openMediaLightbox(type, src) {
+            const container = document.getElementById('lightbox-content-container');
+            if (type === 'image') {
+                container.innerHTML = `<img src="${src}" class="max-h-[80vh] max-w-full object-contain rounded-xl">`;
+            } else {
+                container.innerHTML = `<video src="${src}" controls autoplay class="max-h-[80vh] max-w-full rounded-xl"></video>`;
             }
-        });
+            document.getElementById('media-lightbox').classList.remove('hidden');
+        }
+
+        function closeMediaLightbox() {
+            document.getElementById('media-lightbox').classList.add('hidden');
+            document.getElementById('lightbox-content-container').innerHTML = '';
+        }
     </script>
 </body>
 </html>
