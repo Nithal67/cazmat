@@ -147,10 +147,11 @@
 
         async function loadReparationsData() {
             try {
-                const response = await fetch('realisations.json');
+                const response = await fetch('realisations.json'); // Corrigé ici
+                if (!response.ok) throw new Error("Fichier introuvable");
                 reparationsData = await response.json();
             } catch (err) {
-                console.error("Erreur chargement reparations.json", err);
+                console.error("Erreur chargement realisations.json", err);
             }
         }
 
@@ -174,7 +175,7 @@
             
             const keys = Object.keys(reparationsData);
             if (keys.length === 0) {
-                foldersView.innerHTML = `<p class="text-xs text-blue-300 col-span-2 text-center py-4">Aucun dossier trouvé.</p>`;
+                foldersView.innerHTML = `<p class="text-xs text-blue-300 col-span-2 text-center py-4">Rien pour le moment.</p>`;
                 return;
             }
 
@@ -216,7 +217,7 @@
             mediaView.innerHTML = '';
 
             if (folder.items.length === 0) {
-                mediaView.innerHTML = `<p class="text-xs text-blue-300 col-span-3 text-center py-8">Ce dossier est vide.</p>`;
+                mediaView.innerHTML = `<p class="text-xs text-blue-300 col-span-3 text-center py-8">Rien pour le moment.</p>`;
                 return;
             }
 
