@@ -1,17 +1,19 @@
 {
     "tondeuse": {
         "title": "Réparation d'une tondeuse",
-        "description": "Remplacement cable lanceur + ressort.",
+        "description": "Remplacement câble lanceur + ressort.",
+        "details": "La corde du lanceur avait cédé et le ressort de rappel de celui-ci était tordu. j'ai donc commandé un ressort neuf que j'ai graissé et installé puis remplacer la corde avant de faire un test",
         "items": [
-            { "type": "image", "src": "images/tondeuse1.jpg", "name": "lanceur démonté + ressort neuf et graissé" },
+            { "type": "image", "src": "images/tondeuse1.jpg", "name": "Lanceur démonté + ressort neuf et graissé" },
             { "type": "video", "src": "images/tondeuse2.mp4", "name": "video pour youtube" }
         ]
     },
     "karcher": {
         "title": "Réparation d'un Karcher",
         "description": "Remplacement du contacteur.",
+        "details": "Le Karcher ne s'allumait plus. Après un démontage, j'ai remarqué que le contacteur était cassé et le circuit électrique décale. J'ai donc commandé un contacteur puis remonté le tout à la bonne place avant d'effectuer un test.",
         "items": [
-            { "type": "image", "src": "images/karcher1.jpg", "name": "contacteur cassé" }
+            { "type": "image", "src": "images/karcher1.jpg", "name": "Contacteur cassé" }
         ]
     }
 }
