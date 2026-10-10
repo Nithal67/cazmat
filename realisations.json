@@ -15,5 +15,13 @@
         "items": [
             { "type": "image", "src": "images/karcher1.jpg", "name": "Contacteur cassé" }
         ]
+},
+    "taille haie": {
+        "title": "Réparation d'un taille haie Still",
+        "description": "Nettoyage interne.",
+        "details": "La lame de ce taille haie ne bougeait plus. Après avoir accédé au mécanisme de mise en mouvement, je me rends compte que celui-ci était totalement bloqué par de la saleté. Un coup de bombe à air comprimé et c'est reparti.'.",
+        "items": [
+            { "type": "image", "src": "images/haie1.jpg", "name": "photo taille haie" }
+        ]
     }
 }
