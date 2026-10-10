@@ -4,7 +4,7 @@
         "description": "Remplacement cable lanceur + ressort.",
         "items": [
             { "type": "image", "src": "images/tondeuse1.jpg", "name": "lanceur démonté + ressort neuf et graissé" },
-            { "type": "video", "src": "images/tondeuse2.mp4", "name": "montage remplacement cable" }
+            { "type": "video", "src": "images/tondeuse2.mp4", "name": "video pour youtube" }
         ]
     },
     "karcher": {
