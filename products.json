@@ -1,26 +1,26 @@
 [
     {
         "id": 1,
-        "name": "Pack Eau & Boissons",
+        "name": "Rouleau 10 sacs poubelles de 30L",
         "price_week": 12.50,
-        "icon": "fa-bottle-water"
+        "icon": "fa-basket-shopping"
     },
     {
         "id": 2,
-        "name": "Pack Entretien & Hygiène",
+        "name": "Flacon 1L liquide vaisselle",
         "price_week": 15.00,
         "icon": "fa-pump-soap"
     },
     {
         "id": 3,
-        "name": "Pack Épicerie de première nécessité",
+        "name": "Flacon 1L savon main",
         "price_week": 22.00,
-        "icon": "fa-basket-shopping"
+        "icon": "fa-bottle-water"
     },
     {
         "id": 4,
-        "name": "Pack Consommables & Piles",
+        "name": "Rouleau essui-tout",
         "price_week": 9.50,
-        "icon": "fa-battery-full"
+        "icon": "fa-basket-shopping"
     }
 ]
