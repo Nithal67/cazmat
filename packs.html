@@ -6,14 +6,20 @@
     <title>CAZMAT | Composer mon pack</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    fontFamily: { sans: ['"Montserrat"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            red: '#F57927',
+                            dark: '#0A0A0A',
+                            card: '#121212',
+                            border: '#262626'
+                        }
                     }
                 }
             }
@@ -22,38 +28,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
-<body style="background-color: #1A1D24;" class="text-blue-400 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-brand-dark text-gray-200 font-sans antialiased flex flex-col min-h-screen">
 
     <!-- NAVIGATION -->
-    <header class="bg-[#000000]/90 backdrop-blur-md sticky top-0 z-40 border-b border-blue-900/20">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3">
-                <img src="images/logo.png" alt="Logo CAZMAT" class="w-8 h-8 object-contain">
-                <span class="font-semibold tracking-tight text-white text-lg">CAZMAT</span>
+    <header class="bg-black/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-9 h-9 object-contain group-hover:scale-105 transition-transform duration-300">
+                <span class="font-bold tracking-wider text-white text-xl uppercase">CAZMAT</span>
             </a>
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200">
-                <a href="index.html" class="hover:text-blue-400 transition-colors">Accueil</a>
-                <a href="packs.html" class="text-blue-400 font-semibold">Pack Essentiels</a>
-                <a href="maintenance.html" class="hover:text-blue-400 transition-colors">Maintenance</a>
-                <a href="faq.html" class="hover:text-blue-400 transition-colors">FAQ</a>
-                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-gray-300">
+                <a href="index.html" class="hover:text-brand-red transition-colors">Accueil</a>
+                <a href="packs.html" class="text-brand-red font-bold">Pack Essentiels</a>
+                <a href="maintenance.html" class="hover:text-brand-red transition-colors">Maintenance</a>
+                <a href="faq.html" class="hover:text-brand-red transition-colors">FAQ</a>
+                <a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a>
             </nav>
-            <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+            <a href="dashboard.html" class="border border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition duration-300">
                 Résilier
             </a>
         </div>
     </header>
 
     <!-- SECTION PRINCIPALE -->
-    <main class="flex-grow py-16 px-6 max-w-6xl mx-auto w-full">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <main class="flex-grow py-16 px-6 max-w-7xl mx-auto w-full">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-brand-border pb-8">
             <div class="space-y-2">
-                <h1 class="text-3xl font-semibold tracking-tight text-white">Composer votre pack</h1>
-                <p class="text-blue-200 text-sm">Sélectionnez vos articles. Paiement unique à la livraison, sans engagement.</p>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">Sélection Exclusive</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composer votre pack</h1>
+                <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos articles. Paiement unique à la livraison, sans engagement.</p>
             </div>
-            <!-- Bouton Photos de nos produits -->
-            <button onclick="openGalleryModal()" class="bg-[#384345] hover:bg-[#303a3c] border border-blue-900/30 text-white px-5 py-2.5 rounded-xl text-xs font-medium transition shadow-sm inline-flex items-center gap-2 shrink-0">
-                <i class="fa-solid fa-images text-blue-400"></i>
+            <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
+                <i class="fa-solid fa-images text-brand-red"></i>
                 <span>Photos de nos produits</span>
             </button>
         </div>
@@ -61,75 +67,75 @@
         <div class="grid lg:grid-cols-12 gap-12 items-start">
             
             <!-- CATALOGUE -->
-            <div class="lg:col-span-7 space-y-3">
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-4">Catalogue des produits</h2>
-                <div id="products-catalog-container" class="space-y-3">
-                    <div class="text-blue-200 text-sm bg-[#384345] border border-blue-900/30 p-6 rounded-xl text-center">
-                        <i class="fa-solid fa-circle-notch fa-spin text-blue-400 mr-2"></i> Chargement...
+            <div class="lg:col-span-7 space-y-4">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400">Catalogue des produits</h2>
+                <div id="products-catalog-container" class="space-y-4">
+                    <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider">
+                        <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement du catalogue...
                     </div>
                 </div>
             </div>
 
             <!-- PANIER & FORMULAIRE -->
-            <div class="lg:col-span-5 bg-[#384345] border border-blue-900/30 rounded-2xl p-6 shadow-sm sticky top-28 space-y-6">
-                <div class="flex items-center justify-between pb-4 border-b border-blue-900/20">
-                    <h3 class="font-medium text-sm text-white">Récapitulatif</h3>
-                    <span id="items-count" class="text-xs text-blue-300 bg-blue-950/60 px-2.5 py-1 rounded-full border border-blue-900/30">0 article</span>
+            <div class="lg:col-span-5 bg-brand-card border border-brand-border p-8 sticky top-28 space-y-6">
+                <div class="flex items-center justify-between pb-4 border-b border-brand-border">
+                    <h3 class="font-bold text-xs uppercase tracking-widest text-white">Récapitulatif</h3>
+                    <span id="items-count" class="text-[10px] font-bold uppercase tracking-wider text-brand-red bg-black/60 px-3 py-1 border border-brand-border">0 article</span>
                 </div>
 
-                <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto pr-1 text-xs text-blue-200">
-                    <p class="text-blue-400/60 italic text-center py-4">Votre panier est vide.</p>
+                <div id="cart-items" class="space-y-3 max-h-40 overflow-y-auto pr-1 text-xs text-gray-300">
+                    <p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>
                 </div>
 
-                <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-4 pt-2">
-                    <div class="bg-[#2f383a] p-3 rounded-xl border border-blue-900/20 space-y-2">
-                        <label class="block text-[11px] font-medium text-blue-300">Fréquence du montant :</label>
+                <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-5 pt-2">
+                    <div class="bg-black/60 p-4 border border-brand-border space-y-3">
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Fréquence du montant :</label>
                         <div class="grid grid-cols-2 gap-2">
                             <label class="cursor-pointer">
                                 <input type="radio" name="price_period" value="hebdo" checked onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-1.5 px-2 text-xs font-medium rounded-lg border border-blue-900/20 bg-[#384345] text-blue-300 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-500 transition">
+                                <div class="text-center py-2 px-3 text-[11px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
                                     Hebdomadaire
                                 </div>
                             </label>
                             <label class="cursor-pointer">
                                 <input type="radio" name="price_period" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-1.5 px-2 text-xs font-medium rounded-lg border border-blue-900/20 bg-[#384345] text-blue-300 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-500 transition">
+                                <div class="text-center py-2 px-3 text-[11px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
                                     Mensuel (x4)
                                 </div>
                             </label>
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-center py-3 px-4 bg-[#2f383a] rounded-xl border border-blue-900/20">
+                    <div class="flex justify-between items-center py-4 px-5 bg-black/60 border border-brand-border">
                         <div>
-                            <span class="block text-[11px] text-blue-300">Total à la livraison</span>
-                            <span id="period-label" class="text-[10px] text-blue-400">Prix hebdomadaire</span>
+                            <span class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Total à la livraison</span>
+                            <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Prix hebdomadaire</span>
                         </div>
-                        <span id="cart-total" class="font-semibold text-xl text-white">0.00 €</span>
+                        <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
                     </div>
 
-                    <div class="space-y-3 pt-2">
-                        <div class="grid grid-cols-2 gap-2">
+                    <div class="space-y-4 pt-2">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-medium text-blue-200 mb-1">Prénom *</label>
-                                <input type="text" id="client-prenom" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Prénom *</label>
+                                <input type="text" id="client-prenom" required class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-medium text-blue-200 mb-1">Nom *</label>
-                                <input type="text" id="client-nom" required class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nom *</label>
+                                <input type="text" id="client-nom" required class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-medium text-blue-200 mb-1">Adresse complète *</label>
-                            <input type="text" id="client-adresse" required placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Adresse complète *</label>
+                            <input type="text" id="client-adresse" required placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-medium text-blue-200 mb-1">Téléphone *</label>
-                            <input type="tel" id="client-telephone" required placeholder="06 12 34 56 78" class="w-full bg-[#2f383a] border border-blue-900/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Téléphone *</label>
+                            <input type="tel" id="client-telephone" required placeholder="06 12 34 56 78" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl text-xs font-medium transition shadow-sm">
+                    <button type="submit" class="w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
                         Valider la commande
                     </button>
                 </form>
@@ -137,57 +143,81 @@
         </div>
     </main>
 
-    <!-- MODAL GALERIE PRODUITS (Fond transparent / grille) -->
-    <div id="gallery-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#384345] border border-blue-900/30 p-6 md:p-8 rounded-2xl max-w-3xl w-full shadow-2xl space-y-6 relative">
-            <div class="flex justify-between items-center pb-3 border-b border-blue-900/20">
-                <h3 class="font-semibold text-sm text-white">Photos de nos produits</h3>
-                <button onclick="closeGalleryModal()" class="text-blue-300 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+    <!-- POP-UP AVERTISSEMENT PAGE DE TEST -->
+    <div id="test-popup" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-lg w-full shadow-2xl space-y-6 text-center">
+            <div class="w-12 h-12 bg-brand-red/10 border border-brand-red text-brand-red flex items-center justify-center mx-auto text-lg">
+                <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <!-- Grille de photos avec fond transparent -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-1">
-                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
-                    <img src="images/bannier.jpeg" alt="Pack Eau & Boissons" class="w-full h-28 object-contain bg-transparent rounded-lg">
-                    <span class="text-[11px] text-white mt-2 text-center">Pack Eau & Boissons</span>
-                </div>
-                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
-                    <img src="images/atelier.jpeg" alt="Pack Entretien" class="w-full h-28 object-contain bg-transparent rounded-lg">
-                    <span class="text-[11px] text-white mt-2 text-center">Pack Entretien & Hygiène</span>
-                </div>
-                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
-                    <img src="images/bannier.jpeg" alt="Pack Épicerie" class="w-full h-28 object-contain bg-transparent rounded-lg">
-                    <span class="text-[11px] text-white mt-2 text-center">Pack Épicerie</span>
-                </div>
-                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-transparent border border-blue-900/20 rounded-xl p-2 flex flex-col items-center hover:border-blue-500 transition">
-                    <img src="images/atelier.jpeg" alt="Pack Consommables" class="w-full h-28 object-contain bg-transparent rounded-lg">
-                    <span class="text-[11px] text-white mt-2 text-center">Pack Consommables</span>
-                </div>
+            <div class="space-y-2">
+                <h2 class="text-lg font-bold uppercase tracking-wider text-white">Page de test</h2>
+                <p class="text-xs text-gray-300 leading-relaxed font-light">
+                    Les prix et packs sont non officiels, il s'agit d'un test de mise en page. Les prix et packs réels arrivent sous peu. Merci de ne pas commander.
+                </p>
             </div>
-            <button onclick="closeGalleryModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-medium transition">Fermer</button>
+            <button onclick="closeTestPopup()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3.5 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
+                J'ai compris
+            </button>
         </div>
     </div>
 
-    <!-- LIGHTBOX POUR OUVRIR EN GRAND -->
-    <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightboxModal()">
+    <!-- MODAL GALERIE PRODUITS -->
+    <div id="gallery-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
+            <div class="flex justify-between items-center pb-4 border-b border-brand-border">
+                <h3 class="font-bold text-xs uppercase tracking-widest text-white">Photos de nos produits</h3>
+                <button onclick="closeGalleryModal()" class="text-gray-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-1">
+                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
+                    <img src="images/bannier.jpeg" alt="Pack Eau & Boissons" class="w-full h-28 object-contain">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Eau & Boissons</span>
+                </div>
+                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
+                    <img src="images/atelier.jpeg" alt="Pack Entretien" class="w-full h-28 object-contain">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Entretien & Hygiène</span>
+                </div>
+                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
+                    <img src="images/bannier.jpeg" alt="Pack Épicerie" class="w-full h-28 object-contain">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Épicerie</span>
+                </div>
+                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
+                    <img src="images/atelier.jpeg" alt="Pack Consommables" class="w-full h-28 object-contain">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Consommables</span>
+                </div>
+            </div>
+            <button onclick="closeGalleryModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightboxModal()">
         <div class="relative max-w-4xl w-full flex flex-col items-center">
             <button onclick="closeLightboxModal()" class="absolute -top-10 right-0 text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <img id="lightbox-img" src="" alt="Agrandissement produit" class="max-h-[80vh] max-w-full object-contain rounded-xl bg-transparent">
+            <img id="lightbox-img" src="" alt="Agrandissement produit" class="max-h-[80vh] max-w-full object-contain border border-brand-border">
         </div>
     </div>
 
-    <!-- MODAL DE SUCCÈS COMMANDE -->
-    <div id="modal-success" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#384345] border border-blue-900/30 p-8 rounded-2xl max-w-md w-full text-center shadow-xl space-y-4">
-            <h2 class="text-lg font-semibold text-white">Commande enregistrée</h2>
-            <p class="text-xs text-blue-200">Montant à régler à la livraison : <span id="modal-price-tag" class="font-semibold text-white">0.00€</span></p>
-            <p class="text-[11px] text-blue-300 bg-[#2f383a] p-3 rounded-lg text-left">Nous vous contacterons très rapidement pour convenir d'une date de livraison.</p>
-            <button onclick="closeModalAndReset()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-medium">Fermer</button>
+    <!-- MODAL SUCCÈS -->
+    <div id="modal-success" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-md w-full text-center shadow-2xl space-y-6">
+            <div class="w-12 h-12 bg-brand-red/10 border border-brand-red text-brand-red flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-lg font-bold uppercase tracking-wider text-white">Commande enregistrée</h2>
+            <p class="text-xs text-gray-300">Montant à régler à la livraison : <span id="modal-price-tag" class="font-extrabold text-white">0.00€</span></p>
+            <p class="text-[11px] text-gray-400 bg-black/60 p-4 border border-brand-border text-left leading-relaxed">Nous vous contacterons très rapidement pour convenir d'une date de livraison.</p>
+            <button onclick="closeModalAndReset()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
         </div>
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
+    <footer class="bg-black text-gray-500 py-10 text-center text-xs uppercase tracking-widest border-t border-brand-border mt-auto space-y-3">
         <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
+        <div class="flex justify-center gap-6 text-[11px]">
+            <a href="mentions-legales.html" class="hover:text-brand-red transition-colors">Mentions Légales</a>
+            <a href="cgv.html" class="hover:text-brand-red transition-colors">CGV</a>
+        </div>
     </footer>
 
     <!-- SCRIPTS -->
@@ -197,6 +227,11 @@
         let catalogProducts = [];
         let selectedCart = {};
         let currentCalculatedTotal = 0;
+
+        // Fonction pour fermer la pop-up de test
+        function closeTestPopup() {
+            document.getElementById('test-popup').classList.add('hidden');
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('products-catalog-container');
@@ -208,26 +243,26 @@
                 
                 catalogProducts.forEach(prod => {
                     container.innerHTML += `
-                        <div class="bg-[#384345] border border-blue-900/30 rounded-xl p-4 flex items-center justify-between hover:border-blue-700/50 transition">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-lg bg-[#2f383a] text-blue-400 flex items-center justify-center text-xs">
+                        <div class="bg-brand-card border border-brand-border p-5 flex items-center justify-between hover:border-brand-red/50 transition duration-300">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-sm">
                                     <i class="fa-solid ${prod.icon || 'fa-box'}"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-medium text-xs text-white">${prod.name}</h4>
-                                    <span class="text-[11px] text-blue-300">${Number(prod.price_week).toFixed(2)} € / sem.</span>
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-white">${prod.name}</h4>
+                                    <span class="text-[11px] text-gray-400">${Number(prod.price_week).toFixed(2)} € / sem.</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2 bg-[#2f383a] p-1 rounded-lg border border-blue-900/20">
-                                <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-6 h-6 rounded bg-[#384345] text-blue-300 text-xs font-bold hover:bg-[#252c2e]">-</button>
-                                <span id="qty-${prod.id}" class="text-xs font-semibold w-4 text-center text-white">0</span>
-                                <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-6 h-6 rounded bg-blue-600 text-white text-xs font-bold hover:bg-blue-500">+</button>
+                            <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border">
+                                <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-7 h-7 bg-brand-card text-gray-300 text-xs font-bold hover:bg-brand-border hover:text-white transition">-</button>
+                                <span id="qty-${prod.id}" class="text-xs font-bold w-5 text-center text-white">0</span>
+                                <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-7 h-7 bg-brand-red text-white text-xs font-bold hover:bg-red-700 transition">+</button>
                             </div>
                         </div>
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<div class="text-red-400 text-xs bg-red-950/40 p-4 rounded-xl">Erreur de chargement du catalogue.</div>`;
+                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider">Erreur de chargement du catalogue.</div>`;
             }
         });
 
@@ -254,7 +289,7 @@
 
             const keys = Object.keys(selectedCart);
             if (keys.length === 0) {
-                cartContainer.innerHTML = '<p class="text-blue-400/60 italic text-center py-4">Votre panier est vide.</p>';
+                cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
                 document.getElementById('cart-total').textContent = '0.00 €';
                 document.getElementById('items-count').textContent = '0 article';
                 currentCalculatedTotal = 0;
@@ -267,9 +302,9 @@
                 weeklyTotal += itemWeeklyPrice;
                 totalItemsCount += item.quantity;
                 cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-1 border-b border-blue-900/20 last:border-0">
-                        <span class="text-blue-200">${item.quantity}x ${item.name}</span>
-                        <span class="font-medium text-white">${itemWeeklyPrice.toFixed(2)} €</span>
+                    <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
+                        <span class="text-gray-300">${item.quantity}x ${item.name}</span>
+                        <span class="font-bold text-white">${itemWeeklyPrice.toFixed(2)} €</span>
                     </div>
                 `;
             });
@@ -314,20 +349,13 @@
             updateCartDisplay();
         }
 
-        // Gestion de la galerie modale produits
-        function openGalleryModal() {
-            document.getElementById('gallery-modal').classList.remove('hidden');
-        }
-        function closeGalleryModal() {
-            document.getElementById('gallery-modal').classList.add('hidden');
-        }
+        function openGalleryModal() { document.getElementById('gallery-modal').classList.remove('hidden'); }
+        function closeGalleryModal() { document.getElementById('gallery-modal').classList.add('hidden'); }
         function openLightbox(imgSrc) {
             document.getElementById('lightbox-img').src = imgSrc;
             document.getElementById('lightbox-modal').classList.remove('hidden');
         }
-        function closeLightboxModal() {
-            document.getElementById('lightbox-modal').classList.add('hidden');
-        }
+        function closeLightboxModal() { document.getElementById('lightbox-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>

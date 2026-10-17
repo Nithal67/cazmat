@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAZMAT | Service de Proximité & Atelier Technique à Duppigheim</title>
+    <title>CAZMAT | Service de Proximité & Atelier Technique</title>
+    <!-- Polices Google Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#F57927',      /* Rouge Alfa */
+                            dark: '#0A0A0A',     /* Noir profond */
+                            card: '#121212',     /* Noir carte */
+                            border: '#262626'   /* Gris bordure */
+                        }
                     }
                 }
             }
@@ -21,55 +30,93 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="background-color: #1A1D24;" class="text-blue-400 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-brand-dark text-gray-200 font-sans antialiased flex flex-col min-h-screen">
 
-    <!-- NAVIGATION -->
-    <header class="bg-[#000000]/90 backdrop-blur-md sticky top-0 z-40 border-b border-blue-900/20">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3">
-                <img src="images/logo.png" alt="Logo CAZMAT" class="w-8 h-8 object-contain">
-                <span class="font-semibold tracking-tight text-white text-lg">CAZMAT</span>
+    <!-- NAVIGATION STYLE ALFA ROMEO -->
+    <header class="bg-black/80 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-9 h-9 object-contain group-hover:scale-105 transition-transform duration-300">
+                <span class="font-bold tracking-wider text-white text-xl uppercase">CAZMAT</span>
             </a>
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200">
-                <a href="index.html" class="text-blue-400 font-semibold">Accueil</a>
-                <a href="packs.html" class="hover:text-blue-400 transition-colors">Pack Essentiels</a>
-                <a href="maintenance.html" class="hover:text-blue-400 transition-colors">Maintenance</a>
-                <a href="faq.html" class="hover:text-blue-400 transition-colors">FAQ</a>
-                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-gray-300">
+                <a href="index.html" class="text-brand-red font-bold">Accueil</a>
+                <a href="packs.html" class="hover:text-brand-red transition-colors">Pack Essentiels</a>
+                <a href="maintenance.html" class="hover:text-brand-red transition-colors">Maintenance</a>
+                <a href="faq.html" class="hover:text-brand-red transition-colors">FAQ</a>
+                <a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a>
             </nav>
-            <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+            <a href="dashboard.html" class="border border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-5 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition duration-300">
                 Résilier
             </a>
         </div>
     </header>
 
-    <!-- HERO (TEXTE CENTRÉ ET IMAGE EN DESSOUS) -->
-    <section class="max-w-4xl mx-auto px-6 py-16 text-center space-y-8">
-        <div class="space-y-4 max-w-2xl mx-auto">
-            <h1 class="text-4xl font-semibold tracking-tight text-white leading-tight">
-                Simplifiez votre quotidien, sans vous déplacer.
-            </h1>
-            <p class="text-blue-200 text-sm leading-relaxed">
-                Recevez chaque semaine vos produits de première nécessité à domicile et profitez d'un atelier local pour entretenir et réparer vos équipements.
-            </p>
-            <div class="flex justify-center gap-3 pt-2">
-                <a href="packs.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-xs font-medium transition shadow-sm">
-                    Composer un Pack
-                </a>
-                <a href="maintenance.html" class="bg-[#384345] hover:bg-[#303a3c] border border-blue-900/20 text-blue-200 px-6 py-3 rounded-xl text-xs font-medium transition">
-                    Atelier Technique
-                </a>
+    <!-- HERO SECTION IMMERSIVE -->
+    <main class="flex-grow">
+        <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-brand-border">
+            <!-- Image de fond avec overlay sombre -->
+            <div class="absolute inset-0 z-0">
+                <img src="images/bannier.jpeg" alt="CAZMAT" class="w-full h-full object-cover opacity-40 filter brightness-75">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/60 to-transparent"></div>
             </div>
-        </div>
 
-        <div class="rounded-2xl overflow-hidden border border-blue-900/30 bg-[#384345] shadow-sm max-w-3xl mx-auto">
-            <img src="images/bannier.jpeg" alt="CAZMAT" class="object-cover w-full h-[320px] md:h-[400px]">
-        </div>
-    </section>
+            <div class="relative z-10 max-w-4xl mx-auto px-6 py-24 text-center space-y-8">
+                <span class="inline-block text-xs font-bold uppercase tracking-[0.2em] text-brand-red border border-brand-red/40 px-4 py-1.5 bg-black/50">
+                    Atelier Technique & Services • Duppigheim
+                </span>
+                <h1 class="text-4xl md:text-6xl font-extrabold uppercase tracking-tight text-white leading-none">
+                    L'Excellence du Service de Proximité.
+                </h1>
+                <p class="text-gray-300 text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed">
+                    Recevez vos produits essentiels directement chez vous et confiez vos réparations à un atelier d'expertise locale.
+                </p>
 
-    <!-- FOOTER -->
-    <footer class="bg-[#384345] text-blue-300 py-8 text-center text-xs border-t border-blue-900/20 mt-auto">
+                <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                    <a href="packs.html" class="bg-brand-red hover:bg-red-700 text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
+                        Composer un Pack
+                    </a>
+                    <a href="maintenance.html" class="bg-transparent border border-white hover:border-brand-red hover:text-brand-red text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition duration-300">
+                        Atelier Technique
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION CARACTÉRISTIQUES / SERVICES -->
+        <section class="max-w-7xl mx-auto px-6 py-20">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Carte 1 -->
+                <div class="bg-brand-card border border-brand-border p-8 hover:border-brand-red/50 transition duration-300 group">
+                    <div class="text-brand-red text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <h3 class="text-lg font-bold uppercase tracking-wider text-white mb-2">Livraison à domicile</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed font-light">
+                        Packs essentiels d'épicerie, boisson et produits ménagers livrés chez vous sans engagement.
+                    </p>
+                </div>
+                <!-- Carte 2 -->
+                <div class="bg-brand-card border border-brand-border p-8 hover:border-brand-red/50 transition duration-300 group">
+                    <div class="text-brand-red text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wrench"></i>
+                    </div>
+                    <h3 class="text-lg font-bold uppercase tracking-wider text-white mb-2">Atelier de réparation</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed font-light">
+                        Un service technique local pour la maintenance et la réparation de vos équipements mécaniques et électroniques.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<footer class="bg-black text-gray-500 py-10 text-center text-xs uppercase tracking-widest border-t border-brand-border mt-auto space-y-3">
         <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
+        <div class="flex justify-center gap-6 text-[11px]">
+            <a href="mentions-legales.html" class="hover:text-brand-red transition-colors">Mentions Légales</a>
+            <a href="cgv.html" class="hover:text-brand-red transition-colors">CGV</a>
+        </div>
     </footer>
+
 </body>
 </html>
