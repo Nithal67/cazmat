@@ -22,13 +22,13 @@
         "name": "Flacon 1L liquide vaiselle citron",
         "price_week": 2.50,
         "icon": "fa-basket-shopping"
-    }
+    },
     {
         "id": 5,
         "name": "Flacon 1L netoyant sol",
         "price_week": 2.50,
         "icon": "fa-basket-shopping"
-    }
+    },
     {
         "id": 6,
         "name": "Flacon 1L savon main amande",
