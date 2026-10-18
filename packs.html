@@ -39,7 +39,7 @@
             </a>
             <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-gray-300">
                 <a href="index.html" class="hover:text-brand-red transition-colors">Accueil</a>
-                <a href="packs.html" class="text-brand-red font-bold">Pack ménager</a>
+                <a href="packs.html" class="text-brand-red font-bold">Pack Essentiels</a>
                 <a href="maintenance.html" class="hover:text-brand-red transition-colors">Maintenance</a>
                 <a href="faq.html" class="hover:text-brand-red transition-colors">FAQ</a>
                 <a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a>
@@ -54,8 +54,9 @@
     <main class="flex-grow py-16 px-6 max-w-7xl mx-auto w-full">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-brand-border pb-8">
             <div class="space-y-2">
-                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">composez votre pack</h1>
-                <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos articles. Paiement unique à la livraison.</p>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">Sélection Exclusive</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composer votre pack</h1>
+                <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos articles. Paiement unique à la livraison, sans engagement.</p>
             </div>
             <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
                 <i class="fa-solid fa-images text-brand-red"></i>
@@ -88,27 +89,38 @@
 
                 <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-5 pt-2">
                     <div class="bg-black/60 p-4 border border-brand-border space-y-3">
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Fréquence du montant :</label>
-                        <div class="grid grid-cols-2 gap-2">
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Type de commande :</label>
+                        <div class="grid grid-cols-3 gap-2">
                             <label class="cursor-pointer">
-                                <input type="radio" name="price_period" value="hebdo" checked onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-2 px-3 text-[11px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                    Hebdomadaire
+                                <input type="radio" name="order_type" value="unique" checked onchange="updateCartDisplay()" class="peer sr-only">
+                                <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
+                                    Unique
                                 </div>
                             </label>
                             <label class="cursor-pointer">
-                                <input type="radio" name="price_period" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-2 px-3 text-[11px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                    Mensuel (x4)
+                                <input type="radio" name="order_type" value="hebdo" onchange="updateCartDisplay()" class="peer sr-only">
+                                <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
+                                    Hebdo.
                                 </div>
                             </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="order_type" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
+                                <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
+                                    Mensuel
+                                </div>
+                            </label>
+                        </div>
+                        <!-- Fiche d'information dynamique -->
+                        <div id="info-fiche" class="text-[11px] text-gray-300 bg-brand-card p-3 border border-brand-border flex items-start gap-2.5 mt-2">
+                            <i class="fa-solid fa-circle-info text-brand-red mt-0.5"></i>
+                            <span id="info-text">Une seule commande, pas d'abonnement</span>
                         </div>
                     </div>
 
                     <div class="flex justify-between items-center py-4 px-5 bg-black/60 border border-brand-border">
                         <div>
                             <span class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Total à la livraison</span>
-                            <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Prix hebdomadaire</span>
+                            <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Montant total</span>
                         </div>
                         <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
                     </div>
@@ -142,24 +154,6 @@
         </div>
     </main>
 
-    <!-- POP-UP AVERTISSEMENT PAGE DE TEST -->
-    <div id="test-popup" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-brand-card border border-brand-border p-8 max-w-lg w-full shadow-2xl space-y-6 text-center">
-            <div class="w-12 h-12 bg-brand-red/10 border border-brand-red text-brand-red flex items-center justify-center mx-auto text-lg">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <div class="space-y-2">
-                <h2 class="text-lg font-bold uppercase tracking-wider text-white">Page de test</h2>
-                <p class="text-xs text-gray-300 leading-relaxed font-light">
-                    Les prix et packs sont non officiels, il s'agit d'un test de mise en page. Les prix et packs réels arrivent sous peu. Merci de ne pas commander.
-                </p>
-            </div>
-            <button onclick="closeTestPopup()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3.5 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
-                J'ai compris
-            </button>
-        </div>
-    </div>
-
     <!-- MODAL GALERIE PRODUITS -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
@@ -170,19 +164,19 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-1">
                 <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
                     <img src="images/bannier.jpeg" alt="Pack Eau & Boissons" class="w-full h-28 object-contain">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Rouleau 10 sacs poubelles de 30L</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Eau & Boissons</span>
                 </div>
                 <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
                     <img src="images/atelier.jpeg" alt="Pack Entretien" class="w-full h-28 object-contain">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Flacon 1L liquide vaisselle</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Entretien & Hygiène</span>
                 </div>
                 <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
                     <img src="images/bannier.jpeg" alt="Pack Épicerie" class="w-full h-28 object-contain">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Flacon 1L savon main</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Épicerie</span>
                 </div>
                 <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
                     <img src="images/atelier.jpeg" alt="Pack Consommables" class="w-full h-28 object-contain">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Rouleau essui-tout</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Consommables</span>
                 </div>
             </div>
             <button onclick="closeGalleryModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
@@ -227,11 +221,6 @@
         let selectedCart = {};
         let currentCalculatedTotal = 0;
 
-        // Fonction pour fermer la pop-up de test
-        function closeTestPopup() {
-            document.getElementById('test-popup').classList.add('hidden');
-        }
-
         document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('products-catalog-container');
             try {
@@ -249,7 +238,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-xs uppercase tracking-wider text-white">${prod.name}</h4>
-                                    <span class="text-[11px] text-gray-400">${Number(prod.price_week).toFixed(2)} € / sem.</span>
+                                    <span class="text-[11px] text-gray-400">${Number(prod.price_week).toFixed(2)} €</span>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border">
@@ -281,10 +270,24 @@
 
         function updateCartDisplay() {
             const cartContainer = document.getElementById('cart-items');
-            const periodType = document.querySelector('input[name="price_period"]:checked').value;
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
             const periodLabel = document.getElementById('period-label');
+            const infoText = document.getElementById('info-text');
+            
             cartContainer.innerHTML = '';
-            let weeklyTotal = 0, totalItemsCount = 0;
+            let baseTotal = 0, totalItemsCount = 0;
+
+            // Mise à jour de la fiche d'information dynamique
+            if (orderType === 'unique') {
+                infoText.textContent = "Une seule commande, pas d'abonnement";
+                periodLabel.textContent = "Commande unique";
+            } else if (orderType === 'hebdo') {
+                infoText.textContent = "Recevez chaque semaine votre commande";
+                periodLabel.textContent = "Tarif hebdomadaire";
+            } else if (orderType === 'mensuel') {
+                infoText.textContent = "Recevez chaque mois votre commande";
+                periodLabel.textContent = "Tarif mensuel";
+            }
 
             const keys = Object.keys(selectedCart);
             if (keys.length === 0) {
@@ -297,20 +300,19 @@
 
             keys.forEach(id => {
                 const item = selectedCart[id];
-                const itemWeeklyPrice = item.price_week * item.quantity;
-                weeklyTotal += itemWeeklyPrice;
+                const itemPrice = item.price_week * item.quantity;
+                baseTotal += itemPrice;
                 totalItemsCount += item.quantity;
                 cartContainer.innerHTML += `
                     <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
                         <span class="text-gray-300">${item.quantity}x ${item.name}</span>
-                        <span class="font-bold text-white">${itemWeeklyPrice.toFixed(2)} €</span>
+                        <span class="font-bold text-white">${itemPrice.toFixed(2)} €</span>
                     </div>
                 `;
             });
 
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
-            currentCalculatedTotal = periodType === 'mensuel' ? weeklyTotal * 4 : weeklyTotal;
-            periodLabel.textContent = periodType === 'mensuel' ? 'Estimation mensuelle (x4)' : 'Prix hebdomadaire';
+            currentCalculatedTotal = baseTotal;
             document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
         }
 
