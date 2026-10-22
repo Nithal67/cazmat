@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAZMAT | Composer mon pack</title>
+    <title>CAZMAT | Packs & Composition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -50,13 +50,15 @@
         </div>
     </header>
 
-    <!-- SECTION PRINCIPALE -->
-    <main class="flex-grow py-16 px-6 max-w-7xl mx-auto w-full">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-brand-border pb-8">
+    <!-- MAIN -->
+    <main class="flex-grow py-12 px-6 max-w-7xl mx-auto w-full space-y-10">
+        
+        <!-- EN-TÊTE -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-8">
             <div class="space-y-2">
-                <span class="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">Sélection Exclusive</span>
-                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composer votre pack</h1>
-                <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos articles. Paiement unique à la livraison, sans engagement.</p>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">Service de Proximité</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Nos Packs Essentiels</h1>
+                <p class="text-gray-400 text-xs md:text-sm font-light">Choisissez un pack clé en main ou composez sur-mesure votre sélection.</p>
             </div>
             <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
                 <i class="fa-solid fa-images text-brand-red"></i>
@@ -64,11 +66,49 @@
             </button>
         </div>
 
-        <div class="grid lg:grid-cols-12 gap-12 items-start">
+        <!-- BANNIÈRE GARANTIE QUALITÉ PRO -->
+        <div class="bg-brand-card border border-brand-border p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-white">Qualité Professionnelle Garantie</h3>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed">
+                        Tous nos produits proviennent de fournisseurs professionnels certifiés pour vous garantir une efficacité et une qualité irréprochables.
+                    </p>
+                </div>
+            </div>
+            <div class="text-[10px] uppercase font-bold tracking-widest text-brand-red bg-black/60 px-4 py-2 border border-brand-border shrink-0">
+                Minimum : 5 € (Hebdo) / 10 € (Unique & Mensuel)
+            </div>
+        </div>
+
+        <!-- ONGLETS DE NAVIGATION DE SELECTION -->
+        <div class="flex border-b border-brand-border">
+            <button id="tab-prefaits-btn" onclick="switchTab('prefaits')" class="py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300">
+                <i class="fa-solid fa-box-open mr-2 text-brand-red"></i> Packs Clé en Main
+            </button>
+            <button id="tab-surmesure-btn" onclick="switchTab('surmesure')" class="py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300">
+                <i class="fa-solid fa-sliders mr-2 text-brand-red"></i> Créer Mon Pack
+            </button>
+        </div>
+
+        <!-- VUE 1 : PACKS PRÉFAITS -->
+        <div id="view-prefaits" class="space-y-6">
+            <div id="prefaits-container" class="grid md:grid-cols-3 gap-8">
+                <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider col-span-3">
+                    <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement des packs préfaits...
+                </div>
+            </div>
+        </div>
+
+        <!-- VUE 2 : CRÉER MON PACK (CATALOGUE + PANIER) -->
+        <div id="view-surmesure" class="hidden grid lg:grid-cols-12 gap-12 items-start">
             
             <!-- CATALOGUE -->
             <div class="lg:col-span-7 space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400">Catalogue des produits</h2>
+                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400">Catalogue des produits individuels</h2>
                 <div id="products-catalog-container" class="space-y-4">
                     <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider">
                         <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement du catalogue...
@@ -111,7 +151,6 @@
                             </label>
                         </div>
                         
-                        <!-- Fiche d'information dynamique -->
                         <div id="info-fiche" class="text-[11px] text-gray-300 bg-brand-card p-3 border border-brand-border flex items-start gap-2.5 mt-2">
                             <i class="fa-solid fa-circle-info text-brand-red mt-0.5"></i>
                             <span id="info-text">Une seule commande, pas d'abonnement</span>
@@ -124,6 +163,12 @@
                             <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Commande unique</span>
                         </div>
                         <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
+                    </div>
+
+                    <!-- ALERTE COMMANDE MINIMUM DYNAMIQUE -->
+                    <div id="min-order-alert" class="p-3 bg-brand-red/10 border border-brand-red/40 text-brand-red text-[11px] font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span id="min-alert-text">Commande minimum requise.</span>
                     </div>
 
                     <div class="space-y-4 pt-2">
@@ -147,7 +192,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
+                    <button type="submit" id="submit-order-btn" disabled class="w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300">
                         Valider la commande
                     </button>
                 </form>
@@ -170,14 +215,6 @@
                 <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
                     <img src="images/atelier.jpeg" alt="Pack Entretien" class="w-full h-28 object-contain">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Entretien & Hygiène</span>
-                </div>
-                <div onclick="openLightbox('images/bannier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
-                    <img src="images/bannier.jpeg" alt="Pack Épicerie" class="w-full h-28 object-contain">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Épicerie</span>
-                </div>
-                <div onclick="openLightbox('images/atelier.jpeg')" class="cursor-pointer bg-black/60 border border-brand-border hover:border-brand-red p-3 flex flex-col items-center transition duration-300">
-                    <img src="images/atelier.jpeg" alt="Pack Consommables" class="w-full h-28 object-contain">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-white mt-2 text-center">Pack Consommables</span>
                 </div>
             </div>
             <button onclick="closeGalleryModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
@@ -210,7 +247,7 @@
         <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
         <div class="flex justify-center gap-6 text-[11px]">
             <a href="mentions-legales.html" class="hover:text-brand-red transition-colors">Mentions Légales</a>
-            <a href="cgv.html" class="hover:text-brand-red transition-colors">CGV</a>
+            <a href="mentions-legales.html" class="hover:text-brand-red transition-colors">CGV</a>
         </div>
     </footer>
 
@@ -219,15 +256,94 @@
         emailjs.init("oSstg-IAyj_8SX1Ep");
 
         let catalogProducts = [];
+        let prefaitsPacks = [];
         let selectedCart = {};
         let currentCalculatedTotal = 0;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            loadPrefaitsPacks();
+            loadCatalogProducts();
+        });
+
+        function switchTab(tab) {
+            const btnPrefaits = document.getElementById('tab-prefaits-btn');
+            const btnSurmesure = document.getElementById('tab-surmesure-btn');
+            const viewPrefaits = document.getElementById('view-prefaits');
+            const viewSurmesure = document.getElementById('view-surmesure');
+
+            if (tab === 'prefaits') {
+                btnPrefaits.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300";
+                btnSurmesure.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300";
+                viewPrefaits.classList.remove('hidden');
+                viewSurmesure.classList.add('hidden');
+            } else {
+                btnSurmesure.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300";
+                btnPrefaits.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300";
+                viewSurmesure.classList.remove('hidden');
+                viewPrefaits.classList.add('hidden');
+            }
+        }
+
+        async function loadPrefaitsPacks() {
+            const container = document.getElementById('prefaits-container');
+            try {
+                const response = await fetch('packs-prefaits.json');
+                prefaitsPacks = await response.json();
+                container.innerHTML = '';
+
+                prefaitsPacks.forEach(pack => {
+                    const itemsList = pack.items.map(i => `<li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-red text-[10px]"></i> ${i}</li>`).join('');
+                    
+                    container.innerHTML += `
+                        <div class="bg-brand-card border border-brand-border p-8 space-y-6 hover:border-brand-red/50 transition duration-300 flex flex-col justify-between group">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-start">
+                                    <div class="w-12 h-12 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-xl">
+                                        <i class="fa-solid ${pack.icon}"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red bg-black/60 px-3 py-1 border border-brand-border">${pack.badge}</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-sm uppercase tracking-wider text-white">${pack.name}</h3>
+                                    <p class="text-xs text-gray-400 font-light mt-1">${pack.description}</p>
+                                </div>
+                                <ul class="text-xs text-gray-300 space-y-2 border-t border-brand-border pt-4">
+                                    ${itemsList}
+                                </ul>
+                            </div>
+                            <div class="space-y-4 border-t border-brand-border pt-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Prix pack</span>
+                                    <span class="text-xl font-extrabold text-white">${Number(pack.price).toFixed(2)} €</span>
+                                </div>
+                                <button onclick="selectPrefaitPack('${pack.id}')" class="w-full bg-brand-red hover:bg-red-700 text-white py-3.5 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
+                                    Choisir ce pack
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider col-span-3">Impossible de charger les packs préfaits.</div>`;
+            }
+        }
+
+        function selectPrefaitPack(packId) {
+            const pack = prefaitsPacks.find(p => p.id === packId);
+            if (!pack) return;
+            
+            selectedCart = {};
+            selectedCart[pack.id] = { id: pack.id, name: pack.name, price_week: pack.price, quantity: 1 };
+            
+            switchTab('surmesure');
+            updateCartDisplay();
+        }
+
+        async function loadCatalogProducts() {
             const container = document.getElementById('products-catalog-container');
             try {
                 const response = await fetch('products.json');
-                const data = await response.json();
-                catalogProducts = data;
+                catalogProducts = await response.json();
                 container.innerHTML = '';
                 
                 catalogProducts.forEach(prod => {
@@ -253,7 +369,7 @@
             } catch (err) {
                 container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider">Erreur de chargement du catalogue.</div>`;
             }
-        });
+        }
 
         function updateCart(productId, delta) {
             const prod = catalogProducts.find(p => p.id === productId);
@@ -262,9 +378,11 @@
             selectedCart[productId].quantity += delta;
             if (selectedCart[productId].quantity <= 0) {
                 delete selectedCart[productId];
-                document.getElementById(`qty-${productId}`).textContent = '0';
+                const qtyEl = document.getElementById(`qty-${productId}`);
+                if (qtyEl) qtyEl.textContent = '0';
             } else {
-                document.getElementById(`qty-${productId}`).textContent = selectedCart[productId].quantity;
+                const qtyEl = document.getElementById(`qty-${productId}`);
+                if (qtyEl) qtyEl.textContent = selectedCart[productId].quantity;
             }
             updateCartDisplay();
         }
@@ -274,11 +392,16 @@
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
             const periodLabel = document.getElementById('period-label');
             const infoText = document.getElementById('info-text');
+            const submitBtn = document.getElementById('submit-order-btn');
+            const minAlert = document.getElementById('min-order-alert');
+            const minAlertText = document.getElementById('min-alert-text');
             
             cartContainer.innerHTML = '';
             let itemsTotal = 0, totalItemsCount = 0;
 
-            // Mise à jour de la fiche d'information
+            // Seuil de commande minimum (5€ si hebdo, sinon 10€)
+            const minOrderAmount = orderType === 'hebdo' ? 5.00 : 10.00;
+
             if (orderType === 'unique') {
                 infoText.textContent = "Une seule commande, pas d'abonnement";
                 periodLabel.textContent = "Commande unique";
@@ -296,6 +419,11 @@
                 document.getElementById('cart-total').textContent = '0.00 €';
                 document.getElementById('items-count').textContent = '0 article';
                 currentCalculatedTotal = 0;
+                
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Votre panier est vide (minimum : ${minOrderAmount.toFixed(2)} €).`;
                 return;
             }
 
@@ -312,26 +440,32 @@
                 `;
             });
 
-            // Frais de livraison sous 10 euros
-            let shippingFee = 0;
-            if (itemsTotal > 0 && itemsTotal < 10) {
-                shippingFee = 5.00;
-                cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-1.5 border-t border-brand-border mt-2 pt-2 text-brand-red">
-                        <span class="font-semibold"><i class="fa-solid fa-truck text-[10px] mr-1"></i> Frais de livraison (&lt; 10€)</span>
-                        <span class="font-bold">+ 5.00 €</span>
-                    </div>
-                `;
-            }
-
+            currentCalculatedTotal = itemsTotal;
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
-            currentCalculatedTotal = itemsTotal + shippingFee;
             document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+
+            // VERIFICATION RÈGLE DU SEUIL DE COMMANDE
+            if (currentCalculatedTotal < minOrderAmount) {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Commande minimum de ${minOrderAmount.toFixed(2)} € requise (reste ${(minOrderAmount - currentCalculatedTotal).toFixed(2)} €).`;
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
+                minAlert.classList.add('hidden');
+            }
         }
 
         async function handleOrderSubmit(e) {
             e.preventDefault();
-            if (Object.keys(selectedCart).length === 0) return alert('Panier vide.');
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const minOrderAmount = orderType === 'hebdo' ? 5.00 : 10.00;
+
+            if (currentCalculatedTotal < minOrderAmount) {
+                return alert(`La commande doit atteindre un minimum de ${minOrderAmount.toFixed(2)} €.`);
+            }
+            
             const prenom = document.getElementById('client-prenom').value;
             const nom = document.getElementById('client-nom').value;
             const adresse = document.getElementById('client-adresse').value;
