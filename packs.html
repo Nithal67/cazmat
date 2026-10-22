@@ -66,7 +66,7 @@
             </button>
         </div>
 
-        <!-- BANNIÈRE GARANTIE QUALITÉ PRO -->
+        <!-- BANNIÈRE GARANTIE QUALITÉ PRO & LIVRAISON -->
         <div class="bg-brand-card border border-brand-border p-5 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-xl shrink-0">
@@ -79,8 +79,13 @@
                     </p>
                 </div>
             </div>
-            <div class="text-[10px] uppercase font-bold tracking-widest text-brand-red bg-black/60 px-4 py-2 border border-brand-border shrink-0">
-                Minimum : 5 € (Hebdo) / 10 € (Unique & Mensuel)
+            <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+                <div class="text-[10px] uppercase font-bold tracking-widest text-brand-red bg-black/60 px-4 py-2 border border-brand-border text-center">
+                    Livraison : 5.00 € (Fixe)
+                </div>
+                <div class="text-[10px] uppercase font-bold tracking-widest text-gray-400 bg-black/60 px-4 py-2 border border-brand-border text-center">
+                    Min. : 5 € (Hebdo) / 10 € (Autres)
+                </div>
             </div>
         </div>
 
@@ -123,7 +128,7 @@
                     <span id="items-count" class="text-[10px] font-bold uppercase tracking-wider text-brand-red bg-black/60 px-3 py-1 border border-brand-border">0 article</span>
                 </div>
 
-                <div id="cart-items" class="space-y-3 max-h-40 overflow-y-auto pr-1 text-xs text-gray-300">
+                <div id="cart-items" class="space-y-3 max-h-48 overflow-y-auto pr-1 text-xs text-gray-300">
                     <p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>
                 </div>
 
@@ -259,6 +264,7 @@
         let prefaitsPacks = [];
         let selectedCart = {};
         let currentCalculatedTotal = 0;
+        const SHIPPING_FEE = 5.00; // Frais de livraison fixes à 5 euros tout le temps
 
         document.addEventListener('DOMContentLoaded', async () => {
             loadPrefaitsPacks();
@@ -399,8 +405,8 @@
             cartContainer.innerHTML = '';
             let itemsTotal = 0, totalItemsCount = 0;
 
-            // Seuil de commande minimum (5€ si hebdo, sinon 10€)
-            const minOrderAmount = orderType === 'hebdo' ? 5.00 : 10.00;
+            // Seuil de sous-total minimum (hors frais de port) : 5€ si hebdo, sinon 10€
+            const minArticlesSubtotal = orderType === 'hebdo' ? 5.00 : 10.00;
 
             if (orderType === 'unique') {
                 infoText.textContent = "Une seule commande, pas d'abonnement";
@@ -423,7 +429,7 @@
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
                 minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Votre panier est vide (minimum : ${minOrderAmount.toFixed(2)} €).`;
+                minAlertText.textContent = `Votre panier est vide (minimum d'articles : ${minArticlesSubtotal.toFixed(2)} €).`;
                 return;
             }
 
@@ -440,16 +446,24 @@
                 `;
             });
 
-            currentCalculatedTotal = itemsTotal;
+            // Ajout systématique des 5 euros de livraison
+            cartContainer.innerHTML += `
+                <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-brand-red">
+                    <span class="font-bold"><i class="fa-solid fa-truck text-[10px] mr-1.5"></i> Frais de livraison fixes</span>
+                    <span class="font-bold">+ ${SHIPPING_FEE.toFixed(2)} €</span>
+                </div>
+            `;
+
+            currentCalculatedTotal = itemsTotal + SHIPPING_FEE;
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
             document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
 
-            // VERIFICATION RÈGLE DU SEUIL DE COMMANDE
-            if (currentCalculatedTotal < minOrderAmount) {
+            // VÉRIFICATION DU SEUIL MINIMUM D'ARTICLES (HORS FRAIS DE PORT)
+            if (itemsTotal < minArticlesSubtotal) {
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
                 minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Commande minimum de ${minOrderAmount.toFixed(2)} € requise (reste ${(minOrderAmount - currentCalculatedTotal).toFixed(2)} €).`;
+                minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} € d'articles).`;
             } else {
                 submitBtn.disabled = false;
                 submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
@@ -460,10 +474,11 @@
         async function handleOrderSubmit(e) {
             e.preventDefault();
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
-            const minOrderAmount = orderType === 'hebdo' ? 5.00 : 10.00;
+            const minArticlesSubtotal = orderType === 'hebdo' ? 5.00 : 10.00;
+            const itemsTotal = currentCalculatedTotal - SHIPPING_FEE;
 
-            if (currentCalculatedTotal < minOrderAmount) {
-                return alert(`La commande doit atteindre un minimum de ${minOrderAmount.toFixed(2)} €.`);
+            if (itemsTotal < minArticlesSubtotal) {
+                return alert(`Le sous-total des articles doit atteindre un minimum de ${minArticlesSubtotal.toFixed(2)} €.`);
             }
             
             const prenom = document.getElementById('client-prenom').value;
@@ -471,7 +486,7 @@
             const adresse = document.getElementById('client-adresse').value;
             const telephone = document.getElementById('client-telephone').value;
             const itemsSummary = Object.values(selectedCart).map(i => `${i.quantity}x ${i.name}`).join(', ');
-            const priceString = currentCalculatedTotal.toFixed(2) + ' €';
+            const priceString = currentCalculatedTotal.toFixed(2) + ' € (dont 5.00 € livraison)';
 
             emailjs.send("service_988n3j9", "template_p6qhejv", {
                 to_email: "thomanathan@outlook.fr",
