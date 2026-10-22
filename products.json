@@ -14,7 +14,7 @@
     {
         "id": 3,
         "name": "Rouleau essuie-tout 3 plis à l'unité",
-        "price_week": 1.50,
+        "price_week": 1.00,
         "icon": "fa-bottle-water"
     },
     {
@@ -32,7 +32,7 @@
     {
         "id": 6,
         "name": "Flacon 1L savon main amande",
-        "price_week": 3.50,
+        "price_week": 3.00,
         "icon": "fa-basket-shopping"
     }
 ]
