@@ -54,7 +54,8 @@
     <main class="flex-grow py-16 px-6 max-w-7xl mx-auto w-full">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-brand-border pb-8">
             <div class="space-y-2">
-                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composez votre pack</h1>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">Sélection Exclusive</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composer votre pack</h1>
                 <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos articles. Paiement unique à la livraison, sans engagement.</p>
             </div>
             <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
@@ -109,6 +110,7 @@
                                 </div>
                             </label>
                         </div>
+                        
                         <!-- Fiche d'information dynamique -->
                         <div id="info-fiche" class="text-[11px] text-gray-300 bg-brand-card p-3 border border-brand-border flex items-start gap-2.5 mt-2">
                             <i class="fa-solid fa-circle-info text-brand-red mt-0.5"></i>
@@ -119,7 +121,7 @@
                     <div class="flex justify-between items-center py-4 px-5 bg-black/60 border border-brand-border">
                         <div>
                             <span class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Total à la livraison</span>
-                            <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Montant total</span>
+                            <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Commande unique</span>
                         </div>
                         <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
                     </div>
@@ -274,9 +276,9 @@
             const infoText = document.getElementById('info-text');
             
             cartContainer.innerHTML = '';
-            let baseTotal = 0, totalItemsCount = 0;
+            let itemsTotal = 0, totalItemsCount = 0;
 
-            // Mise à jour de la fiche d'information dynamique
+            // Mise à jour de la fiche d'information
             if (orderType === 'unique') {
                 infoText.textContent = "Une seule commande, pas d'abonnement";
                 periodLabel.textContent = "Commande unique";
@@ -300,7 +302,7 @@
             keys.forEach(id => {
                 const item = selectedCart[id];
                 const itemPrice = item.price_week * item.quantity;
-                baseTotal += itemPrice;
+                itemsTotal += itemPrice;
                 totalItemsCount += item.quantity;
                 cartContainer.innerHTML += `
                     <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
@@ -310,8 +312,20 @@
                 `;
             });
 
+            // Frais de livraison sous 10 euros
+            let shippingFee = 0;
+            if (itemsTotal > 0 && itemsTotal < 10) {
+                shippingFee = 5.00;
+                cartContainer.innerHTML += `
+                    <div class="flex justify-between items-center text-xs py-1.5 border-t border-brand-border mt-2 pt-2 text-brand-red">
+                        <span class="font-semibold"><i class="fa-solid fa-truck text-[10px] mr-1"></i> Frais de livraison (&lt; 10€)</span>
+                        <span class="font-bold">+ 5.00 €</span>
+                    </div>
+                `;
+            }
+
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
-            currentCalculatedTotal = baseTotal;
+            currentCalculatedTotal = itemsTotal + shippingFee;
             document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
         }
 
