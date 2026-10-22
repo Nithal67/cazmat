@@ -2,37 +2,37 @@
     {
         "id": 1,
         "name": "Éponge à l'unité",
-        "price_week": 1.00,
+        "price_week": 1.50,
         "icon": "fa-basket-shopping"
     },
     {
         "id": 2,
         "name": "Rouleau papier toilette à l'unité",
-        "price_week": 0.50,
+        "price_week": 0.75,
         "icon": "fa-pump-soap"
     },
     {
         "id": 3,
         "name": "Rouleau essuie-tout 3 plis à l'unité",
-        "price_week": 1.00,
+        "price_week": 1.50,
         "icon": "fa-bottle-water"
     },
     {
         "id": 4,
         "name": "Flacon 1L liquide vaiselle citron",
-        "price_week": 2.50,
+        "price_week": 3.00,
         "icon": "fa-basket-shopping"
     },
     {
         "id": 5,
         "name": "Flacon 1L netoyant sol",
-        "price_week": 2.50,
+        "price_week": 3.00,
         "icon": "fa-basket-shopping"
     },
     {
         "id": 6,
         "name": "Flacon 1L savon main amande",
-        "price_week": 3.00,
+        "price_week": 3.50,
         "icon": "fa-basket-shopping"
     }
 ]
