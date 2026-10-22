@@ -1,0 +1,29 @@
+[
+    {
+        "id": "pack-1",
+        "name": "pack sec",
+        "description": "Le pack papier.",
+        "price": 10.00,
+        "icon": "fa-bottle-water",
+        "badge": "Incontournable",
+        "items": ["4x papier toilette", "3x essuie-tout 3 fuilles", "2x éponges"]
+    },
+    {
+        "id": "pack-2",
+        "name": "Pack mouillé",
+        "description": "Le pack de produit ménager",
+        "price": 10.00,
+        "icon": "fa-pump-soap",
+        "badge": "Qualité Pro",
+        "items": ["1x 1L savon main amande", "1x 1L nettoyant sol", "1x liquide vaisselle citron"]
+    },
+    {
+        "id": "pack-3",
+        "name": "Pack total",
+        "description": "Le pack complet",
+        "price": 15.00,
+        "icon": "fa-basket-shopping",
+        "badge": "Populaire",
+        "items": ["1x 1L savon main amande", "1x 1L nettoyant sol", "1x liquide vaisselle citron", "4x papier toilette", "3x essuie-tout 3 fuilles", "2x éponges"]
+    }
+]
