@@ -136,7 +136,6 @@
                             <span class="text-xs font-bold uppercase tracking-wider text-white">Je souhaite être livré par abonnement</span>
                         </label>
 
-                        <!-- Choix de la récurrence (masqué par défaut) -->
                         <div id="sub-options" class="hidden pt-2 border-t border-brand-border space-y-2">
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Fréquence d'abonnement :</label>
                             <div class="grid grid-cols-2 gap-2">
@@ -199,7 +198,35 @@
         </div>
     </main>
 
-    <!-- MODAL GALERIE PRODUITS -->
+    <!-- MODAL "EN SAVOIR PLUS" PRODUIT -->
+    <div id="product-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-lg w-full shadow-2xl space-y-6 relative">
+            <div class="flex justify-between items-center pb-4 border-b border-brand-border">
+                <h3 id="modal-prod-title" class="font-bold text-sm uppercase tracking-wider text-white">Détails du produit</h3>
+                <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="flex justify-center bg-black/60 p-4 border border-brand-border">
+                    <img id="modal-prod-img" src="" alt="" class="h-36 object-contain">
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Provenance</span>
+                    <p id="modal-prod-provenance" class="text-gray-300 bg-black/40 p-3 border border-brand-border">-</p>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Composants & Ingrédients</span>
+                    <p id="modal-prod-composants" class="text-gray-300 bg-black/40 p-3 border border-brand-border">-</p>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Informations de sécurité & Danger</span>
+                    <p id="modal-prod-danger" class="text-gray-300 bg-brand-red/10 border border-brand-red/30 p-3">-</p>
+                </div>
+            </div>
+            <button onclick="closeProductModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
+        </div>
+    </div>
+
+    <!-- MODAL GALERIE & LIGHTBOX -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
             <div class="flex justify-between items-center pb-4 border-b border-brand-border">
@@ -220,7 +247,6 @@
         </div>
     </div>
 
-    <!-- LIGHTBOX -->
     <div id="lightbox-modal" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightboxModal()">
         <div class="relative max-w-4xl w-full flex flex-col items-center">
             <button onclick="closeLightboxModal()" class="absolute -top-10 right-0 text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -260,6 +286,9 @@
         let currentCalculatedTotal = 0;
         let currentShippingFee = 0;
         let isDeliverable = true;
+
+        const DUPPIGHEIM_LAT = 48.5284;
+        const DUPPIGHEIM_LON = 7.5933;
 
         document.addEventListener('DOMContentLoaded', async () => {
             loadPrefaitsPacks();
@@ -360,17 +389,18 @@
                 
                 catalogProducts.forEach(prod => {
                     container.innerHTML += `
-                        <div class="bg-brand-card border border-brand-border p-5 flex items-center justify-between hover:border-brand-red/50 transition duration-300">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-sm">
-                                    <i class="fa-solid ${prod.icon || 'fa-box'}"></i>
-                                </div>
+                        <div class="bg-brand-card border border-brand-border p-5 flex flex-col sm:flex-row items-center justify-between gap-4 hover:border-brand-red/50 transition duration-300">
+                            <div class="flex items-center gap-4 w-full sm:w-auto">
+                                <img src="${prod.image || 'images/logo.png'}" alt="${prod.name}" class="w-14 h-14 object-contain bg-black/60 p-2 border border-brand-border shrink-0">
                                 <div>
                                     <h4 class="font-bold text-xs uppercase tracking-wider text-white">${prod.name}</h4>
-                                    <span class="text-[11px] text-gray-400">${Number(prod.price_week).toFixed(2)} €</span>
+                                    <span class="text-[11px] text-brand-red font-semibold block mt-0.5">${Number(prod.price_week).toFixed(2)} €</span>
+                                    <button type="button" onclick="openProductModal(${prod.id})" class="text-[10px] text-gray-400 hover:text-white underline mt-1 inline-block uppercase tracking-wider">
+                                        En savoir plus <i class="fa-solid fa-arrow-right text-[9px] ml-1"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border">
+                            <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border shrink-0">
                                 <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-7 h-7 bg-brand-card text-gray-300 text-xs font-bold hover:bg-brand-border hover:text-white transition">-</button>
                                 <span id="qty-${prod.id}" class="text-xs font-bold w-5 text-center text-white">0</span>
                                 <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-7 h-7 bg-brand-red text-white text-xs font-bold hover:bg-red-700 transition">+</button>
@@ -381,6 +411,23 @@
             } catch (err) {
                 container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider">Erreur de chargement du catalogue.</div>`;
             }
+        }
+
+        function openProductModal(prodId) {
+            const prod = catalogProducts.find(p => p.id === prodId);
+            if (!prod) return;
+
+            document.getElementById('modal-prod-title').textContent = prod.name;
+            document.getElementById('modal-prod-img').src = prod.image || 'images/logo.png';
+            document.getElementById('modal-prod-provenance').textContent = prod.provenance || 'Non renseignée';
+            document.getElementById('modal-prod-composants').textContent = prod.composants || 'Non renseignés';
+            document.getElementById('modal-prod-danger').textContent = prod.danger || 'Aucun danger particulier signalé.';
+            
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
         }
 
         function updateCart(productId, delta) {
@@ -399,144 +446,135 @@
             updateCartDisplay();
         }
 
-       // Fonction pour calculer la distance exacte en km entre deux points GPS (Formule d'Haversine)
-function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Rayon de la Terre en km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance en km
-}
+        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        }
 
-// Coordonnées GPS de Duppigheim (67120)
-const DUPPIGHEIM_LAT = 48.5284;
-const DUPPIGHEIM_LON = 7.5933;
-
-let searchTimeout = null;
-
-async function updateCartDisplay() {
-    const cartContainer = document.getElementById('cart-items');
-    const isSubChecked = document.getElementById('sub-toggle').checked;
-    const periodLabel = document.getElementById('period-label');
-    const submitBtn = document.getElementById('submit-order-btn');
-    const minAlert = document.getElementById('min-order-alert');
-    const minAlertText = document.getElementById('min-alert-text');
-    const addressInput = document.getElementById('client-adresse').value.trim();
-    
-    cartContainer.innerHTML = '';
-    let itemsTotal = 0, totalItemsCount = 0;
-    const minArticlesSubtotal = 5.00;
-
-    if (isSubChecked) {
-        const subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
-        periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
-    } else {
-        periodLabel.textContent = 'Commande unique';
-    }
-
-    const keys = Object.keys(selectedCart);
-    if (keys.length === 0) {
-        cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
-        document.getElementById('cart-total').textContent = '0.00 €';
-        document.getElementById('items-count').textContent = '0 article';
-        currentCalculatedTotal = 0;
-        
-        submitBtn.disabled = true;
-        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-        minAlert.classList.remove('hidden');
-        minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
-        return;
-    }
-
-    keys.forEach(id => {
-        const item = selectedCart[id];
-        const itemPrice = item.price_week * item.quantity;
-        itemsTotal += itemPrice;
-        totalItemsCount += item.quantity;
-        cartContainer.innerHTML += `
-            <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
-                <span class="text-gray-300">${item.quantity}x ${item.name}</span>
-                <span class="font-bold text-white">${itemPrice.toFixed(2)} €</span>
-            </div>
-        `;
-    });
-
-    document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
-
-    // Si pas d'adresse saisie
-    if (addressInput.length < 5) {
-        currentCalculatedTotal = itemsTotal;
-        document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-        submitBtn.disabled = true;
-        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-        minAlert.classList.remove('hidden');
-        minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
-        return;
-    }
-
-    // Calcul de la vraie distance géographique via l'API adresse.data.gouv.fr
-    try {
-        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
-        const data = await res.json();
-        
-        if (data.features && data.features.length > 0) {
-            const coords = data.features[0].geometry.coordinates;
-            const lon = coords[0];
-            const lat = coords[1];
+        async function updateCartDisplay() {
+            const cartContainer = document.getElementById('cart-items');
+            const isSubChecked = document.getElementById('sub-toggle').checked;
+            const periodLabel = document.getElementById('period-label');
+            const submitBtn = document.getElementById('submit-order-btn');
+            const minAlert = document.getElementById('min-order-alert');
+            const minAlertText = document.getElementById('min-alert-text');
+            const addressInput = document.getElementById('client-adresse').value.trim();
             
-            const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, lat, lon));
+            cartContainer.innerHTML = '';
+            let itemsTotal = 0, totalItemsCount = 0;
+            const minArticlesSubtotal = 5.00;
 
-            if (distance > 30) {
-                isDeliverable = false;
-                currentShippingFee = 0;
-                cartContainer.innerHTML += `
-                    <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
-                        Non livrable pour le moment, arrive prochainement (${distance} km)
-                    </div>
-                `;
-                currentCalculatedTotal = itemsTotal;
+            if (isSubChecked) {
+                const subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
+                periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
             } else {
-                isDeliverable = true;
-                if (distance <= 10) currentShippingFee = 1.50;
-                else if (distance <= 20) currentShippingFee = 3.00;
-                else currentShippingFee = 6.00;
+                periodLabel.textContent = 'Commande unique';
+            }
 
+            const keys = Object.keys(selectedCart);
+            if (keys.length === 0) {
+                cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
+                document.getElementById('cart-total').textContent = '0.00 €';
+                document.getElementById('items-count').textContent = '0 article';
+                currentCalculatedTotal = 0;
+                
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
+                return;
+            }
+
+            keys.forEach(id => {
+                const item = selectedCart[id];
+                const itemPrice = item.price_week * item.quantity;
+                itemsTotal += itemPrice;
+                totalItemsCount += item.quantity;
                 cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
-                        <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
-                        <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                    <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
+                        <span class="text-gray-300">${item.quantity}x ${item.name}</span>
+                        <span class="font-bold text-white">${itemPrice.toFixed(2)} €</span>
                     </div>
                 `;
-                currentCalculatedTotal = itemsTotal + currentShippingFee;
+            });
+
+            document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
+
+            if (addressInput.length < 5) {
+                currentCalculatedTotal = itemsTotal;
+                document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
+                const data = await res.json();
+                
+                if (data.features && data.features.length > 0) {
+                    const coords = data.features[0].geometry.coordinates;
+                    const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+
+                    if (distance > 30) {
+                        isDeliverable = false;
+                        currentShippingFee = 0;
+                        cartContainer.innerHTML += `
+                            <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
+                                Non livrable pour le moment, arrive prochainement (${distance} km)
+                            </div>
+                        `;
+                        currentCalculatedTotal = itemsTotal;
+                    } else {
+                        isDeliverable = true;
+                        if (distance <= 10) currentShippingFee = 1.50;
+                        else if (distance <= 20) currentShippingFee = 3.00;
+                        else currentShippingFee = 6.00;
+
+                        cartContainer.innerHTML += `
+                            <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
+                                <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
+                                <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                            </div>
+                        `;
+                        currentCalculatedTotal = itemsTotal + currentShippingFee;
+                    }
+                }
+            } catch (e) {
+                console.error("Erreur géocodage:", e);
+            }
+
+            document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+
+            if (addressInput.trim().length <= 3) {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
+            } else if (!isDeliverable) {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Zone non livrable pour le moment (> 30 km).`;
+            } else if (itemsTotal < minArticlesSubtotal) {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
+                minAlert.classList.add('hidden');
             }
         }
-    } catch (e) {
-        console.error("Erreur géocodage:", e);
-    }
 
-    document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-
-    // RÈGLES DE VALIDATION DU BOUTON
-    if (!isDeliverable) {
-        submitBtn.disabled = true;
-        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-        minAlert.classList.remove('hidden');
-        minAlertText.textContent = `Zone non livrable pour le moment (> 30 km).`;
-    } else if (itemsTotal < minArticlesSubtotal) {
-        submitBtn.disabled = true;
-        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-        minAlert.classList.remove('hidden');
-        minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
-    } else {
-        submitBtn.disabled = false;
-        submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
-        minAlert.classList.add('hidden');
-    }
-}
         async function handleOrderSubmit(e) {
             e.preventDefault();
             const minArticlesSubtotal = 5.00;
