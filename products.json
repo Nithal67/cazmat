@@ -3,48 +3,88 @@
         "id": 1,
         "name": "Éponge à l'unité",
         "price_week": 0.66,
+        "image": "images/produit1.jpeg",
         "icon": "fa-basket-shopping"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 2,
         "name": "Rouleau papier toilette à l'unité",
         "price_week": 0.33,
+        "image": "images/produit1.jpeg",
         "icon": "fa-pump-soap"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 3,
         "name": "Gros rouleau essuie-tout ultra absorbant l'unité",
         "price_week": 1.63,
+        "image": "images/produit1.jpeg",
         "icon": "fa-bottle-water"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 4,
         "name": "Flacon 350ml liquide vaiselle citron",
         "price_week": 1.74,
+        "image": "images/produit1.jpeg",
         "icon": "fa-basket-shopping"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 5,
         "name": "Flacon 800ml netoyant sol",
         "price_week": 1.90,
+        "image": "images/produit1.jpeg",
         "icon": "fa-basket-shopping"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 6,
         "name": "Flacon 350ml savon main amande",
         "price_week": 1.58,
+        "image": "images/produit1.jpeg",
         "icon": "fa-basket-shopping"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 7,
         "name": "Sac poubelle 30L ultra résistant à l'unité",
         "price_week": 0.14,
+        "image": "images/produit1.jpeg",
         "icon": "fa-basket-shopping"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     },
     {
         "id": 8,
         "name": "Sac poubelle 50L ultra résistant à l'unité",
         "price_week": 0.19,
+        "image": "images/produit1.jpeg",
         "icon": "fa-basket-shopping"
+        "description": "Courte description visible sur la carte.",
+    "provenance": "Fabriqué en France (Alsace)",
+    "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
+    "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
     }
 ]
