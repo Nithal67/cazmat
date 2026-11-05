@@ -399,91 +399,112 @@
             updateCartDisplay();
         }
 
-        function estimateDistanceFromAddress(address) {
-            const addr = address.toLowerCase();
-            if (!addr || addr.length < 4) return 0;
+       // Fonction pour calculer la distance exacte en km entre deux points GPS (Formule d'Haversine)
+function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Rayon de la Terre en km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance en km
+}
+
+// Coordonnées GPS de Duppigheim (67120)
+const DUPPIGHEIM_LAT = 48.5284;
+const DUPPIGHEIM_LON = 7.5933;
+
+let searchTimeout = null;
+
+async function updateCartDisplay() {
+    const cartContainer = document.getElementById('cart-items');
+    const isSubChecked = document.getElementById('sub-toggle').checked;
+    const periodLabel = document.getElementById('period-label');
+    const submitBtn = document.getElementById('submit-order-btn');
+    const minAlert = document.getElementById('min-order-alert');
+    const minAlertText = document.getElementById('min-alert-text');
+    const addressInput = document.getElementById('client-adresse').value.trim();
+    
+    cartContainer.innerHTML = '';
+    let itemsTotal = 0, totalItemsCount = 0;
+    const minArticlesSubtotal = 5.00;
+
+    if (isSubChecked) {
+        const subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
+        periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
+    } else {
+        periodLabel.textContent = 'Commande unique';
+    }
+
+    const keys = Object.keys(selectedCart);
+    if (keys.length === 0) {
+        cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
+        document.getElementById('cart-total').textContent = '0.00 €';
+        document.getElementById('items-count').textContent = '0 article';
+        currentCalculatedTotal = 0;
+        
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
+        return;
+    }
+
+    keys.forEach(id => {
+        const item = selectedCart[id];
+        const itemPrice = item.price_week * item.quantity;
+        itemsTotal += itemPrice;
+        totalItemsCount += item.quantity;
+        cartContainer.innerHTML += `
+            <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
+                <span class="text-gray-300">${item.quantity}x ${item.name}</span>
+                <span class="font-bold text-white">${itemPrice.toFixed(2)} €</span>
+            </div>
+        `;
+    });
+
+    document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
+
+    // Si pas d'adresse saisie
+    if (addressInput.length < 5) {
+        currentCalculatedTotal = itemsTotal;
+        document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
+        return;
+    }
+
+    // Calcul de la vraie distance géographique via l'API adresse.data.gouv.fr
+    try {
+        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
+        const data = await res.json();
+        
+        if (data.features && data.features.length > 0) {
+            const coords = data.features[0].geometry.coordinates;
+            const lon = coords[0];
+            const lat = coords[1];
             
-            if (addr.includes('duppigheim') || addr.includes('67120')) return 2;
-            if (addr.includes('olsheim') || addr.includes('avolsheim') || addr.includes('kolbsheim') || addr.includes('entzheim')) return 6;
-            if (addr.includes('molsheim') || addr.includes('obernai') || addr.includes('lingenheim')) return 14;
-            if (addr.includes('strasbourg') || addr.includes('schiltigheim') || addr.includes('mutzig')) return 18;
-            if (addr.includes('selestat') || addr.includes('colmar') || addr.includes('saverne')) return 35; // > 30km
-            
-            return 12;
-        }
+            const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, lat, lon));
 
-        function updateCartDisplay() {
-            const cartContainer = document.getElementById('cart-items');
-            const isSubChecked = document.getElementById('sub-toggle').checked;
-            const periodLabel = document.getElementById('period-label');
-            const submitBtn = document.getElementById('submit-order-btn');
-            const minAlert = document.getElementById('min-order-alert');
-            const minAlertText = document.getElementById('min-alert-text');
-            const addressInput = document.getElementById('client-adresse').value;
-            
-            cartContainer.innerHTML = '';
-            let itemsTotal = 0, totalItemsCount = 0;
-            const minArticlesSubtotal = 5.00; // Minimum de 5 euros sans frais de port pour tous
-
-            let subFreq = '';
-            if (isSubChecked) {
-                subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
-                periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
-            } else {
-                periodLabel.textContent = 'Commande unique';
-            }
-
-            const keys = Object.keys(selectedCart);
-            if (keys.length === 0) {
-                cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
-                document.getElementById('cart-total').textContent = '0.00 €';
-                document.getElementById('items-count').textContent = '0 article';
-                currentCalculatedTotal = 0;
-                
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
-                return;
-            }
-
-            keys.forEach(id => {
-                const item = selectedCart[id];
-                const itemPrice = item.price_week * item.quantity;
-                itemsTotal += itemPrice;
-                totalItemsCount += item.quantity;
-                cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
-                        <span class="text-gray-300">${item.quantity}x ${item.name}</span>
-                        <span class="font-bold text-white">${itemPrice.toFixed(2)} €</span>
-                    </div>
-                `;
-            });
-
-            const distance = estimateDistanceFromAddress(addressInput);
-            
             if (distance > 30) {
                 isDeliverable = false;
                 currentShippingFee = 0;
-            } else {
-                isDeliverable = true;
-                if (distance <= 10) {
-                    currentShippingFee = 1.50;
-                } else if (distance <= 20) {
-                    currentShippingFee = 3.00;
-                } else {
-                    currentShippingFee = 6.00;
-                }
-            }
-
-            if (!isDeliverable) {
                 cartContainer.innerHTML += `
                     <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
-                        Non livrable pour le moment, arrive prochainement (> 30km)
+                        Non livrable pour le moment, arrive prochainement (${distance} km)
                     </div>
                 `;
                 currentCalculatedTotal = itemsTotal;
-            } else if (addressInput.trim().length > 3) {
+            } else {
+                isDeliverable = true;
+                if (distance <= 10) currentShippingFee = 1.50;
+                else if (distance <= 20) currentShippingFee = 3.00;
+                else currentShippingFee = 6.00;
+
                 cartContainer.innerHTML += `
                     <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
                         <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
@@ -491,35 +512,31 @@
                     </div>
                 `;
                 currentCalculatedTotal = itemsTotal + currentShippingFee;
-            } else {
-                currentCalculatedTotal = itemsTotal;
-            }
-
-            document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
-            document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-
-            if (addressInput.trim().length <= 3) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
-            } else if (!isDeliverable) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Zone non livrable pour le moment (> 30km).`;
-            } else if (itemsTotal < minArticlesSubtotal) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
-            } else {
-                submitBtn.disabled = false;
-                submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
-                minAlert.classList.add('hidden');
             }
         }
+    } catch (e) {
+        console.error("Erreur géocodage:", e);
+    }
 
+    document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+
+    // RÈGLES DE VALIDATION DU BOUTON
+    if (!isDeliverable) {
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Zone non livrable pour le moment (> 30 km).`;
+    } else if (itemsTotal < minArticlesSubtotal) {
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
+        minAlert.classList.add('hidden');
+    }
+}
         async function handleOrderSubmit(e) {
             e.preventDefault();
             const minArticlesSubtotal = 5.00;
