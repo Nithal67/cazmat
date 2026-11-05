@@ -66,7 +66,7 @@
             </button>
         </div>
 
-        <!-- BANNIÈRE GARANTIE QUALITÉ PRO & LIVRAISON -->
+        <!-- BANNIÈRE GARANTIE QUALITÉ PRO -->
         <div class="bg-brand-card border border-brand-border p-5 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-xl shrink-0">
@@ -79,13 +79,8 @@
                     </p>
                 </div>
             </div>
-            <div class="flex flex-col sm:flex-row gap-2 shrink-0">
-                <div class="text-[10px] uppercase font-bold tracking-widest text-brand-red bg-black/60 px-4 py-2 border border-brand-border text-center">
-                    Livraison : 5.00 € (Fixe)
-                </div>
-                <div class="text-[10px] uppercase font-bold tracking-widest text-gray-400 bg-black/60 px-4 py-2 border border-brand-border text-center">
-                    Min. : 5 € (Hebdo) / 10 € (Autres)
-                </div>
+            <div class="text-[10px] uppercase font-bold tracking-widest text-brand-red bg-black/60 px-4 py-2 border border-brand-border shrink-0 text-center">
+                Min. articles : 5 € (Hebdo) / 10 € (Autres)
             </div>
         </div>
 
@@ -170,7 +165,7 @@
                         <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
                     </div>
 
-                    <!-- ALERTE COMMANDE MINIMUM DYNAMIQUE -->
+                    <!-- ALERTE MINIMUM / LIVRAISON -->
                     <div id="min-order-alert" class="p-3 bg-brand-red/10 border border-brand-red/40 text-brand-red text-[11px] font-semibold flex items-center gap-2">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <span id="min-alert-text">Commande minimum requise.</span>
@@ -189,7 +184,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Adresse complète *</label>
-                            <input type="text" id="client-adresse" required placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
+                            <input type="text" id="client-adresse" required oninput="calculateDistanceAndTotal()" placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Téléphone *</label>
@@ -264,7 +259,8 @@
         let prefaitsPacks = [];
         let selectedCart = {};
         let currentCalculatedTotal = 0;
-        const SHIPPING_FEE = 5.00; // Frais de livraison fixes à 5 euros tout le temps
+        let currentShippingFee = 0;
+        let isDeliverable = true;
 
         document.addEventListener('DOMContentLoaded', async () => {
             loadPrefaitsPacks();
@@ -393,6 +389,27 @@
             updateCartDisplay();
         }
 
+        // Estimation de distance simulée basée sur le texte de l'adresse (ex: code postal ou ville)
+        // Vous pourrez remplacer cette logique par une API géographique réelle (ex: Nominatim/BAN) si besoin.
+        function estimateDistanceFromAddress(address) {
+            const addr = address.toLowerCase();
+            if (!addr || addr.length < 4) return 0; // Par défaut Duppigheim ou proche si non renseigné
+            
+            // Simulation de distance par mots clés de villages d'Alsace proches de Duppigheim (67120)
+            if (addr.includes('duppigheim') || addr.includes('67120')) return 2;
+            if (addr.includes('olsheim') || addr.includes('avolsheim') || addr.includes('kolbsheim') || addr.includes('entzheim')) return 6;
+            if (addr.includes('molsheim') || addr.includes('obernai') || addr.includes('lingenheim')) return 14;
+            if (addr.includes('strasbourg') || addr.includes('schiltigheim') || addr.includes('mutzig')) return 18;
+            if (addr.includes('selestat') || addr.includes('colmar') || addr.includes('saverne')) return 35; // Au dessus de 30km
+            
+            // Par défaut si l'adresse est saisie sans correspondance connue, on met 12km (tranche 10-20km)
+            return 12;
+        }
+
+        function calculateDistanceAndTotal() {
+            updateCartDisplay();
+        }
+
         function updateCartDisplay() {
             const cartContainer = document.getElementById('cart-items');
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
@@ -401,11 +418,10 @@
             const submitBtn = document.getElementById('submit-order-btn');
             const minAlert = document.getElementById('min-order-alert');
             const minAlertText = document.getElementById('min-alert-text');
+            const addressInput = document.getElementById('client-adresse').value;
             
             cartContainer.innerHTML = '';
             let itemsTotal = 0, totalItemsCount = 0;
-
-            // Seuil de sous-total minimum (hors frais de port) : 5€ si hebdo, sinon 10€
             const minArticlesSubtotal = orderType === 'hebdo' ? 5.00 : 10.00;
 
             if (orderType === 'unique') {
@@ -429,7 +445,7 @@
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
                 minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Votre panier est vide (minimum d'articles : ${minArticlesSubtotal.toFixed(2)} €).`;
+                minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} €).`;
                 return;
             }
 
@@ -446,24 +462,54 @@
                 `;
             });
 
-            // Ajout systématique des 5 euros de livraison
-            cartContainer.innerHTML += `
-                <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-brand-red">
-                    <span class="font-bold"><i class="fa-solid fa-truck text-[10px] mr-1.5"></i> Frais de livraison fixes</span>
-                    <span class="font-bold">+ ${SHIPPING_FEE.toFixed(2)} €</span>
-                </div>
-            `;
+            // Calcul des frais de livraison selon la distance depuis Duppigheim
+            const distance = estimateDistanceFromAddress(addressInput);
+            
+            if (distance > 30) {
+                isDeliverable = false;
+                currentShippingFee = 0;
+            } else {
+                isDeliverable = true;
+                if (distance <= 10) {
+                    currentShippingFee = 1.50;
+                } else if (distance <= 20) {
+                    currentShippingFee = 3.00;
+                } else {
+                    currentShippingFee = 6.00; // de 20 à 30 km
+                }
+            }
 
-            currentCalculatedTotal = itemsTotal + SHIPPING_FEE;
+            if (!isDeliverable) {
+                cartContainer.innerHTML += `
+                    <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
+                        Non livrable pour le moment, arrive prochainement (> 30km)
+                    </div>
+                `;
+                currentCalculatedTotal = itemsTotal;
+            } else {
+                cartContainer.innerHTML += `
+                    <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
+                        <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km de Duppigheim)</span>
+                        <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                    </div>
+                `;
+                currentCalculatedTotal = itemsTotal + currentShippingFee;
+            }
+
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
             document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
 
-            // VÉRIFICATION DU SEUIL MINIMUM D'ARTICLES (HORS FRAIS DE PORT)
-            if (itemsTotal < minArticlesSubtotal) {
+            // GESTION DES BLOCAGES ET ALERTES
+            if (!isDeliverable) {
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
                 minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} € d'articles).`;
+                minAlertText.textContent = `Zone non livrable pour le moment (> 30km).`;
+            } else if (itemsTotal < minArticlesSubtotal) {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
             } else {
                 submitBtn.disabled = false;
                 submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
@@ -475,8 +521,11 @@
             e.preventDefault();
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
             const minArticlesSubtotal = orderType === 'hebdo' ? 5.00 : 10.00;
-            const itemsTotal = currentCalculatedTotal - SHIPPING_FEE;
+            const itemsTotal = currentCalculatedTotal - currentShippingFee;
 
+            if (!isDeliverable) {
+                return alert('Cette adresse est située à plus de 30km : non livrable pour le moment.');
+            }
             if (itemsTotal < minArticlesSubtotal) {
                 return alert(`Le sous-total des articles doit atteindre un minimum de ${minArticlesSubtotal.toFixed(2)} €.`);
             }
@@ -486,7 +535,7 @@
             const adresse = document.getElementById('client-adresse').value;
             const telephone = document.getElementById('client-telephone').value;
             const itemsSummary = Object.values(selectedCart).map(i => `${i.quantity}x ${i.name}`).join(', ');
-            const priceString = currentCalculatedTotal.toFixed(2) + ' € (dont 5.00 € livraison)';
+            const priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison)`;
 
             emailjs.send("service_988n3j9", "template_p6qhejv", {
                 to_email: "thomanathan@outlook.fr",
