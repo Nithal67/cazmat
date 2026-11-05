@@ -2,37 +2,49 @@
     {
         "id": 1,
         "name": "Éponge à l'unité",
-        "price_week": 1.00,
+        "price_week": 0.66,
         "icon": "fa-basket-shopping"
     },
     {
         "id": 2,
         "name": "Rouleau papier toilette à l'unité",
-        "price_week": 0.5,
+        "price_week": 0.33,
         "icon": "fa-pump-soap"
     },
     {
         "id": 3,
-        "name": "Rouleau essuie-tout 3 plis à l'unité",
-        "price_week": 1.00,
+        "name": "Gros rouleau essuie-tout ultra absorbant l'unité",
+        "price_week": 1.63,
         "icon": "fa-bottle-water"
     },
     {
         "id": 4,
-        "name": "Flacon 1L liquide vaiselle citron",
-        "price_week": 2.50,
+        "name": "Flacon 350ml liquide vaiselle citron",
+        "price_week": 1.74,
         "icon": "fa-basket-shopping"
     },
     {
         "id": 5,
-        "name": "Flacon 1L netoyant sol",
-        "price_week": 2.50,
+        "name": "Flacon 800ml netoyant sol",
+        "price_week": 1.90,
         "icon": "fa-basket-shopping"
     },
     {
         "id": 6,
-        "name": "Flacon 1L savon main amande",
-        "price_week": 3.00,
+        "name": "Flacon 350ml savon main amande",
+        "price_week": 1.58,
+        "icon": "fa-basket-shopping"
+    }
+    {
+        "id": 7,
+        "name": "Sac poubelle 30L ultra résistant à l'unité",
+        "price_week": 0.14,
+        "icon": "fa-basket-shopping"
+    }
+    {
+        "id": 8,
+        "name": "Sac poubelle 50L ultra résistant à l'unité",
+        "price_week": 0.19,
         "icon": "fa-basket-shopping"
     }
 ]
