@@ -80,11 +80,11 @@
                 </div>
             </div>
             <div class="text-[10px] uppercase font-bold tracking-widest text-brand-red bg-black/60 px-4 py-2 border border-brand-border shrink-0 text-center">
-                Min. articles : 5 € (Hebdo) / 10 € (Autres)
+                Minimum d'articles : 5.00 € (hors livraison)
             </div>
         </div>
 
-        <!-- ONGLETS DE NAVIGATION DE SELECTION -->
+        <!-- ONGLETS DE NAVIGATION -->
         <div class="flex border-b border-brand-border">
             <button id="tab-prefaits-btn" onclick="switchTab('prefaits')" class="py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300">
                 <i class="fa-solid fa-box-open mr-2 text-brand-red"></i> Packs Clé en Main
@@ -128,32 +128,31 @@
                 </div>
 
                 <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-5 pt-2">
+                    
+                    <!-- OPTION ABONNEMENT -->
                     <div class="bg-black/60 p-4 border border-brand-border space-y-3">
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Type de commande :</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="order_type" value="unique" checked onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                    Unique
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="order_type" value="hebdo" onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                    Hebdo.
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="order_type" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
-                                <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                    Mensuel
-                                </div>
-                            </label>
-                        </div>
-                        
-                        <div id="info-fiche" class="text-[11px] text-gray-300 bg-brand-card p-3 border border-brand-border flex items-start gap-2.5 mt-2">
-                            <i class="fa-solid fa-circle-info text-brand-red mt-0.5"></i>
-                            <span id="info-text">Une seule commande, pas d'abonnement</span>
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" id="sub-toggle" onchange="toggleSubscriptionOptions()" class="w-4 h-4 accent-brand-red rounded bg-brand-card border-brand-border">
+                            <span class="text-xs font-bold uppercase tracking-wider text-white">Je souhaite être livré par abonnement</span>
+                        </label>
+
+                        <!-- Choix de la récurrence (masqué par défaut) -->
+                        <div id="sub-options" class="hidden pt-2 border-t border-brand-border space-y-2">
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Fréquence d'abonnement :</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="sub_frequency" value="hebdo" checked onchange="updateCartDisplay()" class="peer sr-only">
+                                    <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
+                                        Hebdomadaire
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="sub_frequency" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
+                                    <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
+                                        Mensuel
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -165,10 +164,10 @@
                         <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
                     </div>
 
-                    <!-- ALERTE MINIMUM / LIVRAISON -->
+                    <!-- ALERTE DYNAMIQUE -->
                     <div id="min-order-alert" class="p-3 bg-brand-red/10 border border-brand-red/40 text-brand-red text-[11px] font-semibold flex items-center gap-2">
                         <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span id="min-alert-text">Commande minimum requise.</span>
+                        <span id="min-alert-text">Veuillez renseigner votre adresse et composer votre panier.</span>
                     </div>
 
                     <div class="space-y-4 pt-2">
@@ -184,7 +183,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Adresse complète *</label>
-                            <input type="text" id="client-adresse" required oninput="calculateDistanceAndTotal()" placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
+                            <input type="text" id="client-adresse" required oninput="updateCartDisplay()" placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Téléphone *</label>
@@ -284,6 +283,17 @@
                 viewSurmesure.classList.remove('hidden');
                 viewPrefaits.classList.add('hidden');
             }
+        }
+
+        function toggleSubscriptionOptions() {
+            const isChecked = document.getElementById('sub-toggle').checked;
+            const subOptions = document.getElementById('sub-options');
+            if (isChecked) {
+                subOptions.classList.remove('hidden');
+            } else {
+                subOptions.classList.add('hidden');
+            }
+            updateCartDisplay();
         }
 
         async function loadPrefaitsPacks() {
@@ -389,32 +399,23 @@
             updateCartDisplay();
         }
 
-        // Estimation de distance simulée basée sur le texte de l'adresse (ex: code postal ou ville)
-        // Vous pourrez remplacer cette logique par une API géographique réelle (ex: Nominatim/BAN) si besoin.
         function estimateDistanceFromAddress(address) {
             const addr = address.toLowerCase();
-            if (!addr || addr.length < 4) return 0; // Par défaut Duppigheim ou proche si non renseigné
+            if (!addr || addr.length < 4) return 0;
             
-            // Simulation de distance par mots clés de villages d'Alsace proches de Duppigheim (67120)
             if (addr.includes('duppigheim') || addr.includes('67120')) return 2;
             if (addr.includes('olsheim') || addr.includes('avolsheim') || addr.includes('kolbsheim') || addr.includes('entzheim')) return 6;
             if (addr.includes('molsheim') || addr.includes('obernai') || addr.includes('lingenheim')) return 14;
             if (addr.includes('strasbourg') || addr.includes('schiltigheim') || addr.includes('mutzig')) return 18;
-            if (addr.includes('selestat') || addr.includes('colmar') || addr.includes('saverne')) return 35; // Au dessus de 30km
+            if (addr.includes('selestat') || addr.includes('colmar') || addr.includes('saverne')) return 35; // > 30km
             
-            // Par défaut si l'adresse est saisie sans correspondance connue, on met 12km (tranche 10-20km)
             return 12;
-        }
-
-        function calculateDistanceAndTotal() {
-            updateCartDisplay();
         }
 
         function updateCartDisplay() {
             const cartContainer = document.getElementById('cart-items');
-            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const isSubChecked = document.getElementById('sub-toggle').checked;
             const periodLabel = document.getElementById('period-label');
-            const infoText = document.getElementById('info-text');
             const submitBtn = document.getElementById('submit-order-btn');
             const minAlert = document.getElementById('min-order-alert');
             const minAlertText = document.getElementById('min-alert-text');
@@ -422,17 +423,14 @@
             
             cartContainer.innerHTML = '';
             let itemsTotal = 0, totalItemsCount = 0;
-            const minArticlesSubtotal = orderType === 'hebdo' ? 5.00 : 10.00;
+            const minArticlesSubtotal = 5.00; // Minimum de 5 euros sans frais de port pour tous
 
-            if (orderType === 'unique') {
-                infoText.textContent = "Une seule commande, pas d'abonnement";
-                periodLabel.textContent = "Commande unique";
-            } else if (orderType === 'hebdo') {
-                infoText.textContent = "Recevez chaque semaine votre commande";
-                periodLabel.textContent = "Tarif hebdomadaire";
-            } else if (orderType === 'mensuel') {
-                infoText.textContent = "Recevez chaque mois votre commande";
-                periodLabel.textContent = "Tarif mensuel";
+            let subFreq = '';
+            if (isSubChecked) {
+                subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
+                periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
+            } else {
+                periodLabel.textContent = 'Commande unique';
             }
 
             const keys = Object.keys(selectedCart);
@@ -445,7 +443,7 @@
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
                 minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} €).`;
+                minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
                 return;
             }
 
@@ -462,7 +460,6 @@
                 `;
             });
 
-            // Calcul des frais de livraison selon la distance depuis Duppigheim
             const distance = estimateDistanceFromAddress(addressInput);
             
             if (distance > 30) {
@@ -475,7 +472,7 @@
                 } else if (distance <= 20) {
                     currentShippingFee = 3.00;
                 } else {
-                    currentShippingFee = 6.00; // de 20 à 30 km
+                    currentShippingFee = 6.00;
                 }
             }
 
@@ -486,21 +483,27 @@
                     </div>
                 `;
                 currentCalculatedTotal = itemsTotal;
-            } else {
+            } else if (addressInput.trim().length > 3) {
                 cartContainer.innerHTML += `
                     <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
-                        <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km de Duppigheim)</span>
+                        <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
                         <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
                     </div>
                 `;
                 currentCalculatedTotal = itemsTotal + currentShippingFee;
+            } else {
+                currentCalculatedTotal = itemsTotal;
             }
 
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
             document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
 
-            // GESTION DES BLOCAGES ET ALERTES
-            if (!isDeliverable) {
+            if (addressInput.trim().length <= 3) {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                minAlert.classList.remove('hidden');
+                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
+            } else if (!isDeliverable) {
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
                 minAlert.classList.remove('hidden');
@@ -519,9 +522,10 @@
 
         async function handleOrderSubmit(e) {
             e.preventDefault();
-            const orderType = document.querySelector('input[name="order_type"]:checked').value;
-            const minArticlesSubtotal = orderType === 'hebdo' ? 5.00 : 10.00;
+            const minArticlesSubtotal = 5.00;
             const itemsTotal = currentCalculatedTotal - currentShippingFee;
+            const isSubChecked = document.getElementById('sub-toggle').checked;
+            const subFreq = isSubChecked ? document.querySelector('input[name="sub_frequency"]:checked').value : 'unique';
 
             if (!isDeliverable) {
                 return alert('Cette adresse est située à plus de 30km : non livrable pour le moment.');
@@ -535,7 +539,7 @@
             const adresse = document.getElementById('client-adresse').value;
             const telephone = document.getElementById('client-telephone').value;
             const itemsSummary = Object.values(selectedCart).map(i => `${i.quantity}x ${i.name}`).join(', ');
-            const priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison)`;
+            const priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison) [Type: ${subFreq}]`;
 
             emailjs.send("service_988n3j9", "template_p6qhejv", {
                 to_email: "thomanathan@outlook.fr",
@@ -554,6 +558,7 @@
             document.getElementById('modal-success').classList.add('hidden');
             selectedCart = {};
             document.getElementById('order-form').reset();
+            document.getElementById('sub-options').classList.add('hidden');
             catalogProducts.forEach(p => {
                 const el = document.getElementById(`qty-${p.id}`);
                 if (el) el.textContent = '0';
