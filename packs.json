@@ -1,0 +1,26 @@
+[
+    {
+        "id": "pack-entretien",
+        "name": "Pack Entretien & Hygiène",
+        "price": 6.50,
+        "badge": "Populaire",
+        "image": "images/atelier.jpeg",
+        "icon": "fa-pump-soap",
+        "description": "L'essentiel pour un entretien impeccable de vos locaux ou de votre atelier.",
+        "provenance": "Fournisseur professionnel certifié (France)",
+        "composants": "1x Nettoyant sol 800ml, 1x Liquide vaisselle citron, 1x Éponge professionnelle, 1x Rouleau essuie-tout ultra absorbant.",
+        "danger": "Respecter les précautions d'emploi figurant sur chaque emballage individuel."
+    },
+    {
+        "id": "pack-boissons",
+        "name": "Pack Eau & Boissons",
+        "price": 8.00,
+        "badge": "Essentiel",
+        "image": "images/bannier.jpeg",
+        "icon": "fa-bottle-water",
+        "description": "De quoi rester hydraté toute la semaine sur votre lieu de travail ou d'intervention.",
+        "provenance": "Sources locales et régionales (France)",
+        "composants": "Pack de bouteilles d'eau minérale, tasses jetables écologiques.",
+        "danger": "Conserver à l'abri de la lumière et de la chaleur."
+    }
+]
