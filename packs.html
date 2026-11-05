@@ -57,8 +57,8 @@
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-8">
             <div class="space-y-2">
                 <span class="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">Service de Proximité</span>
-                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Nos Packs Essentiels</h1>
-                <p class="text-gray-400 text-xs md:text-sm font-light">Choisissez un pack clé en main ou composez sur-mesure votre sélection.</p>
+                <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Nos Packs & Produits</h1>
+                <p class="text-gray-400 text-xs md:text-sm font-light">Commandez des packs clé en main ou composez votre sélection sur-mesure.</p>
             </div>
             <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
                 <i class="fa-solid fa-images text-brand-red"></i>
@@ -84,36 +84,40 @@
             </div>
         </div>
 
-        <!-- ONGLETS DE NAVIGATION -->
-        <div class="flex border-b border-brand-border">
-            <button id="tab-prefaits-btn" onclick="switchTab('prefaits')" class="py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300">
-                <i class="fa-solid fa-box-open mr-2 text-brand-red"></i> Packs Clé en Main
-            </button>
-            <button id="tab-surmesure-btn" onclick="switchTab('surmesure')" class="py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300">
-                <i class="fa-solid fa-sliders mr-2 text-brand-red"></i> Créer Mon Pack
-            </button>
-        </div>
-
-        <!-- VUE 1 : PACKS PRÉFAITS -->
-        <div id="view-prefaits" class="space-y-6">
-            <div id="prefaits-container" class="grid md:grid-cols-3 gap-8">
-                <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider col-span-3">
-                    <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement des packs préfaits...
-                </div>
-            </div>
-        </div>
-
-        <!-- VUE 2 : CRÉER MON PACK (CATALOGUE EN GRILLE + PANIER) -->
-        <div id="view-surmesure" class="hidden grid lg:grid-cols-12 gap-12 items-start">
+        <!-- SECTION PRINCIPALE : CATALOGUE + PANIER -->
+        <div class="grid lg:grid-cols-12 gap-12 items-start">
             
-            <!-- CATALOGUE EN GRILLE -->
-            <div class="lg:col-span-7 space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400">Catalogue des produits individuels</h2>
-                <div id="products-catalog-container" class="grid sm:grid-cols-2 gap-6">
-                    <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider sm:col-span-2">
-                        <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement du catalogue...
+            <!-- CATALOGUE & ONGLETS DE SÉLECTION -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- ONGLETS -->
+                <div class="flex border-b border-brand-border">
+                    <button id="tab-prefaits-btn" onclick="switchTab('prefaits')" class="py-3 px-6 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300">
+                        <i class="fa-solid fa-box-open mr-2 text-brand-red"></i> Packs Clé en Main
+                    </button>
+                    <button id="tab-surmesure-btn" onclick="switchTab('surmesure')" class="py-3 px-6 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300">
+                        <i class="fa-solid fa-sliders mr-2 text-brand-red"></i> Produits Individuels
+                    </button>
+                </div>
+
+                <!-- VUE 1 : PACKS PRÉFAITS -->
+                <div id="view-prefaits" class="space-y-4">
+                    <div id="prefaits-container" class="grid sm:grid-cols-2 gap-6">
+                        <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider sm:col-span-2">
+                            <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement des packs préfaits...
+                        </div>
                     </div>
                 </div>
+
+                <!-- VUE 2 : PRODUITS INDIVIDUELS (SUR-MESURE) -->
+                <div id="view-surmesure" class="hidden space-y-4">
+                    <div id="products-catalog-container" class="grid sm:grid-cols-2 gap-6">
+                        <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider sm:col-span-2">
+                            <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement du catalogue...
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- PANIER & FORMULAIRE -->
@@ -198,7 +202,7 @@
         </div>
     </main>
 
-    <!-- MODAL "EN SAVOIR PLUS" PRODUIT -->
+    <!-- MODAL "EN SAVOIR PLUS" (OUVERTURE AU CLIC SUR UN ARTICLE) -->
     <div id="product-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brand-card border border-brand-border p-8 max-w-lg w-full shadow-2xl space-y-6 relative">
             <div class="flex justify-between items-center pb-4 border-b border-brand-border">
@@ -302,13 +306,13 @@
             const viewSurmesure = document.getElementById('view-surmesure');
 
             if (tab === 'prefaits') {
-                btnPrefaits.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300";
-                btnSurmesure.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300";
+                btnPrefaits.className = "py-3 px-6 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300";
+                btnSurmesure.className = "py-3 px-6 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300";
                 viewPrefaits.classList.remove('hidden');
                 viewSurmesure.classList.add('hidden');
             } else {
-                btnSurmesure.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300";
-                btnPrefaits.className = "py-4 px-8 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300";
+                btnSurmesure.className = "py-3 px-6 text-xs font-bold uppercase tracking-widest border-b-2 border-brand-red text-white bg-brand-card transition duration-300";
+                btnPrefaits.className = "py-3 px-6 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-white transition duration-300";
                 viewSurmesure.classList.remove('hidden');
                 viewPrefaits.classList.add('hidden');
             }
@@ -333,51 +337,34 @@
                 container.innerHTML = '';
 
                 prefaitsPacks.forEach(pack => {
-                    const itemsList = pack.items.map(i => `<li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-red text-[10px]"></i> ${i}</li>`).join('');
-                    
                     container.innerHTML += `
-                        <div class="bg-brand-card border border-brand-border p-8 space-y-6 hover:border-brand-red/50 transition duration-300 flex flex-col justify-between group">
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-start">
-                                    <div class="w-12 h-12 bg-black/60 border border-brand-border text-brand-red flex items-center justify-center text-xl">
-                                        <i class="fa-solid ${pack.icon}"></i>
-                                    </div>
-                                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red bg-black/60 px-3 py-1 border border-brand-border">${pack.badge}</span>
+                        <div class="bg-brand-card border border-brand-border p-6 flex flex-col items-center text-center justify-between hover:border-brand-red/50 transition duration-300 group">
+                            <div class="space-y-4 w-full cursor-pointer" onclick="openPrefaitModal('${pack.id}')">
+                                <div class="w-full h-36 bg-black/60 p-4 border border-brand-border flex items-center justify-center relative overflow-hidden">
+                                    <img src="${pack.image || 'images/logo.png'}" alt="${pack.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
+                                    <span class="absolute top-2 right-2 text-[9px] font-bold uppercase tracking-widest text-brand-red bg-black/80 px-2.5 py-1 border border-brand-border">${pack.badge}</span>
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-sm uppercase tracking-wider text-white">${pack.name}</h3>
-                                    <p class="text-xs text-gray-400 font-light mt-1">${pack.description}</p>
+                                <div class="space-y-1">
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-white line-clamp-2">${pack.name}</h4>
+                                    <span class="text-sm font-extrabold text-brand-red block">${Number(pack.price).toFixed(2)} €</span>
+                                    <span class="text-[10px] text-gray-400 underline uppercase tracking-wider inline-block">Voir la fiche</span>
                                 </div>
-                                <ul class="text-xs text-gray-300 space-y-2 border-t border-brand-border pt-4">
-                                    ${itemsList}
-                                </ul>
                             </div>
-                            <div class="space-y-4 border-t border-brand-border pt-6">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Prix pack</span>
-                                    <span class="text-xl font-extrabold text-white">${Number(pack.price).toFixed(2)} €</span>
+
+                            <div class="w-full pt-4 mt-4 border-t border-brand-border flex items-center justify-between">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Quantité</span>
+                                <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border">
+                                    <button type="button" onclick="updateCartPack('${pack.id}', -1)" class="w-7 h-7 bg-brand-card text-gray-300 text-xs font-bold hover:bg-brand-border hover:text-white transition">-</button>
+                                    <span id="qty-pack-${pack.id}" class="text-xs font-bold w-5 text-center text-white">0</span>
+                                    <button type="button" onclick="updateCartPack('${pack.id}', 1)" class="w-7 h-7 bg-brand-red text-white text-xs font-bold hover:bg-red-700 transition">+</button>
                                 </div>
-                                <button onclick="selectPrefaitPack('${pack.id}')" class="w-full bg-brand-red hover:bg-red-700 text-white py-3.5 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20">
-                                    Choisir ce pack
-                                </button>
                             </div>
                         </div>
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider col-span-3">Impossible de charger les packs préfaits.</div>`;
+                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider sm:col-span-2">Impossible de charger les packs préfaits.</div>`;
             }
-        }
-
-        function selectPrefaitPack(packId) {
-            const pack = prefaitsPacks.find(p => p.id === packId);
-            if (!pack) return;
-            
-            selectedCart = {};
-            selectedCart[pack.id] = { id: pack.id, name: pack.name, price_week: pack.price, quantity: 1 };
-            
-            switchTab('surmesure');
-            updateCartDisplay();
         }
 
         async function loadCatalogProducts() {
@@ -390,17 +377,15 @@
                 catalogProducts.forEach(prod => {
                     container.innerHTML += `
                         <div class="bg-brand-card border border-brand-border p-6 flex flex-col items-center text-center justify-between hover:border-brand-red/50 transition duration-300 group">
-                            <div class="space-y-4 w-full">
+                            <div class="space-y-4 w-full cursor-pointer" onclick="openProductModal(${prod.id})">
                                 <div class="w-full h-36 bg-black/60 p-4 border border-brand-border flex items-center justify-center relative overflow-hidden">
                                     <img src="${prod.image || 'images/logo.png'}" alt="${prod.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-bold text-xs uppercase tracking-wider text-white line-clamp-2">${prod.name}</h4>
                                     <span class="text-sm font-extrabold text-brand-red block">${Number(prod.price_week).toFixed(2)} €</span>
+                                    <span class="text-[10px] text-gray-400 underline uppercase tracking-wider inline-block">Voir la fiche</span>
                                 </div>
-                                <button type="button" onclick="openProductModal(${prod.id})" class="text-[10px] text-gray-400 hover:text-white underline uppercase tracking-wider inline-block">
-                                    En savoir plus <i class="fa-solid fa-arrow-right text-[9px] ml-1"></i>
-                                </button>
                             </div>
 
                             <div class="w-full pt-4 mt-4 border-t border-brand-border flex items-center justify-between">
@@ -432,6 +417,19 @@
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
+        function openPrefaitModal(packId) {
+            const pack = prefaitsPacks.find(p => p.id === packId);
+            if (!pack) return;
+
+            document.getElementById('modal-prod-title').textContent = pack.name;
+            document.getElementById('modal-prod-img').src = pack.image || 'images/logo.png';
+            document.getElementById('modal-prod-provenance').textContent = pack.provenance || 'Fournisseur partenaire certifié';
+            document.getElementById('modal-prod-composants').textContent = pack.items ? pack.items.join(', ') : pack.description;
+            document.getElementById('modal-prod-danger').textContent = pack.danger || 'Respecter les consignes d\'utilisation habituelles.';
+            
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
         function closeProductModal() {
             document.getElementById('product-modal').classList.add('hidden');
         }
@@ -439,15 +437,35 @@
         function updateCart(productId, delta) {
             const prod = catalogProducts.find(p => p.id === productId);
             if (!prod) return;
-            if (!selectedCart[productId]) selectedCart[productId] = { ...prod, quantity: 0 };
-            selectedCart[productId].quantity += delta;
-            if (selectedCart[productId].quantity <= 0) {
-                delete selectedCart[productId];
+            const cartKey = `prod_${productId}`;
+            if (!selectedCart[cartKey]) selectedCart[cartKey] = { id: cartKey, name: prod.name, price_week: prod.price_week, quantity: 0 };
+            
+            selectedCart[cartKey].quantity += delta;
+            if (selectedCart[cartKey].quantity <= 0) {
+                delete selectedCart[cartKey];
                 const qtyEl = document.getElementById(`qty-${productId}`);
                 if (qtyEl) qtyEl.textContent = '0';
             } else {
                 const qtyEl = document.getElementById(`qty-${productId}`);
-                if (qtyEl) qtyEl.textContent = selectedCart[productId].quantity;
+                if (qtyEl) qtyEl.textContent = selectedCart[cartKey].quantity;
+            }
+            updateCartDisplay();
+        }
+
+        function updateCartPack(packId, delta) {
+            const pack = prefaitsPacks.find(p => p.id === packId);
+            if (!pack) return;
+            const cartKey = `pack_${pack.id}`;
+            if (!selectedCart[cartKey]) selectedCart[cartKey] = { id: cartKey, name: pack.name, price_week: pack.price, quantity: 0 };
+            
+            selectedCart[cartKey].quantity += delta;
+            if (selectedCart[cartKey].quantity <= 0) {
+                delete selectedCart[cartKey];
+                const qtyEl = document.getElementById(`qty-pack-${pack.id}`);
+                if (qtyEl) qtyEl.textContent = '0';
+            } else {
+                const qtyEl = document.getElementById(`qty-pack-${pack.id}`);
+                if (qtyEl) qtyEl.textContent = selectedCart[cartKey].quantity;
             }
             updateCartDisplay();
         }
@@ -496,8 +514,8 @@
                 return;
             }
 
-            keys.forEach(id => {
-                const item = selectedCart[id];
+            keys.forEach(key => {
+                const item = selectedCart[key];
                 const itemPrice = item.price_week * item.quantity;
                 itemsTotal += itemPrice;
                 totalItemsCount += item.quantity;
@@ -622,6 +640,10 @@
             document.getElementById('sub-options').classList.add('hidden');
             catalogProducts.forEach(p => {
                 const el = document.getElementById(`qty-${p.id}`);
+                if (el) el.textContent = '0';
+            });
+            prefaitsPacks.forEach(p => {
+                const el = document.getElementById(`qty-pack-${p.id}`);
                 if (el) el.textContent = '0';
             });
             updateCartDisplay();
