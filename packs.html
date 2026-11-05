@@ -103,14 +103,14 @@
             </div>
         </div>
 
-        <!-- VUE 2 : CRÉER MON PACK (CATALOGUE + PANIER) -->
+        <!-- VUE 2 : CRÉER MON PACK (CATALOGUE EN GRILLE + PANIER) -->
         <div id="view-surmesure" class="hidden grid lg:grid-cols-12 gap-12 items-start">
             
-            <!-- CATALOGUE -->
+            <!-- CATALOGUE EN GRILLE -->
             <div class="lg:col-span-7 space-y-4">
                 <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400">Catalogue des produits individuels</h2>
-                <div id="products-catalog-container" class="space-y-4">
-                    <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider">
+                <div id="products-catalog-container" class="grid sm:grid-cols-2 gap-6">
+                    <div class="text-gray-400 text-xs bg-brand-card border border-brand-border p-8 text-center uppercase tracking-wider sm:col-span-2">
                         <i class="fa-solid fa-circle-notch fa-spin text-brand-red mr-2"></i> Chargement du catalogue...
                     </div>
                 </div>
@@ -389,27 +389,33 @@
                 
                 catalogProducts.forEach(prod => {
                     container.innerHTML += `
-                        <div class="bg-brand-card border border-brand-border p-5 flex flex-col sm:flex-row items-center justify-between gap-4 hover:border-brand-red/50 transition duration-300">
-                            <div class="flex items-center gap-4 w-full sm:w-auto">
-                                <img src="${prod.image || 'images/logo.png'}" alt="${prod.name}" class="w-14 h-14 object-contain bg-black/60 p-2 border border-brand-border shrink-0">
-                                <div>
-                                    <h4 class="font-bold text-xs uppercase tracking-wider text-white">${prod.name}</h4>
-                                    <span class="text-[11px] text-brand-red font-semibold block mt-0.5">${Number(prod.price_week).toFixed(2)} €</span>
-                                    <button type="button" onclick="openProductModal(${prod.id})" class="text-[10px] text-gray-400 hover:text-white underline mt-1 inline-block uppercase tracking-wider">
-                                        En savoir plus <i class="fa-solid fa-arrow-right text-[9px] ml-1"></i>
-                                    </button>
+                        <div class="bg-brand-card border border-brand-border p-6 flex flex-col items-center text-center justify-between hover:border-brand-red/50 transition duration-300 group">
+                            <div class="space-y-4 w-full">
+                                <div class="w-full h-36 bg-black/60 p-4 border border-brand-border flex items-center justify-center relative overflow-hidden">
+                                    <img src="${prod.image || 'images/logo.png'}" alt="${prod.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
                                 </div>
+                                <div class="space-y-1">
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-white line-clamp-2">${prod.name}</h4>
+                                    <span class="text-sm font-extrabold text-brand-red block">${Number(prod.price_week).toFixed(2)} €</span>
+                                </div>
+                                <button type="button" onclick="openProductModal(${prod.id})" class="text-[10px] text-gray-400 hover:text-white underline uppercase tracking-wider inline-block">
+                                    En savoir plus <i class="fa-solid fa-arrow-right text-[9px] ml-1"></i>
+                                </button>
                             </div>
-                            <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border shrink-0">
-                                <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-7 h-7 bg-brand-card text-gray-300 text-xs font-bold hover:bg-brand-border hover:text-white transition">-</button>
-                                <span id="qty-${prod.id}" class="text-xs font-bold w-5 text-center text-white">0</span>
-                                <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-7 h-7 bg-brand-red text-white text-xs font-bold hover:bg-red-700 transition">+</button>
+
+                            <div class="w-full pt-4 mt-4 border-t border-brand-border flex items-center justify-between">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Quantité</span>
+                                <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border">
+                                    <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-7 h-7 bg-brand-card text-gray-300 text-xs font-bold hover:bg-brand-border hover:text-white transition">-</button>
+                                    <span id="qty-${prod.id}" class="text-xs font-bold w-5 text-center text-white">0</span>
+                                    <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-7 h-7 bg-brand-red text-white text-xs font-bold hover:bg-red-700 transition">+</button>
+                                </div>
                             </div>
                         </div>
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider">Erreur de chargement du catalogue.</div>`;
+                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider sm:col-span-2">Erreur de chargement du catalogue.</div>`;
             }
         }
 
