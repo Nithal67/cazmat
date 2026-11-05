@@ -332,7 +332,7 @@
         async function loadPrefaitsPacks() {
             const container = document.getElementById('prefaits-container');
             try {
-                const response = await fetch('packs-prefaits.json');
+                const response = await fetch('packs.json');
                 prefaitsPacks = await response.json();
                 container.innerHTML = '';
 
