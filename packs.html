@@ -202,45 +202,42 @@
         </div>
     </main>
 
-   <!-- MODAL "EN SAVOIR PLUS" (IMAGE À GAUCHE / DÉTAILS À DROITE) -->
-<div id="product-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
-        <div class="flex justify-between items-center pb-4 border-b border-brand-border">
-            <h3 id="modal-prod-title" class="font-bold text-base uppercase tracking-wider text-white">Détails du produit</h3>
-            <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <!-- GRILLE 2 COLONNES : IMAGE À GAUCHE, TEXTE À DROITE -->
-        <div class="grid md:grid-cols-2 gap-8 items-start">
-            <!-- COLONNE GAUCHE : IMAGE EN GRAND -->
-            <div class="bg-black/60 p-6 border border-brand-border flex items-center justify-center h-72">
-                <img id="modal-prod-img" src="" alt="" class="max-h-full max-w-full object-contain">
+    <!-- MODAL "EN SAVOIR PLUS" (IMAGE À GAUCHE / DÉTAILS À DROITE) -->
+    <div id="product-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
+            <div class="flex justify-between items-center pb-4 border-b border-brand-border">
+                <h3 id="modal-prod-title" class="font-bold text-base uppercase tracking-wider text-white">Détails du produit</h3>
+                <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- COLONNE DROITE : DESCRIPTION ET INFORMATIONS -->
-            <div class="space-y-4 text-xs">
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Description</span>
-                    <p id="modal-prod-desc" class="text-gray-300 bg-black/40 p-3 border border-brand-border leading-relaxed">-</p>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="bg-black/60 p-6 border border-brand-border flex items-center justify-center h-72 overflow-hidden">
+                    <img id="modal-prod-img" src="" alt="" class="max-h-full max-w-full object-contain">
                 </div>
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Provenance</span>
-                    <p id="modal-prod-provenance" class="text-gray-300 bg-black/40 p-3 border border-brand-border">-</p>
-                </div>
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Composants & Ingrédients</span>
-                    <p id="modal-prod-composants" class="text-gray-300 bg-black/40 p-3 border border-brand-border">-</p>
-                </div>
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Sécurité & Danger</span>
-                    <p id="modal-prod-danger" class="text-gray-300 bg-brand-red/10 border border-brand-red/30 p-3 leading-relaxed">-</p>
+
+                <div class="space-y-4 text-xs">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Description</span>
+                        <p id="modal-prod-desc" class="text-gray-300 bg-black/40 p-3 border border-brand-border leading-relaxed">-</p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Provenance</span>
+                        <p id="modal-prod-provenance" class="text-gray-300 bg-black/40 p-3 border border-brand-border">-</p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Composants & Ingrédients</span>
+                        <p id="modal-prod-composants" class="text-gray-300 bg-black/40 p-3 border border-brand-border">-</p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Sécurité & Danger</span>
+                        <p id="modal-prod-danger" class="text-gray-300 bg-brand-red/10 border border-brand-red/30 p-3 leading-relaxed">-</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <button onclick="closeProductModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
+            <button onclick="closeProductModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
+        </div>
     </div>
-</div>
 
     <!-- MODAL GALERIE & LIGHTBOX -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
@@ -353,7 +350,7 @@
                         <div class="bg-brand-card border border-brand-border p-6 flex flex-col items-center text-center justify-between hover:border-brand-red/50 transition duration-300 group">
                             <div class="space-y-4 w-full cursor-pointer" onclick="openPrefaitModal('${pack.id}')">
                                 <div class="w-full h-36 bg-black/60 p-4 border border-brand-border flex items-center justify-center relative overflow-hidden">
-                                    <img src="${pack.image || 'images/logo.png'}" alt="${pack.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
+                                    <img src="${pack.image || 'images/logo.png'}" alt="${pack.name}" class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500">
                                     <span class="absolute top-2 right-2 text-[9px] font-bold uppercase tracking-widest text-brand-red bg-black/80 px-2.5 py-1 border border-brand-border">${pack.badge}</span>
                                 </div>
                                 <div class="space-y-1">
@@ -375,7 +372,7 @@
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider sm:col-span-2">Impossible de charger les packs préfaits.</div>`;
+                container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider sm:col-span-2">Impossible de charger les packs préfaits (packs.json).</div>`;
             }
         }
 
@@ -391,7 +388,7 @@
                         <div class="bg-brand-card border border-brand-border p-6 flex flex-col items-center text-center justify-between hover:border-brand-red/50 transition duration-300 group">
                             <div class="space-y-4 w-full cursor-pointer" onclick="openProductModal(${prod.id})">
                                 <div class="w-full h-36 bg-black/60 p-4 border border-brand-border flex items-center justify-center relative overflow-hidden">
-                                    <img src="${prod.image || 'images/logo.png'}" alt="${prod.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
+                                    <img src="${prod.image || 'images/logo.png'}" alt="${prod.name}" class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500">
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-bold text-xs uppercase tracking-wider text-white line-clamp-2">${prod.name}</h4>
@@ -417,36 +414,18 @@
         }
 
         function openProductModal(prodId) {
-    const prod = catalogProducts.find(p => p.id === prodId);
-    if (!prod) return;
+            const prod = catalogProducts.find(p => p.id === prodId);
+            if (!prod) return;
 
-    document.getElementById('modal-prod-title').textContent = prod.name;
-    document.getElementById('modal-prod-img').src = prod.image || 'images/logo.png';
-    document.getElementById('modal-prod-desc').textContent = prod.description || 'Courte description non renseignée.';
-    document.getElementById('modal-prod-provenance').textContent = prod.provenance || 'Non renseignée';
-    document.getElementById('modal-prod-composants').textContent = prod.composants || 'Non renseignés';
-    document.getElementById('modal-prod-danger').textContent = prod.danger || 'Aucun danger particulier signalé.';
-    
-    document.getElementById('product-modal').classList.remove('hidden');
-}
-
-function openPrefaitModal(packId) {
-    const pack = prefaitsPacks.find(p => p.id === packId);
-    if (!pack) return;
-
-    document.getElementById('modal-prod-title').textContent = pack.name;
-    document.getElementById('modal-prod-img').src = pack.image || 'images/logo.png';
-    document.getElementById('modal-prod-desc').textContent = pack.description || 'Pack clé en main professionnel.';
-    document.getElementById('modal-prod-provenance').textContent = pack.provenance || 'Fournisseur partenaire certifié';
-    document.getElementById('modal-prod-composants').textContent = pack.composants || (pack.items ? pack.items.join(', ') : 'Non renseignés');
-    document.getElementById('modal-prod-danger').textContent = pack.danger || 'Respecter les consignes d\'utilisation habituelles.';
-    
-    document.getElementById('product-modal').classList.remove('hidden');
-}
-
-function closeProductModal() {
-    document.getElementById('product-modal').classList.add('hidden');
-}
+            document.getElementById('modal-prod-title').textContent = prod.name;
+            document.getElementById('modal-prod-img').src = prod.image || 'images/logo.png';
+            document.getElementById('modal-prod-desc').textContent = prod.description || 'Courte description non renseignée.';
+            document.getElementById('modal-prod-provenance').textContent = prod.provenance || 'Non renseignée';
+            document.getElementById('modal-prod-composants').textContent = prod.composants || 'Non renseignés';
+            document.getElementById('modal-prod-danger').textContent = prod.danger || 'Aucun danger particulier signalé.';
+            
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
 
         function openPrefaitModal(packId) {
             const pack = prefaitsPacks.find(p => p.id === packId);
@@ -454,8 +433,9 @@ function closeProductModal() {
 
             document.getElementById('modal-prod-title').textContent = pack.name;
             document.getElementById('modal-prod-img').src = pack.image || 'images/logo.png';
+            document.getElementById('modal-prod-desc').textContent = pack.description || 'Pack clé en main professionnel.';
             document.getElementById('modal-prod-provenance').textContent = pack.provenance || 'Fournisseur partenaire certifié';
-            document.getElementById('modal-prod-composants').textContent = pack.items ? pack.items.join(', ') : pack.description;
+            document.getElementById('modal-prod-composants').textContent = pack.composants || (pack.items ? pack.items.join(', ') : 'Non renseignés');
             document.getElementById('modal-prod-danger').textContent = pack.danger || 'Respecter les consignes d\'utilisation habituelles.';
             
             document.getElementById('product-modal').classList.remove('hidden');
