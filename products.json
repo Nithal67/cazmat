@@ -3,7 +3,7 @@
         "id": 1,
         "name": "Éponge à l'unité",
         "price_week": 0.66,
-        "image": "images/rponge.jpg",
+        "image": "images/eponge.jpg",
         "icon": "fa-basket-shopping",
         "description": "Courte description visible sur la carte.",
         "provenance": "Fabriqué en France (Alsace)",
