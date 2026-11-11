@@ -55,6 +55,9 @@
                 <a href="faq.html" class="hover:text-brand-red transition-colors">FAQ</a>
                 <a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a>
             </nav>
+            <a href="dashboard.html" class="border border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition duration-300">
+                Résilier
+            </a>
         </div>
     </header>
 
@@ -68,6 +71,10 @@
                 <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composez Votre Sélection</h1>
                 <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos produits professionnels selon vos besoins.</p>
             </div>
+            <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
+                <i class="fa-solid fa-images text-brand-red"></i>
+                <span>Galerie Photos</span>
+            </button>
         </div>
 
         <!-- BANNIÈRE QUALITÉ PRO ÉPURÉE -->
@@ -177,7 +184,7 @@
         </div>
     </main>
 
-    <!-- MODAL "EN SAVOIR PLUS" (SANS PROVENANCE) -->
+    <!-- MODAL "EN SAVOIR PLUS" -->
     <div id="product-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
             <div class="flex justify-between items-center pb-4 border-b border-brand-border">
@@ -207,6 +214,23 @@
             </div>
 
             <button onclick="closeProductModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
+        </div>
+    </div>
+
+    <!-- POP-UP EXPLICATIVE CONSIGNE -->
+    <div id="consigne-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-md w-full shadow-2xl space-y-6 relative text-center">
+            <div class="w-12 h-12 bg-brand-red/10 border border-brand-red text-brand-red flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-recycle"></i>
+            </div>
+            <h3 class="font-bold text-sm uppercase tracking-wider text-white">Fonctionnement de la consigne</h3>
+            <div class="text-xs text-gray-300 space-y-3 text-left bg-black/40 p-4 border border-brand-border leading-relaxed">
+                <p>Ce produit inclut un contenant consigné (<span id="consigne-price-tag" class="font-bold text-brand-red">1.00 €</span>).</p>
+                <p>• <strong>Payé une seule fois</strong> : lors de vos prochaines commandes similaires, vous ne paierez plus la consigne.</p>
+                <p>• <strong>Échange ou Remboursement</strong> : nous récupérons le contenant vide pour le laver et le re-remplir, ou nous vous rendons son montant.</p>
+                <p>• <strong>Conservation libre</strong> : vous pouvez aussi choisir de le garder définitivement.</p>
+            </div>
+            <button onclick="closeConsigneModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">J'ai compris</button>
         </div>
     </div>
 
@@ -269,6 +293,8 @@
         let currentCalculatedTotal = 0;
         let currentShippingFee = 0;
         let isDeliverable = true;
+        
+        let shownConsignePopups = {};
 
         const DUPPIGHEIM_LAT = 48.5284;
         const DUPPIGHEIM_LON = 7.5933;
@@ -362,15 +388,46 @@
             document.getElementById('product-modal').classList.add('hidden');
         }
 
+        function closeConsigneModal() {
+            document.getElementById('consigne-modal').classList.add('hidden');
+        }
+
         function updateCart(productId, delta) {
             const prod = catalogProducts.find(p => p.id === productId);
             if (!prod) return;
             const cartKey = `prod_${productId}`;
-            if (!selectedCart[cartKey]) selectedCart[cartKey] = { id: cartKey, name: prod.name, price_week: prod.price_week, quantity: 0 };
+
+            // Association des consignes par ID de produit (ID 4: Liquide vaisselle, ID 5: Nettoyant sol, ID 6: Savon main)
+            let consigneAmount = 0;
+            if (productId === 4 || productId === 6) {
+                consigneAmount = 1.00;
+            } else if (productId === 5) {
+                consigneAmount = 2.50;
+            }
+
+            if (!selectedCart[cartKey]) {
+                selectedCart[cartKey] = { 
+                    id: cartKey, 
+                    name: prod.name, 
+                    price_week: prod.price_week, 
+                    consigne: consigneAmount,
+                    quantity: 0 
+                };
+            }
             
+            const prevQty = selectedCart[cartKey].quantity;
             selectedCart[cartKey].quantity += delta;
+
+            // Déclenchement de la pop-up de consigne au premier ajout
+            if (delta > 0 && prevQty === 0 && consigneAmount > 0 && !shownConsignePopups[productId]) {
+                shownConsignePopups[productId] = true;
+                document.getElementById('consigne-price-tag').textContent = consigneAmount.toFixed(2) + ' €';
+                document.getElementById('consigne-modal').classList.remove('hidden');
+            }
+
             if (selectedCart[cartKey].quantity <= 0) {
                 delete selectedCart[cartKey];
+                shownConsignePopups[productId] = false;
                 const qtyEl = document.getElementById(`qty-${productId}`);
                 if (qtyEl) qtyEl.textContent = '0';
             } else {
@@ -426,21 +483,35 @@
 
             keys.forEach(key => {
                 const item = selectedCart[key];
-                const itemPrice = item.price_week * item.quantity;
-                itemsTotal += itemPrice;
+                const productPrice = item.price_week * item.quantity;
+                const consignePrice = (item.consigne || 0) * item.quantity;
+                const itemTotal = productPrice + consignePrice;
+                
+                itemsTotal += productPrice;
                 totalItemsCount += item.quantity;
+
+                let consigneHtml = consignePrice > 0 ? `<div class="text-[10px] text-brand-red">+ consigne unitaire (${item.consigne.toFixed(2)} €)</div>` : '';
+
                 cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-1.5 border-b border-brand-border last:border-0">
-                        <span class="text-gray-300">${item.quantity}x ${item.name}</span>
-                        <span class="font-bold text-white">${itemPrice.toFixed(2)} €</span>
+                    <div class="py-1.5 border-b border-brand-border last:border-0 space-y-0.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-300">${item.quantity}x ${item.name}</span>
+                            <span class="font-bold text-white">${itemTotal.toFixed(2)} €</span>
+                        </div>
+                        ${consigneHtml}
                     </div>
                 `;
             });
 
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
 
+            let grandItemsTotal = 0;
+            keys.forEach(k => {
+                grandItemsTotal += (selectedCart[k].price_week * selectedCart[k].quantity) + ((selectedCart[k].consigne || 0) * selectedCart[k].quantity);
+            });
+
             if (addressInput.length < 5) {
-                currentCalculatedTotal = itemsTotal;
+                currentCalculatedTotal = grandItemsTotal;
                 document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
@@ -465,7 +536,7 @@
                                 Non livrable pour le moment, arrive prochainement (${distance} km)
                             </div>
                         `;
-                        currentCalculatedTotal = itemsTotal;
+                        currentCalculatedTotal = grandItemsTotal;
                     } else {
                         isDeliverable = true;
                         if (distance <= 10) currentShippingFee = 1.50;
@@ -478,7 +549,7 @@
                                 <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
                             </div>
                         `;
-                        currentCalculatedTotal = itemsTotal + currentShippingFee;
+                        currentCalculatedTotal = grandItemsTotal + currentShippingFee;
                     }
                 }
             } catch (e) {
@@ -512,7 +583,9 @@
         async function handleOrderSubmit(e) {
             e.preventDefault();
             const minArticlesSubtotal = 5.00;
-            const itemsTotal = currentCalculatedTotal - currentShippingFee;
+            let itemsTotal = 0;
+            Object.values(selectedCart).forEach(i => { itemsTotal += (i.price_week * i.quantity); });
+
             const isSubChecked = document.getElementById('sub-toggle').checked;
             const subFreq = isSubChecked ? document.querySelector('input[name="sub_frequency"]:checked').value : 'unique';
 
@@ -527,7 +600,11 @@
             const nom = document.getElementById('client-nom').value;
             const adresse = document.getElementById('client-adresse').value;
             const telephone = document.getElementById('client-telephone').value;
-            const itemsSummary = Object.values(selectedCart).map(i => `${i.quantity}x ${i.name}`).join(', ');
+            const itemsSummary = Object.values(selectedCart).map(i => {
+                let text = `${i.quantity}x ${i.name}`;
+                if (i.consigne > 0) text += ` (avec consigne ${i.consigne}€)`;
+                return text;
+            }).join(', ');
             const priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison) [Type: ${subFreq}]`;
 
             emailjs.send("service_988n3j9", "template_p6qhejv", {
@@ -546,6 +623,7 @@
         function closeModalAndReset() {
             document.getElementById('modal-success').classList.add('hidden');
             selectedCart = {};
+            shownConsignePopups = {};
             document.getElementById('order-form').reset();
             document.getElementById('sub-options').classList.add('hidden');
             catalogProducts.forEach(p => {
