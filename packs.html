@@ -178,7 +178,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Adresse complète *</label>
-                            <input type="text" id="client-adresse" required oninput="updateCartDisplay()" placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
+                            <input type="text" id="client-adresse" required oninput="debounceUpdateCart()" placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Téléphone *</label>
@@ -486,7 +486,15 @@
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
         }
 
- async function updateCartDisplay() {
+ let addressTimer;
+function debounceUpdateCart() {
+    clearTimeout(addressTimer);
+    addressTimer = setTimeout(() => {
+        updateCartDisplay();
+    }, 400);
+}
+
+async function updateCartDisplay() {
     const cartContainer = document.getElementById('cart-items');
     const isSubChecked = document.getElementById('sub-toggle').checked;
     const periodLabel = document.getElementById('period-label');
@@ -512,6 +520,7 @@
         document.getElementById('cart-total').textContent = '0.00 €';
         document.getElementById('items-count').textContent = '0 article';
         currentCalculatedTotal = 0;
+        currentShippingFee = 0;
         
         submitBtn.disabled = true;
         submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
@@ -561,7 +570,9 @@
         `;
     }
 
+    // Gestion de la livraison par défaut si l'adresse est trop courte
     if (addressInput.length < 5) {
+        currentShippingFee = 0;
         currentCalculatedTotal = discountedSubtotal;
         document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
         submitBtn.disabled = true;
@@ -584,7 +595,7 @@
                 currentShippingFee = 0;
                 cartContainer.innerHTML += `
                     <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
-                        Non livrable pour le moment (${distance} km > 30 km)
+                        Non livrable (${distance} km > 30 km max)
                     </div>
                 `;
                 currentCalculatedTotal = discountedSubtotal;
@@ -603,10 +614,11 @@
                 currentCalculatedTotal = discountedSubtotal + currentShippingFee;
             }
         } else {
-            // Si l'API BAN ne trouve pas l'adresse exacte, on affiche une alerte discrète dans le panier
+            isDeliverable = false;
+            currentShippingFee = 0;
             cartContainer.innerHTML += `
                 <div class="py-2 border-t border-brand-border mt-2 pt-2 text-yellow-500 text-center text-[11px]">
-                    Adresse introuvable par l'API, vérifiez l'orthographe.
+                    Adresse introuvable, précisez la ville.
                 </div>
             `;
             currentCalculatedTotal = discountedSubtotal;
@@ -627,7 +639,7 @@
         submitBtn.disabled = true;
         submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
         minAlert.classList.remove('hidden');
-        minAlertText.textContent = `Zone non livrable pour le moment (> 30 km).`;
+        minAlertText.textContent = `Adresse hors zone de livraison (> 30 km).`;
     } else if (itemsTotal < minArticlesSubtotal) {
         submitBtn.disabled = true;
         submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
