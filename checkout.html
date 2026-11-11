@@ -253,7 +253,7 @@
             feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
 
             try {
-                const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
+                const res = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(addressInput)}&limit=1`);
                 const data = await res.json();
 
                 if (data.features && data.features.length > 0) {
