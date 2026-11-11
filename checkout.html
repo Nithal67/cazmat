@@ -38,7 +38,7 @@
                 <span class="font-bold tracking-wider text-white text-xl uppercase">CAZMAT</span>
             </a>
             <a href="packs.html" class="border border-brand-border hover:border-brand-red text-gray-300 hover:text-white px-5 py-2 text-xs font-bold uppercase tracking-wider transition duration-300 flex items-center gap-2">
-                <i class="fa-solid fa-arrow-left"></i> Modifer mon panier
+                <i class="fa-solid fa-arrow-left"></i> Modifier mon panier
             </a>
         </div>
     </header>
@@ -236,69 +236,82 @@
                 `;
             }
 
+            // Ligne dynamique des frais de livraison dans le récapitulatif
+            if (isLocated && isDeliverable) {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center text-gray-300 pt-2 border-t border-brand-border">
+                        <span><i class="fa-solid fa-truck text-brand-red mr-1"></i> Frais de livraison</span>
+                        <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                    </div>
+                `;
+            }
+
             updateTotalDisplay();
         }
 
         async function locateAddress() {
-    const addressInput = document.getElementById('client-adresse').value.trim();
-    const feedbackEl = document.getElementById('location-feedback');
+            const addressInput = document.getElementById('client-adresse').value.trim();
+            const feedbackEl = document.getElementById('location-feedback');
 
-    if (addressInput.length < 5) {
-        feedbackEl.textContent = "Veuillez entrer une adresse valide avant de localiser.";
-        feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-        return;
-    }
+            if (addressInput.length < 5) {
+                feedbackEl.textContent = "Veuillez entrer une adresse valide avant de localiser.";
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                return;
+            }
 
-    feedbackEl.textContent = "Localisation et calcul en cours...";
-    feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
+            feedbackEl.textContent = "Localisation et calcul en cours...";
+            feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
 
-    try {
-        // 1. On récupère les coordonnées GPS via l'API Nominatim (OpenStreetMap), très stable
-        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressInput)}&limit=1`);
-        const geoData = await geoRes.json();
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressInput)}&limit=1`);
+                const geoData = await res.json();
 
-        if (!geoData || geoData.length === 0) {
-            isLocated = false;
-            feedbackEl.textContent = "Adresse introuvable. Précisez la rue et la ville.";
-            feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-            updateTotalDisplay();
+                if (!geoData || geoData.length === 0) {
+                    isLocated = false;
+                    isDeliverable = false;
+                    currentShippingFee = 0;
+                    feedbackEl.textContent = "Adresse introuvable. Précisez la rue et la ville.";
+                    feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                    document.getElementById('shipping-status-label').textContent = "Adresse introuvable";
+                    renderCartSummary();
+                    validateCheckoutState();
+                    return;
+                }
+
+                const clientLat = parseFloat(geoData[0].lat);
+                const clientLon = parseFloat(geoData[0].lon);
+                const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, clientLat, clientLon));
+
+                if (distance > 30) {
+                    isDeliverable = false;
+                    isLocated = true;
+                    currentShippingFee = 0;
+                    feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
+                    feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                    document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
+                } else {
+                    isDeliverable = true;
+                    isLocated = true;
+                    if (distance <= 10) currentShippingFee = 1.50;
+                    else if (distance <= 20) currentShippingFee = 3.00;
+                    else currentShippingFee = 6.00;
+
+                    feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
+                    feedbackEl.className = "text-[11px] font-semibold text-green-400";
+                    document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
+                }
+            } catch(e) {
+                isLocated = false;
+                isDeliverable = false;
+                currentShippingFee = 0;
+                feedbackEl.textContent = "Erreur lors de la localisation. Réessayez.";
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+            }
+
+            renderCartSummary();
             validateCheckoutState();
-            return;
         }
 
-        const clientLat = parseFloat(geoData[0].lat);
-        const clientLon = parseFloat(geoData[0].lon);
-
-        // 2. On calcule la distance à vol d'oiseau ou on utilise la formule Haversine depuis Duppigheim
-        const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, clientLat, clientLon));
-
-        if (distance > 30) {
-            isDeliverable = false;
-            isLocated = true;
-            currentShippingFee = 0;
-            feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
-            feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-            document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
-        } else {
-            isDeliverable = true;
-            isLocated = true;
-            if (distance <= 10) currentShippingFee = 1.50;
-            else if (distance <= 20) currentShippingFee = 3.00;
-            else currentShippingFee = 6.00;
-
-            feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
-            feedbackEl.className = "text-[11px] font-semibold text-green-400";
-            document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
-        }
-    } catch(e) {
-        isLocated = false;
-        feedbackEl.textContent = "Erreur lors de la localisation. Réessayez.";
-        feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-    }
-
-    updateTotalDisplay();
-    validateCheckoutState();
-}
         function updateTotalDisplay() {
             const subtotal = getSubtotal();
             const total = subtotal + currentShippingFee;
@@ -349,7 +362,6 @@
                 total_price: priceString
             }).catch(err => {});
 
-            // Vider le panier
             localStorage.removeItem('cazmat_cart');
             localStorage.removeItem('cazmat_discount');
 
