@@ -294,7 +294,6 @@
         let currentShippingFee = 0;
         let isDeliverable = true;
         
-        // Suivi pour n'afficher la pop-up de consigne qu'à la première addition de l'article
         let shownConsignePopups = {};
 
         const DUPPIGHEIM_LAT = 48.5284;
@@ -398,12 +397,11 @@
             if (!prod) return;
             const cartKey = `prod_${productId}`;
 
-            // Définition des consignes selon le produit
+            // Association des consignes par ID de produit (ID 4: Liquide vaisselle, ID 5: Nettoyant sol, ID 6: Savon main)
             let consigneAmount = 0;
-            const nameLower = prod.name.toLowerCase();
-            if (nameLower.includes('liquide vaisselle') || nameLower.includes('savon main')) {
+            if (productId === 4 || productId === 6) {
                 consigneAmount = 1.00;
-            } else if (nameLower.includes('nettoyant sol')) {
+            } else if (productId === 5) {
                 consigneAmount = 2.50;
             }
 
@@ -420,7 +418,7 @@
             const prevQty = selectedCart[cartKey].quantity;
             selectedCart[cartKey].quantity += delta;
 
-            // Si on ajoute l'article pour la première fois et qu'il a une consigne, afficher la pop-up
+            // Déclenchement de la pop-up de consigne au premier ajout
             if (delta > 0 && prevQty === 0 && consigneAmount > 0 && !shownConsignePopups[productId]) {
                 shownConsignePopups[productId] = true;
                 document.getElementById('consigne-price-tag').textContent = consigneAmount.toFixed(2) + ' €';
@@ -429,7 +427,7 @@
 
             if (selectedCart[cartKey].quantity <= 0) {
                 delete selectedCart[cartKey];
-                shownConsignePopups[productId] = false; // Réinitialiser pour pouvoir réafficher si besoin plus tard
+                shownConsignePopups[productId] = false;
                 const qtyEl = document.getElementById(`qty-${productId}`);
                 if (qtyEl) qtyEl.textContent = '0';
             } else {
@@ -489,7 +487,7 @@
                 const consignePrice = (item.consigne || 0) * item.quantity;
                 const itemTotal = productPrice + consignePrice;
                 
-                itemsTotal += productPrice; // Le minimum de 5€ s'applique sur les articles hors consigne
+                itemsTotal += productPrice;
                 totalItemsCount += item.quantity;
 
                 let consigneHtml = consignePrice > 0 ? `<div class="text-[10px] text-brand-red">+ consigne unitaire (${item.consigne.toFixed(2)} €)</div>` : '';
@@ -507,7 +505,6 @@
 
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
 
-            // Calcul du total global (produits + consignes)
             let grandItemsTotal = 0;
             keys.forEach(k => {
                 grandItemsTotal += (selectedCart[k].price_week * selectedCart[k].quantity) + ((selectedCart[k].consigne || 0) * selectedCart[k].quantity);
@@ -640,7 +637,7 @@
         function closeGalleryModal() { document.getElementById('gallery-modal').classList.add('hidden'); }
         function openLightbox(imgSrc) {
             document.getElementById('lightbox-img').src = imgSrc;
-            document.getElementById('lightbox-modal').classList.add('hidden');
+            document.getElementById('lightbox-modal').classList.remove('hidden');
         }
         function closeLightboxModal() { document.getElementById('lightbox-modal').classList.add('hidden'); }
     </script>
