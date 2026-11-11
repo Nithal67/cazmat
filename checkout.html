@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAZMAT | Finalisation de la Commande</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Montserrat"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            red: '#F57927',
+                            dark: '#0A0A0A',
+                            card: '#121212',
+                            border: '#262626'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body class="bg-brand-dark text-gray-200 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <header class="bg-black/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="images/logo.png" alt="Logo CAZMAT" class="w-9 h-9 object-contain group-hover:scale-105 transition-transform duration-300">
+                <span class="font-bold tracking-wider text-white text-xl uppercase">CAZMAT</span>
+            </a>
+            <a href="packs.html" class="border border-brand-border hover:border-brand-red text-gray-300 hover:text-white px-5 py-2 text-xs font-bold uppercase tracking-wider transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Modifer mon panier
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-grow py-12 px-6 max-w-4xl mx-auto w-full space-y-10">
+        
+        <div class="border-b border-brand-border pb-6 space-y-2">
+            <h1 class="text-3xl font-extrabold uppercase tracking-tight text-white">Finalisation de Commande</h1>
+            <p class="text-xs text-gray-400">Renseignez vos informations de livraison pour calculer les frais et valider.</p>
+        </div>
+
+        <div class="grid md:grid-cols-12 gap-8 items-start">
+            
+            <!-- RÉCAPITULATIF DU PANIER -->
+            <div class="md:col-span-5 bg-brand-card border border-brand-border p-6 space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-white border-b border-brand-border pb-3">Récapitulatif de la commande</h3>
+                <div id="checkout-cart-summary" class="space-y-2 text-xs text-gray-300 max-h-60 overflow-y-auto pr-1">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </div>
+
+            <!-- FORMULAIRE CLIENT & GEOLOCALISATION -->
+            <div class="md:col-span-7 bg-brand-card border border-brand-border p-6 space-y-6">
+                <form id="checkout-form" onsubmit="handleFinalOrder(event)" class="space-y-5">
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-white border-b border-brand-border pb-3">Informations de livraison</h3>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Prénom *</label>
+                                <input type="text" id="client-prenom" required class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nom *</label>
+                                <input type="text" id="client-nom" required class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Téléphone *</label>
+                            <input type="tel" id="client-telephone" required placeholder="06 12 34 56 78" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
+                        </div>
+
+                        <!-- ADRESSE & BOUTON LOCALISER -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Adresse complète *</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="client-adresse" required placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
+                                <button type="button" onclick="locateAddress()" class="bg-brand-red hover:bg-red-700 text-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition duration-300 shrink-0 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span>Localiser</span>
+                                </button>
+                            </div>
+                            <p id="location-feedback" class="text-[11px] font-semibold text-gray-400 italic">Veuillez cliquer sur "Localiser" pour calculer la livraison.</p>
+                        </div>
+                    </div>
+
+                    <!-- ABONNEMENT -->
+                    <div class="bg-black/60 p-4 border border-brand-border space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" id="sub-toggle" onchange="toggleSubOptions()" class="w-4 h-4 accent-brand-red rounded bg-brand-card border-brand-border">
+                            <span class="text-xs font-bold uppercase tracking-wider text-white">Je souhaite être livré par abonnement</span>
+                        </label>
+                        <div id="sub-options" class="hidden pt-2 border-t border-brand-border space-y-2">
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Fréquence :</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="sub_frequency" value="hebdo" checked class="peer sr-only">
+                                    <div class="text-center py-2 text-[10px] font-bold uppercase bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition">Hebdomadaire</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="sub_frequency" value="mensuel" class="peer sr-only">
+                                    <div class="text-center py-2 text-[10px] font-bold uppercase bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition">Mensuel</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DISPLAY TOTAL FINAL -->
+                    <div class="flex justify-between items-center py-4 px-5 bg-black/60 border border-brand-border">
+                        <div>
+                            <span class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Total à la livraison</span>
+                            <span class="text-[10px] text-brand-red uppercase tracking-wider font-semibold" id="shipping-status-label">Livraison non calculée</span>
+                        </div>
+                        <span id="final-total" class="font-extrabold text-2xl text-white">0.00 €</span>
+                    </div>
+
+                    <!-- CONFIRMATION OBLIGATOIRE -->
+                    <div class="pt-2">
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" id="confirm-check" onchange="validateCheckoutState()" class="w-4 h-4 accent-brand-red rounded bg-brand-card border-brand-border">
+                            <span class="text-xs font-bold uppercase tracking-wider text-white">Je confirme vouloir commander</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="submit-final-btn" disabled class="w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300">
+                        Commander
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL SUCCÈS -->
+    <div id="modal-success" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-card border border-brand-border p-8 max-w-md w-full text-center shadow-2xl space-y-6">
+            <div class="w-12 h-12 bg-brand-red/10 border border-brand-red text-brand-red flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-lg font-bold uppercase tracking-wider text-white">Commande enregistrée</h2>
+            <p class="text-xs text-gray-300">Montant à régler à la livraison : <span id="modal-price-tag" class="font-extrabold text-white">0.00€</span></p>
+            <p class="text-[11px] text-gray-400 bg-black/60 p-4 border border-brand-border text-left leading-relaxed">Nous vous contacterons très rapidement pour convenir d'une date de livraison.</p>
+            <a href="index.html" class="block w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Retour à l'accueil</a>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        emailjs.init("oSstg-IAyj_8SX1Ep");
+
+        let selectedCart = {};
+        let discountPercent = 0;
+        let currentShippingFee = 0;
+        let isLocated = false;
+        let isDeliverable = false;
+
+        const DUPPIGHEIM_LAT = 48.5284;
+        const DUPPIGHEIM_LON = 7.5933;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedCart = localStorage.getItem('cazmat_cart');
+            const savedDiscount = localStorage.getItem('cazmat_discount');
+
+            if (savedCart) {
+                try { selectedCart = JSON.parse(savedCart); } catch(e){}
+            }
+            if (savedDiscount) discountPercent = parseFloat(savedDiscount) || 0;
+
+            if (Object.keys(selectedCart).length === 0) {
+                window.location.href = 'packs.html';
+                return;
+            }
+
+            renderCartSummary();
+        });
+
+        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        }
+
+        function getSubtotal() {
+            let total = 0;
+            Object.values(selectedCart).forEach(i => {
+                total += (i.price_week * i.quantity) + ((i.consigne || 0) * i.quantity);
+            });
+            return total - (total * discountPercent);
+        }
+
+        function renderCartSummary() {
+            const container = document.getElementById('checkout-cart-summary');
+            container.innerHTML = '';
+            
+            Object.values(selectedCart).forEach(item => {
+                const pPrice = item.price_week * item.quantity;
+                const cPrice = (item.consigne || 0) * item.quantity;
+                const total = pPrice + cPrice;
+
+                let consigneText = cPrice > 0 ? `<div class="text-[10px] text-brand-red">+ consigne unitaire (${item.consigne.toFixed(2)} €)</div>` : '';
+
+                container.innerHTML += `
+                    <div class="py-1.5 border-b border-brand-border last:border-0">
+                        <div class="flex justify-between items-center">
+                            <span>${item.quantity}x ${item.name}</span>
+                            <span class="font-bold text-white">${total.toFixed(2)} €</span>
+                        </div>
+                        ${consigneText}
+                    </div>
+                `;
+            });
+
+            if (discountPercent > 0) {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center text-green-400 font-bold pt-2 border-t border-brand-border">
+                        <span>Réduction promo (-10%)</span>
+                        <span>- ${(getSubtotal() / 0.9 * 0.1).toFixed(2)} €</span>
+                    </div>
+                `;
+            }
+
+            updateTotalDisplay();
+        }
+
+        async function locateAddress() {
+            const addressInput = document.getElementById('client-adresse').value.trim();
+            const feedbackEl = document.getElementById('location-feedback');
+
+            if (addressInput.length < 5) {
+                feedbackEl.textContent = "Veuillez entrer une adresse valide avant de localiser.";
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                return;
+            }
+
+            feedbackEl.textContent = "Calcul de la distance en cours...";
+            feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
+
+            try {
+                const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
+                const data = await res.json();
+
+                if (data.features && data.features.length > 0) {
+                    const coords = data.features[0].geometry.coordinates;
+                    const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+
+                    if (distance > 30) {
+                        isDeliverable = false;
+                        isLocated = true;
+                        currentShippingFee = 0;
+                        feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
+                        feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                        document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
+                    } else {
+                        isDeliverable = true;
+                        isLocated = true;
+                        if (distance <= 10) currentShippingFee = 1.50;
+                        else if (distance <= 20) currentShippingFee = 3.00;
+                        else currentShippingFee = 6.00;
+
+                        feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
+                        feedbackEl.className = "text-[11px] font-semibold text-green-400";
+                        document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
+                    }
+                } else {
+                    isLocated = false;
+                    feedbackEl.textContent = "Adresse introuvable. Veuillez préciser la commune.";
+                    feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                }
+            } catch(e) {
+                feedbackEl.textContent = "Erreur de géolocalisation. Réessayez.";
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+            }
+
+            updateTotalDisplay();
+            validateCheckoutState();
+        }
+
+        function updateTotalDisplay() {
+            const subtotal = getSubtotal();
+            const total = subtotal + currentShippingFee;
+            document.getElementById('final-total').textContent = total.toFixed(2) + ' €';
+        }
+
+        function toggleSubOptions() {
+            const isChecked = document.getElementById('sub-toggle').checked;
+            const options = document.getElementById('sub-options');
+            if (isChecked) options.classList.remove('hidden');
+            else options.classList.add('hidden');
+        }
+
+        function validateCheckoutState() {
+            const isConfirmed = document.getElementById('confirm-check').checked;
+            const submitBtn = document.getElementById('submit-final-btn');
+
+            if (isLocated && isDeliverable && isConfirmed) {
+                submitBtn.disabled = false;
+                submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 cursor-pointer shadow-lg shadow-brand-red/20";
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+            }
+        }
+
+        async function handleFinalOrder(e) {
+            e.preventDefault();
+            if (!isLocated || !isDeliverable) return alert("Veuillez localiser une adresse livrable.");
+
+            const prenom = document.getElementById('client-prenom').value;
+            const nom = document.getElementById('client-nom').value;
+            const adresse = document.getElementById('client-adresse').value;
+            const telephone = document.getElementById('client-telephone').value;
+            const isSub = document.getElementById('sub-toggle').checked;
+            const subFreq = isSub ? document.querySelector('input[name="sub_frequency"]:checked').value : 'unique';
+
+            const grandTotal = getSubtotal() + currentShippingFee;
+            const itemsSummary = Object.values(selectedCart).map(i => `${i.quantity}x ${i.name}`).join(', ');
+            const priceString = grandTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € livraison) [Abonnement: ${subFreq}]`;
+
+            emailjs.send("service_988n3j9", "template_p6qhejv", {
+                to_email: "thomanathan@outlook.fr",
+                client_name: `${prenom} ${nom}`,
+                client_address: adresse,
+                client_phone: telephone,
+                cart_summary: itemsSummary,
+                total_price: priceString
+            }).catch(err => {});
+
+            // Vider le panier
+            localStorage.removeItem('cazmat_cart');
+            localStorage.removeItem('cazmat_discount');
+
+            document.getElementById('modal-price-tag').textContent = priceString;
+            document.getElementById('modal-success').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
