@@ -485,15 +485,6 @@
                       Math.sin(dLon / 2) * Math.sin(dLon / 2);
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
         }
-
- let addressTimer;
-function debounceUpdateCart() {
-    clearTimeout(addressTimer);
-    addressTimer = setTimeout(() => {
-        updateCartDisplay();
-    }, 400);
-}
-
 async function updateCartDisplay() {
     const cartContainer = document.getElementById('cart-items');
     const isSubChecked = document.getElementById('sub-toggle').checked;
@@ -570,64 +561,55 @@ async function updateCartDisplay() {
         `;
     }
 
-    // Gestion de la livraison par défaut si l'adresse est trop courte
-    if (addressInput.length < 5) {
-        currentShippingFee = 0;
-        currentCalculatedTotal = discountedSubtotal;
-        document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-        submitBtn.disabled = true;
-        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-        minAlert.classList.remove('hidden');
-        minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
-        return;
-    }
+    // Valeur par défaut si l'adresse est trop courte
+    currentShippingFee = 0;
+    isDeliverable = true;
 
-    try {
-        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
-        const data = await res.json();
-        
-        if (data.features && data.features.length > 0) {
-            const coords = data.features[0].geometry.coordinates;
-            const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+    if (addressInput.length >= 5) {
+        try {
+            const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
+            const data = await res.json();
+            
+            if (data.features && data.features.length > 0) {
+                const coords = data.features[0].geometry.coordinates;
+                const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
 
-            if (distance > 30) {
-                isDeliverable = false;
-                currentShippingFee = 0;
-                cartContainer.innerHTML += `
-                    <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
-                        Non livrable (${distance} km > 30 km max)
-                    </div>
-                `;
-                currentCalculatedTotal = discountedSubtotal;
+                if (distance > 30) {
+                    isDeliverable = false;
+                    currentShippingFee = 0;
+                    cartContainer.innerHTML += `
+                        <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
+                            Non livrable (${distance} km > 30 km max)
+                        </div>
+                    `;
+                } else {
+                    isDeliverable = true;
+                    if (distance <= 10) currentShippingFee = 1.50;
+                    else if (distance <= 20) currentShippingFee = 3.00;
+                    else currentShippingFee = 6.00;
+
+                    // Injection explicite des frais de port dans le récapitulatif
+                    cartContainer.innerHTML += `
+                        <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
+                            <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
+                            <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                        </div>
+                    `;
+                }
             } else {
-                isDeliverable = true;
-                if (distance <= 10) currentShippingFee = 1.50;
-                else if (distance <= 20) currentShippingFee = 3.00;
-                else currentShippingFee = 6.00;
-
                 cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
-                        <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
-                        <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                    <div class="py-2 border-t border-brand-border mt-2 pt-2 text-yellow-500 text-center text-[11px]">
+                        Adresse introuvable par l'API.
                     </div>
                 `;
-                currentCalculatedTotal = discountedSubtotal + currentShippingFee;
             }
-        } else {
-            isDeliverable = false;
-            currentShippingFee = 0;
-            cartContainer.innerHTML += `
-                <div class="py-2 border-t border-brand-border mt-2 pt-2 text-yellow-500 text-center text-[11px]">
-                    Adresse introuvable, précisez la ville.
-                </div>
-            `;
-            currentCalculatedTotal = discountedSubtotal;
+        } catch (e) {
+            console.error("Erreur géocodage:", e);
         }
-    } catch (e) {
-        console.error("Erreur géocodage:", e);
-        currentCalculatedTotal = discountedSubtotal;
     }
 
+    // Le total calculé inclut désormais toujours les frais de livraison s'ils sont applicables
+    currentCalculatedTotal = discountedSubtotal + currentShippingFee;
     document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
 
     if (addressInput.trim().length <= 3) {
@@ -651,7 +633,6 @@ async function updateCartDisplay() {
         minAlert.classList.add('hidden');
     }
 }
-
         async function handleOrderSubmit(e) {
             e.preventDefault();
             const minArticlesSubtotal = 5.00;
