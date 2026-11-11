@@ -486,152 +486,159 @@
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
         }
 
-        async function updateCartDisplay() {
-            const cartContainer = document.getElementById('cart-items');
-            const isSubChecked = document.getElementById('sub-toggle').checked;
-            const periodLabel = document.getElementById('period-label');
-            const submitBtn = document.getElementById('submit-order-btn');
-            const minAlert = document.getElementById('min-order-alert');
-            const minAlertText = document.getElementById('min-alert-text');
-            const addressInput = document.getElementById('client-adresse').value.trim();
-            
-            cartContainer.innerHTML = '';
-            let itemsTotal = 0, totalItemsCount = 0;
-            const minArticlesSubtotal = 5.00;
+ async function updateCartDisplay() {
+    const cartContainer = document.getElementById('cart-items');
+    const isSubChecked = document.getElementById('sub-toggle').checked;
+    const periodLabel = document.getElementById('period-label');
+    const submitBtn = document.getElementById('submit-order-btn');
+    const minAlert = document.getElementById('min-order-alert');
+    const minAlertText = document.getElementById('min-alert-text');
+    const addressInput = document.getElementById('client-adresse').value.trim();
+    
+    cartContainer.innerHTML = '';
+    let itemsTotal = 0, totalItemsCount = 0;
+    const minArticlesSubtotal = 5.00;
 
-            if (isSubChecked) {
-                const subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
-                periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
-            } else {
-                periodLabel.textContent = 'Commande unique';
-            }
+    if (isSubChecked) {
+        const subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
+        periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
+    } else {
+        periodLabel.textContent = 'Commande unique';
+    }
 
-            const keys = Object.keys(selectedCart);
-            if (keys.length === 0) {
-                cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
-                document.getElementById('cart-total').textContent = '0.00 €';
-                document.getElementById('items-count').textContent = '0 article';
-                currentCalculatedTotal = 0;
-                
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
-                return;
-            }
+    const keys = Object.keys(selectedCart);
+    if (keys.length === 0) {
+        cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
+        document.getElementById('cart-total').textContent = '0.00 €';
+        document.getElementById('items-count').textContent = '0 article';
+        currentCalculatedTotal = 0;
+        
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
+        return;
+    }
 
-            keys.forEach(key => {
-                const item = selectedCart[key];
-                const productPrice = item.price_week * item.quantity;
-                const consignePrice = (item.consigne || 0) * item.quantity;
-                const itemTotal = productPrice + consignePrice;
-                
-                itemsTotal += productPrice;
-                totalItemsCount += item.quantity;
+    keys.forEach(key => {
+        const item = selectedCart[key];
+        const productPrice = item.price_week * item.quantity;
+        const consignePrice = (item.consigne || 0) * item.quantity;
+        const itemTotal = productPrice + consignePrice;
+        
+        itemsTotal += productPrice;
+        totalItemsCount += item.quantity;
 
-                let consigneHtml = consignePrice > 0 ? `<div class="text-[10px] text-brand-red">+ consigne unitaire (${item.consigne.toFixed(2)} €)</div>` : '';
+        let consigneHtml = consignePrice > 0 ? `<div class="text-[10px] text-brand-red">+ consigne unitaire (${item.consigne.toFixed(2)} €)</div>` : '';
 
+        cartContainer.innerHTML += `
+            <div class="py-1.5 border-b border-brand-border last:border-0 space-y-0.5">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="text-gray-300">${item.quantity}x ${item.name}</span>
+                    <span class="font-bold text-white">${itemTotal.toFixed(2)} €</span>
+                </div>
+                ${consigneHtml}
+            </div>
+        `;
+    });
+
+    document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
+
+    let grandItemsTotal = 0;
+    keys.forEach(k => {
+        grandItemsTotal += (selectedCart[k].price_week * selectedCart[k].quantity) + ((selectedCart[k].consigne || 0) * selectedCart[k].quantity);
+    });
+
+    let discountAmount = grandItemsTotal * discountPercent;
+    let discountedSubtotal = grandItemsTotal - discountAmount;
+
+    if (discountPercent > 0) {
+        cartContainer.innerHTML += `
+            <div class="flex justify-between items-center text-xs py-1.5 border-t border-brand-border text-green-400 font-bold">
+                <span>Réduction promo (-10%)</span>
+                <span>- ${discountAmount.toFixed(2)} €</span>
+            </div>
+        `;
+    }
+
+    if (addressInput.length < 5) {
+        currentCalculatedTotal = discountedSubtotal;
+        document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
+        return;
+    }
+
+    try {
+        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
+        const data = await res.json();
+        
+        if (data.features && data.features.length > 0) {
+            const coords = data.features[0].geometry.coordinates;
+            const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+
+            if (distance > 30) {
+                isDeliverable = false;
+                currentShippingFee = 0;
                 cartContainer.innerHTML += `
-                    <div class="py-1.5 border-b border-brand-border last:border-0 space-y-0.5">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-gray-300">${item.quantity}x ${item.name}</span>
-                            <span class="font-bold text-white">${itemTotal.toFixed(2)} €</span>
-                        </div>
-                        ${consigneHtml}
+                    <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
+                        Non livrable pour le moment (${distance} km > 30 km)
                     </div>
                 `;
-            });
-
-            document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
-
-            // Calcul du total brut (produits + consignes)
-            let grandItemsTotal = 0;
-            keys.forEach(k => {
-                grandItemsTotal += (selectedCart[k].price_week * selectedCart[k].quantity) + ((selectedCart[k].consigne || 0) * selectedCart[k].quantity);
-            });
-
-            // Application de la réduction promo (sur le panier total)
-            let discountAmount = grandItemsTotal * discountPercent;
-            let discountedSubtotal = grandItemsTotal - discountAmount;
-
-            if (discountPercent > 0) {
-                cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center text-xs py-1.5 border-t border-brand-border text-green-400 font-bold">
-                        <span>Réduction promo (-10%)</span>
-                        <span>- ${discountAmount.toFixed(2)} €</span>
-                    </div>
-                `;
-            }
-
-            if (addressInput.length < 5) {
                 currentCalculatedTotal = discountedSubtotal;
-                document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
-                return;
-            }
-
-            try {
-                const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
-                const data = await res.json();
-                
-                if (data.features && data.features.length > 0) {
-                    const coords = data.features[0].geometry.coordinates;
-                    const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
-
-                    if (distance > 30) {
-                        isDeliverable = false;
-                        currentShippingFee = 0;
-                        cartContainer.innerHTML += `
-                            <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
-                                Non livrable pour le moment, arrive prochainement (${distance} km)
-                            </div>
-                        `;
-                        currentCalculatedTotal = discountedSubtotal;
-                    } else {
-                        isDeliverable = true;
-                        if (distance <= 10) currentShippingFee = 1.50;
-                        else if (distance <= 20) currentShippingFee = 3.00;
-                        else currentShippingFee = 6.00;
-
-                        cartContainer.innerHTML += `
-                            <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
-                                <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
-                                <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
-                            </div>
-                        `;
-                        currentCalculatedTotal = discountedSubtotal + currentShippingFee;
-                    }
-                }
-            } catch (e) {
-                console.error("Erreur géocodage:", e);
-            }
-
-            document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-
-            if (addressInput.trim().length <= 3) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
-            } else if (!isDeliverable) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Zone non livrable pour le moment (> 30 km).`;
-            } else if (itemsTotal < minArticlesSubtotal) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
             } else {
-                submitBtn.disabled = false;
-                submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
-                minAlert.classList.add('hidden');
+                isDeliverable = true;
+                if (distance <= 10) currentShippingFee = 1.50;
+                else if (distance <= 20) currentShippingFee = 3.00;
+                else currentShippingFee = 6.00;
+
+                cartContainer.innerHTML += `
+                    <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
+                        <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
+                        <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
+                    </div>
+                `;
+                currentCalculatedTotal = discountedSubtotal + currentShippingFee;
             }
+        } else {
+            // Si l'API BAN ne trouve pas l'adresse exacte, on affiche une alerte discrète dans le panier
+            cartContainer.innerHTML += `
+                <div class="py-2 border-t border-brand-border mt-2 pt-2 text-yellow-500 text-center text-[11px]">
+                    Adresse introuvable par l'API, vérifiez l'orthographe.
+                </div>
+            `;
+            currentCalculatedTotal = discountedSubtotal;
         }
+    } catch (e) {
+        console.error("Erreur géocodage:", e);
+        currentCalculatedTotal = discountedSubtotal;
+    }
+
+    document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
+
+    if (addressInput.trim().length <= 3) {
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
+    } else if (!isDeliverable) {
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Zone non livrable pour le moment (> 30 km).`;
+    } else if (itemsTotal < minArticlesSubtotal) {
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+        minAlert.classList.remove('hidden');
+        minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
+        minAlert.classList.add('hidden');
+    }
+}
 
         async function handleOrderSubmit(e) {
             e.preventDefault();
