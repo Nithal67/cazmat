@@ -240,58 +240,70 @@
         }
 
         async function locateAddress() {
-            const addressInput = document.getElementById('client-adresse').value.trim();
-            const feedbackEl = document.getElementById('location-feedback');
+    const addressInput = document.getElementById('client-adresse').value.trim();
+    const feedbackEl = document.getElementById('location-feedback');
 
-            if (addressInput.length < 5) {
-                feedbackEl.textContent = "Veuillez entrer une adresse valide avant de localiser.";
-                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-                return;
-            }
+    if (addressInput.length < 5) {
+        feedbackEl.textContent = "Veuillez entrer une adresse valide avant de localiser.";
+        feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+        return;
+    }
 
-            feedbackEl.textContent = "Calcul de la distance en cours...";
-            feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
+    feedbackEl.textContent = "Localisation en cours...";
+    feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
 
-            try {
-                const res = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(addressInput)}&limit=1`);
-                const data = await res.json();
+    // Utilisation d'un AbortController pour stopper la requête si elle dépasse 5 secondes (évite le blocage 504)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-                if (data.features && data.features.length > 0) {
-                    const coords = data.features[0].geometry.coordinates;
-                    const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+    try {
+        const res = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(addressInput)}&limit=1`, {
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
 
-                    if (distance > 30) {
-                        isDeliverable = false;
-                        isLocated = true;
-                        currentShippingFee = 0;
-                        feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
-                        feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-                        document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
-                    } else {
-                        isDeliverable = true;
-                        isLocated = true;
-                        if (distance <= 10) currentShippingFee = 1.50;
-                        else if (distance <= 20) currentShippingFee = 3.00;
-                        else currentShippingFee = 6.00;
-
-                        feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
-                        feedbackEl.className = "text-[11px] font-semibold text-green-400";
-                        document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
-                    }
-                } else {
-                    isLocated = false;
-                    feedbackEl.textContent = "Adresse introuvable. Veuillez préciser la commune.";
-                    feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-                }
-            } catch(e) {
-                feedbackEl.textContent = "Erreur de géolocalisation. Réessayez.";
-                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-            }
-
-            updateTotalDisplay();
-            validateCheckoutState();
+        if (!res.ok) {
+            throw new Error(`Erreur serveur (${res.status})`);
         }
 
+        const data = await res.json();
+
+        if (data.features && data.features.length > 0) {
+            const coords = data.features[0].geometry.coordinates;
+            const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+
+            if (distance > 30) {
+                isDeliverable = false;
+                isLocated = true;
+                currentShippingFee = 0;
+                feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
+            } else {
+                isDeliverable = true;
+                isLocated = true;
+                if (distance <= 10) currentShippingFee = 1.50;
+                else if (distance <= 20) currentShippingFee = 3.00;
+                else currentShippingFee = 6.00;
+
+                feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
+                feedbackEl.className = "text-[11px] font-semibold text-green-400";
+                document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
+            }
+        } else {
+            isLocated = false;
+            feedbackEl.textContent = "Adresse introuvable. Veuillez vérifier l'orthographe.";
+            feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+        }
+    } catch(e) {
+        isLocated = false;
+        feedbackEl.textContent = "Le service de géolocalisation est temporairement indisponible (504). Réessayez dans un instant.";
+        feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+    }
+
+    updateTotalDisplay();
+    validateCheckoutState();
+}
         function updateTotalDisplay() {
             const subtotal = getSubtotal();
             const total = subtotal + currentShippingFee;
