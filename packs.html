@@ -26,7 +26,6 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         #modal-img-container {
             overflow: hidden;
@@ -102,14 +101,14 @@
                 </div>
             </div>
 
-            <!-- PANIER & FORMULAIRE -->
+            <!-- PANIER SEUL -->
             <div class="lg:col-span-5 bg-brand-card border border-brand-border p-8 sticky top-28 space-y-6">
                 <div class="flex items-center justify-between pb-4 border-b border-brand-border">
-                    <h3 class="font-bold text-xs uppercase tracking-widest text-white">Récapitulatif</h3>
+                    <h3 class="font-bold text-xs uppercase tracking-widest text-white">Votre Panier</h3>
                     <span id="items-count" class="text-[10px] font-bold uppercase tracking-wider text-brand-red bg-black/60 px-3 py-1 border border-brand-border">0 article</span>
                 </div>
 
-                <div id="cart-items" class="space-y-3 max-h-48 overflow-y-auto pr-1 text-xs text-gray-300">
+                <div id="cart-items" class="space-y-3 max-h-56 overflow-y-auto pr-1 text-xs text-gray-300">
                     <p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>
                 </div>
 
@@ -123,90 +122,40 @@
                     <div id="promo-feedback" class="text-[11px] hidden font-semibold"></div>
                 </div>
 
-                <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-5 pt-2">
-                    
-                    <!-- OPTION ABONNEMENT -->
-                    <div class="bg-black/60 p-4 border border-brand-border space-y-3">
-                        <label class="flex items-center gap-3 cursor-pointer select-none">
-                            <input type="checkbox" id="sub-toggle" onchange="toggleSubscriptionOptions()" class="w-4 h-4 accent-brand-red rounded bg-brand-card border-brand-border">
-                            <span class="text-xs font-bold uppercase tracking-wider text-white">Je souhaite être livré par abonnement</span>
-                        </label>
-
-                        <div id="sub-options" class="hidden pt-2 border-t border-brand-border space-y-2">
-                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Fréquence d'abonnement :</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="sub_frequency" value="hebdo" checked onchange="updateCartDisplay()" class="peer sr-only">
-                                    <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                        Hebdomadaire
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="sub_frequency" value="mensuel" onchange="updateCartDisplay()" class="peer sr-only">
-                                    <div class="text-center py-2 px-1 text-[10px] font-bold uppercase tracking-wider bg-brand-card text-gray-400 border border-brand-border peer-checked:bg-brand-red peer-checked:text-white peer-checked:border-brand-red transition duration-300">
-                                        Mensuel
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
+                <!-- SOUS-TOTAL D'ARTICLES -->
+                <div class="flex justify-between items-center py-4 px-5 bg-black/60 border border-brand-border">
+                    <div>
+                        <span class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Sous-total Panier</span>
+                        <span class="text-[10px] text-gray-500 uppercase tracking-wider">Hors frais de livraison</span>
                     </div>
+                    <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
+                </div>
 
-                    <div class="flex justify-between items-center py-4 px-5 bg-black/60 border border-brand-border">
-                        <div>
-                            <span class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Total à la livraison</span>
-                            <span id="period-label" class="text-[10px] text-brand-red uppercase tracking-wider">Commande unique</span>
-                        </div>
-                        <span id="cart-total" class="font-extrabold text-2xl text-white">0.00 €</span>
-                    </div>
+                <!-- ALERTE MINIMUM DE COMMANDE -->
+                <div id="min-order-alert" class="p-3 bg-brand-red/10 border border-brand-red/40 text-brand-red text-[11px] font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span id="min-alert-text">Composez votre panier (minimum 5.00 € d'articles).</span>
+                </div>
 
-                    <!-- ALERTE DYNAMIQUE -->
-                    <div id="min-order-alert" class="p-3 bg-brand-red/10 border border-brand-red/40 text-brand-red text-[11px] font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span id="min-alert-text">Veuillez renseigner votre adresse et composer votre panier.</span>
-                    </div>
-
-                    <div class="space-y-4 pt-2">
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Prénom *</label>
-                                <input type="text" id="client-prenom" required class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nom *</label>
-                                <input type="text" id="client-nom" required class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Adresse complète *</label>
-                            <input type="text" id="client-adresse" required oninput="debounceUpdateCart()" placeholder="12 rue de la Gare, Duppigheim" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Téléphone *</label>
-                            <input type="tel" id="client-telephone" required placeholder="06 12 34 56 78" class="w-full bg-black/60 border border-brand-border px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-red transition placeholder-gray-600">
-                        </div>
-                    </div>
-
-                    <button type="submit" id="submit-order-btn" disabled class="w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300">
-                        Valider la commande
-                    </button>
-                </form>
+                <button type="button" id="proceed-to-checkout-btn" onclick="goToCheckout()" disabled class="w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300 flex items-center justify-center gap-2">
+                    <span>Passer la commande</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
             </div>
         </div>
     </main>
 
-    <!-- MODAL "EN SAVOIR PLUS" -->
+    <!-- MODAL DETAILS PRODUIT -->
     <div id="product-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
             <div class="flex justify-between items-center pb-4 border-b border-brand-border">
                 <h3 id="modal-prod-title" class="font-bold text-base uppercase tracking-wider text-white">Détails du produit</h3>
                 <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
             <div class="grid md:grid-cols-2 gap-8 items-start">
                 <div id="modal-img-container" class="bg-black/60 p-6 border border-brand-border flex items-center justify-center h-72">
                     <img id="modal-prod-img" src="" alt="" class="max-h-full max-w-full object-contain">
                 </div>
-
                 <div class="space-y-4 text-xs">
                     <div>
                         <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red block mb-1">Description</span>
@@ -222,7 +171,6 @@
                     </div>
                 </div>
             </div>
-
             <button onclick="closeProductModal()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
         </div>
     </div>
@@ -244,7 +192,7 @@
         </div>
     </div>
 
-    <!-- MODAL GALERIE & LIGHTBOX -->
+    <!-- MODAL GALERIE -->
     <div id="gallery-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brand-card border border-brand-border p-8 max-w-3xl w-full shadow-2xl space-y-6 relative">
             <div class="flex justify-between items-center pb-4 border-b border-brand-border">
@@ -272,19 +220,6 @@
         </div>
     </div>
 
-    <!-- MODAL SUCCÈS -->
-    <div id="modal-success" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-brand-card border border-brand-border p-8 max-w-md w-full text-center shadow-2xl space-y-6">
-            <div class="w-12 h-12 bg-brand-red/10 border border-brand-red text-brand-red flex items-center justify-center mx-auto text-xl">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h2 class="text-lg font-bold uppercase tracking-wider text-white">Commande enregistrée</h2>
-            <p class="text-xs text-gray-300">Montant à régler à la livraison : <span id="modal-price-tag" class="font-extrabold text-white">0.00€</span></p>
-            <p class="text-[11px] text-gray-400 bg-black/60 p-4 border border-brand-border text-left leading-relaxed">Nous vous contacterons très rapidement pour convenir d'une date de livraison.</p>
-            <button onclick="closeModalAndReset()" class="w-full bg-brand-red hover:bg-red-700 text-white py-3 text-xs font-bold uppercase tracking-widest transition duration-300">Fermer</button>
-        </div>
-    </div>
-
     <!-- FOOTER -->
     <footer class="bg-black text-gray-500 py-10 text-center text-xs uppercase tracking-widest border-t border-brand-border mt-auto space-y-3">
         <p>&copy; 2026 - CAZMAT (Duppigheim). Tous droits réservés.</p>
@@ -296,22 +231,17 @@
 
     <!-- SCRIPTS -->
     <script>
-        emailjs.init("oSstg-IAyj_8SX1Ep");
-
         let catalogProducts = [];
         let selectedCart = {};
-        let currentCalculatedTotal = 0;
-        let currentShippingFee = 0;
-        let isDeliverable = true;
         let discountPercent = 0;
-        let addressTimer = null;
-        
         let shownConsignePopups = {};
 
-        const DUPPIGHEIM_LAT = 48.5284;
-        const DUPPIGHEIM_LON = 7.5933;
-
         document.addEventListener('DOMContentLoaded', async () => {
+            // Restaurer le panier s'il y a déjà quelque chose en mémoire
+            const savedCart = localStorage.getItem('cazmat_cart');
+            if (savedCart) {
+                try { selectedCart = JSON.parse(savedCart); } catch(e){}
+            }
             loadCatalogProducts();
             initImageZoom();
         });
@@ -319,31 +249,17 @@
         function initImageZoom() {
             const container = document.getElementById('modal-img-container');
             const img = document.getElementById('modal-prod-img');
-
             container.addEventListener('mousemove', (e) => {
                 const rect = container.getBoundingClientRect();
                 const x = ((e.clientX - rect.left) / rect.width) * 100;
                 const y = ((e.clientY - rect.top) / rect.height) * 100;
-
                 img.style.transformOrigin = `${x}% ${y}%`;
                 img.style.transform = "scale(2.2)";
             });
-
             container.addEventListener('mouseleave', () => {
                 img.style.transformOrigin = "center center";
                 img.style.transform = "scale(1)";
             });
-        }
-
-        function toggleSubscriptionOptions() {
-            const isChecked = document.getElementById('sub-toggle').checked;
-            const subOptions = document.getElementById('sub-options');
-            if (isChecked) {
-                subOptions.classList.remove('hidden');
-            } else {
-                subOptions.classList.add('hidden');
-            }
-            updateCartDisplay();
         }
 
         async function loadCatalogProducts() {
@@ -354,6 +270,9 @@
                 container.innerHTML = '';
                 
                 catalogProducts.forEach(prod => {
+                    const cartKey = `prod_${prod.id}`;
+                    const currentQty = selectedCart[cartKey] ? selectedCart[cartKey].quantity : 0;
+
                     container.innerHTML += `
                         <div class="bg-brand-card border border-brand-border p-6 flex flex-col items-center text-center justify-between hover:border-brand-red/50 transition duration-300 group">
                             <div class="space-y-4 w-full cursor-pointer" onclick="openProductModal(${prod.id})">
@@ -371,13 +290,14 @@
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Quantité</span>
                                 <div class="flex items-center gap-3 bg-black/60 p-1.5 border border-brand-border">
                                     <button type="button" onclick="updateCart(${prod.id}, -1)" class="w-7 h-7 bg-brand-card text-gray-300 text-xs font-bold hover:bg-brand-border hover:text-white transition">-</button>
-                                    <span id="qty-${prod.id}" class="text-xs font-bold w-5 text-center text-white">0</span>
+                                    <span id="qty-${prod.id}" class="text-xs font-bold w-5 text-center text-white">${currentQty}</span>
                                     <button type="button" onclick="updateCart(${prod.id}, 1)" class="w-7 h-7 bg-brand-red text-white text-xs font-bold hover:bg-red-700 transition">+</button>
                                 </div>
                             </div>
                         </div>
                     `;
                 });
+                updateCartDisplay();
             } catch (err) {
                 container.innerHTML = `<div class="text-brand-red text-xs bg-brand-card border border-brand-border p-6 uppercase tracking-wider sm:col-span-2">Erreur de chargement du catalogue (products.json).</div>`;
             }
@@ -386,28 +306,20 @@
         function openProductModal(prodId) {
             const prod = catalogProducts.find(p => p.id === prodId);
             if (!prod) return;
-
             document.getElementById('modal-prod-title').textContent = prod.name;
             document.getElementById('modal-prod-img').src = prod.image || 'images/logo.png';
             document.getElementById('modal-prod-desc').textContent = prod.description || 'Courte description non renseignée.';
             document.getElementById('modal-prod-composants').textContent = prod.composants || 'Non renseignés';
             document.getElementById('modal-prod-danger').textContent = prod.danger || 'Aucun danger particulier signalé.';
-            
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-        }
-
-        function closeConsigneModal() {
-            document.getElementById('consigne-modal').classList.add('hidden');
-        }
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+        function closeConsigneModal() { document.getElementById('consigne-modal').classList.add('hidden'); }
 
         function applyPromoCode() {
             const codeInput = document.getElementById('promo-code-input').value.trim().toLowerCase();
             const feedbackEl = document.getElementById('promo-feedback');
-            
             const currentDate = new Date();
             const expiryDate = new Date('2026-11-30T23:59:59');
 
@@ -415,7 +327,7 @@
 
             if (currentDate > expiryDate) {
                 discountPercent = 0;
-                feedbackEl.textContent = "Ce code promo a expiré (valable jusqu'au 30 novembre).";
+                feedbackEl.textContent = "Ce code promo a expiré.";
                 feedbackEl.className = "text-[11px] font-semibold text-brand-red";
                 updateCartDisplay();
                 return;
@@ -439,11 +351,8 @@
             const cartKey = `prod_${productId}`;
 
             let consigneAmount = 0;
-            if (productId === 4 || productId === 6) {
-                consigneAmount = 1.00;
-            } else if (productId === 5) {
-                consigneAmount = 2.50;
-            }
+            if (productId === 4 || productId === 6) consigneAmount = 1.00;
+            else if (productId === 5) consigneAmount = 2.50;
 
             if (!selectedCart[cartKey]) {
                 selectedCart[cartKey] = { 
@@ -473,56 +382,29 @@
                 const qtyEl = document.getElementById(`qty-${productId}`);
                 if (qtyEl) qtyEl.textContent = selectedCart[cartKey].quantity;
             }
+
+            // Sauvegarder dans le localStorage
+            localStorage.setItem('cazmat_cart', JSON.stringify(selectedCart));
             updateCartDisplay();
         }
 
-        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-        }
-
-        function debounceUpdateCart() {
-            clearTimeout(addressTimer);
-            addressTimer = setTimeout(() => {
-                updateCartDisplay();
-            }, 400);
-        }
-
-        async function updateCartDisplay() {
+        function updateCartDisplay() {
             const cartContainer = document.getElementById('cart-items');
-            const isSubChecked = document.getElementById('sub-toggle').checked;
-            const periodLabel = document.getElementById('period-label');
-            const submitBtn = document.getElementById('submit-order-btn');
+            const proceedBtn = document.getElementById('proceed-to-checkout-btn');
             const minAlert = document.getElementById('min-order-alert');
             const minAlertText = document.getElementById('min-alert-text');
-            const addressInput = document.getElementById('client-adresse').value.trim();
             
             cartContainer.innerHTML = '';
             let itemsTotal = 0, totalItemsCount = 0;
             const minArticlesSubtotal = 5.00;
-
-            if (isSubChecked) {
-                const subFreq = document.querySelector('input[name="sub_frequency"]:checked').value;
-                periodLabel.textContent = subFreq === 'hebdo' ? 'Abonnement hebdomadaire' : 'Abonnement mensuel';
-            } else {
-                periodLabel.textContent = 'Commande unique';
-            }
 
             const keys = Object.keys(selectedCart);
             if (keys.length === 0) {
                 cartContainer.innerHTML = '<p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>';
                 document.getElementById('cart-total').textContent = '0.00 €';
                 document.getElementById('items-count').textContent = '0 article';
-                currentCalculatedTotal = 0;
-                currentShippingFee = 0;
-                
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+                proceedBtn.disabled = true;
+                proceedBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300 flex items-center justify-center gap-2";
                 minAlert.classList.remove('hidden');
                 minAlertText.textContent = `Votre panier est vide (minimum : ${minArticlesSubtotal.toFixed(2)} € d'articles).`;
                 return;
@@ -569,133 +451,24 @@
                 `;
             }
 
-            currentShippingFee = 0;
-            isDeliverable = true;
+            document.getElementById('cart-total').textContent = discountedSubtotal.toFixed(2) + ' €';
 
-            if (addressInput.length >= 5) {
-                try {
-                    const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(addressInput)}&limit=1`);
-                    const data = await res.json();
-                    
-                    if (data.features && data.features.length > 0) {
-                        const coords = data.features[0].geometry.coordinates;
-                        const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
-
-                        if (distance > 30) {
-                            isDeliverable = false;
-                            currentShippingFee = 0;
-                            cartContainer.innerHTML += `
-                                <div class="py-2 border-t border-brand-border mt-2 pt-2 text-brand-red text-center font-bold">
-                                    Non livrable (${distance} km > 30 km max)
-                                </div>
-                            `;
-                        } else {
-                            isDeliverable = true;
-                            if (distance <= 10) currentShippingFee = 1.50;
-                            else if (distance <= 20) currentShippingFee = 3.00;
-                            else currentShippingFee = 6.00;
-
-                            cartContainer.innerHTML += `
-                                <div class="flex justify-between items-center text-xs py-2 border-t border-brand-border mt-2 pt-2 text-gray-300">
-                                    <span><i class="fa-solid fa-truck text-brand-red mr-1.5"></i> Livraison (~${distance} km)</span>
-                                    <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
-                                </div>
-                            `;
-                        }
-                    } else {
-                        isDeliverable = false;
-                        currentShippingFee = 0;
-                        cartContainer.innerHTML += `
-                            <div class="py-2 border-t border-brand-border mt-2 pt-2 text-yellow-500 text-center text-[11px]">
-                                Adresse introuvable, précisez la ville.
-                            </div>
-                        `;
-                    }
-                } catch (e) {
-                    console.error("Erreur géocodage:", e);
-                }
-            }
-
-            currentCalculatedTotal = discountedSubtotal + currentShippingFee;
-            document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
-
-            if (addressInput.trim().length <= 3) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Veuillez renseigner votre adresse de livraison complète.`;
-            } else if (!isDeliverable) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
-                minAlert.classList.remove('hidden');
-                minAlertText.textContent = `Adresse hors zone de livraison (> 30 km).`;
-            } else if (itemsTotal < minArticlesSubtotal) {
-                submitBtn.disabled = true;
-                submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
+            if (itemsTotal < minArticlesSubtotal) {
+                proceedBtn.disabled = true;
+                proceedBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300 flex items-center justify-center gap-2";
                 minAlert.classList.remove('hidden');
                 minAlertText.textContent = `Minimum de ${minArticlesSubtotal.toFixed(2)} € d'articles requis (reste ${(minArticlesSubtotal - itemsTotal).toFixed(2)} €).`;
             } else {
-                submitBtn.disabled = false;
-                submitBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer";
+                proceedBtn.disabled = false;
+                proceedBtn.className = "w-full bg-brand-red hover:bg-red-700 text-white py-4 text-xs font-bold uppercase tracking-widest transition duration-300 shadow-lg shadow-brand-red/20 cursor-pointer flex items-center justify-center gap-2";
                 minAlert.classList.add('hidden');
             }
         }
 
-        async function handleOrderSubmit(e) {
-            e.preventDefault();
-            const minArticlesSubtotal = 5.00;
-            let itemsTotal = 0;
-            Object.values(selectedCart).forEach(i => { itemsTotal += (i.price_week * i.quantity); });
-
-            const isSubChecked = document.getElementById('sub-toggle').checked;
-            const subFreq = isSubChecked ? document.querySelector('input[name="sub_frequency"]:checked').value : 'unique';
-
-            if (!isDeliverable) {
-                return alert('Cette adresse est située à plus de 30km : non livrable pour le moment.');
-            }
-            if (itemsTotal < minArticlesSubtotal) {
-                return alert(`Le sous-total des articles doit atteindre un minimum de ${minArticlesSubtotal.toFixed(2)} €.`);
-            }
-            
-            const prenom = document.getElementById('client-prenom').value;
-            const nom = document.getElementById('client-nom').value;
-            const adresse = document.getElementById('client-adresse').value;
-            const telephone = document.getElementById('client-telephone').value;
-            const itemsSummary = Object.values(selectedCart).map(i => {
-                let text = `${i.quantity}x ${i.name}`;
-                if (i.consigne > 0) text += ` (avec consigne ${i.consigne}€)`;
-                return text;
-            }).join(', ');
-            let priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison) [Type: ${subFreq}]`;
-            if (discountPercent > 0) priceString += ` [Code Promo: novembre10 appliqué (-10%)]`;
-
-            emailjs.send("service_988n3j9", "template_p6qhejv", {
-                to_email: "thomanathan@outlook.fr",
-                client_name: `${prenom} ${nom}`,
-                client_address: adresse,
-                client_phone: telephone,
-                cart_summary: itemsSummary,
-                total_price: priceString
-            }).catch(err => {});
-
-            document.getElementById('modal-price-tag').textContent = priceString;
-            document.getElementById('modal-success').classList.remove('hidden');
-        }
-
-        function closeModalAndReset() {
-            document.getElementById('modal-success').classList.add('hidden');
-            selectedCart = {};
-            shownConsignePopups = {};
-            discountPercent = 0;
-            document.getElementById('order-form').reset();
-            document.getElementById('promo-code-input').value = '';
-            document.getElementById('promo-feedback').classList.add('hidden');
-            document.getElementById('sub-options').classList.add('hidden');
-            catalogProducts.forEach(p => {
-                const el = document.getElementById(`qty-${p.id}`);
-                if (el) el.textContent = '0';
-            });
-            updateCartDisplay();
+        function goToCheckout() {
+            // Sauvegarder la réduction actuelle et rediriger
+            localStorage.setItem('cazmat_discount', discountPercent);
+            window.location.href = 'checkout.html';
         }
 
         function openGalleryModal() { document.getElementById('gallery-modal').classList.remove('hidden'); }
