@@ -55,6 +55,9 @@
                 <a href="faq.html" class="hover:text-brand-red transition-colors">FAQ</a>
                 <a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a>
             </nav>
+            <a href="dashboard.html" class="border border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition duration-300">
+                Résilier
+            </a>
         </div>
     </header>
 
@@ -68,6 +71,10 @@
                 <h1 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Composez Votre Sélection</h1>
                 <p class="text-gray-400 text-xs md:text-sm font-light">Sélectionnez vos produits professionnels selon vos besoins.</p>
             </div>
+            <button onclick="openGalleryModal()" class="border border-brand-border bg-brand-card hover:border-brand-red text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition duration-300 inline-flex items-center gap-3 shrink-0">
+                <i class="fa-solid fa-images text-brand-red"></i>
+                <span>Galerie Photos</span>
+            </button>
         </div>
 
         <!-- BANNIÈRE QUALITÉ PRO ÉPURÉE -->
@@ -104,6 +111,16 @@
 
                 <div id="cart-items" class="space-y-3 max-h-48 overflow-y-auto pr-1 text-xs text-gray-300">
                     <p class="text-gray-500 italic text-center py-4">Votre panier est vide.</p>
+                </div>
+
+                <!-- CODE PROMO -->
+                <div class="bg-black/60 p-4 border border-brand-border space-y-2">
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Code promotionnel :</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="promo-code-input" placeholder="Ex: novembre10" class="w-full bg-brand-card border border-brand-border px-3 py-2 text-xs text-white uppercase focus:outline-none focus:border-brand-red transition placeholder-gray-600">
+                        <button type="button" onclick="applyPromoCode()" class="bg-brand-border hover:bg-brand-red text-white px-4 py-2 text-xs font-bold uppercase tracking-wider transition duration-300 shrink-0">Appliquer</button>
+                    </div>
+                    <div id="promo-feedback" class="text-[11px] hidden font-semibold"></div>
                 </div>
 
                 <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-5 pt-2">
@@ -286,6 +303,7 @@
         let currentCalculatedTotal = 0;
         let currentShippingFee = 0;
         let isDeliverable = true;
+        let discountPercent = 0; // Gestion de la réduction promo
         
         let shownConsignePopups = {};
 
@@ -385,12 +403,41 @@
             document.getElementById('consigne-modal').classList.add('hidden');
         }
 
+        function applyPromoCode() {
+            const codeInput = document.getElementById('promo-code-input').value.trim().toLowerCase();
+            const feedbackEl = document.getElementById('promo-feedback');
+            
+            // Date limite fixée au 30 novembre 2026 inclus
+            const currentDate = new Date();
+            const expiryDate = new Date('2026-11-30T23:59:59');
+
+            feedbackEl.classList.remove('hidden');
+
+            if (currentDate > expiryDate) {
+                discountPercent = 0;
+                feedbackEl.textContent = "Ce code promo a expiré (valable jusqu'au 30 novembre).";
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+                updateCartDisplay();
+                return;
+            }
+
+            if (codeInput === 'novembre10') {
+                discountPercent = 0.10; // -10%
+                feedbackEl.textContent = "Code promo appliqué : -10% sur le panier !";
+                feedbackEl.className = "text-[11px] font-semibold text-green-400";
+            } else {
+                discountPercent = 0;
+                feedbackEl.textContent = "Code promo invalide.";
+                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+            }
+            updateCartDisplay();
+        }
+
         function updateCart(productId, delta) {
             const prod = catalogProducts.find(p => p.id === productId);
             if (!prod) return;
             const cartKey = `prod_${productId}`;
 
-            // Association des consignes par ID de produit (ID 4: Liquide vaisselle, ID 5: Nettoyant sol, ID 6: Savon main)
             let consigneAmount = 0;
             if (productId === 4 || productId === 6) {
                 consigneAmount = 1.00;
@@ -411,7 +458,6 @@
             const prevQty = selectedCart[cartKey].quantity;
             selectedCart[cartKey].quantity += delta;
 
-            // Déclenchement de la pop-up de consigne au premier ajout
             if (delta > 0 && prevQty === 0 && consigneAmount > 0 && !shownConsignePopups[productId]) {
                 shownConsignePopups[productId] = true;
                 document.getElementById('consigne-price-tag').textContent = consigneAmount.toFixed(2) + ' €';
@@ -498,13 +544,27 @@
 
             document.getElementById('items-count').textContent = `${totalItemsCount} article${totalItemsCount > 1 ? 's' : ''}`;
 
+            // Calcul du total brut (produits + consignes)
             let grandItemsTotal = 0;
             keys.forEach(k => {
                 grandItemsTotal += (selectedCart[k].price_week * selectedCart[k].quantity) + ((selectedCart[k].consigne || 0) * selectedCart[k].quantity);
             });
 
+            // Application de la réduction promo (sur le panier total)
+            let discountAmount = grandItemsTotal * discountPercent;
+            let discountedSubtotal = grandItemsTotal - discountAmount;
+
+            if (discountPercent > 0) {
+                cartContainer.innerHTML += `
+                    <div class="flex justify-between items-center text-xs py-1.5 border-t border-brand-border text-green-400 font-bold">
+                        <span>Réduction promo (-10%)</span>
+                        <span>- ${discountAmount.toFixed(2)} €</span>
+                    </div>
+                `;
+            }
+
             if (addressInput.length < 5) {
-                currentCalculatedTotal = grandItemsTotal;
+                currentCalculatedTotal = discountedSubtotal;
                 document.getElementById('cart-total').textContent = currentCalculatedTotal.toFixed(2) + ' €';
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full bg-brand-red/40 text-gray-500 cursor-not-allowed py-4 text-xs font-bold uppercase tracking-widest transition duration-300";
@@ -529,7 +589,7 @@
                                 Non livrable pour le moment, arrive prochainement (${distance} km)
                             </div>
                         `;
-                        currentCalculatedTotal = grandItemsTotal;
+                        currentCalculatedTotal = discountedSubtotal;
                     } else {
                         isDeliverable = true;
                         if (distance <= 10) currentShippingFee = 1.50;
@@ -542,7 +602,7 @@
                                 <span class="font-bold text-white">+ ${currentShippingFee.toFixed(2)} €</span>
                             </div>
                         `;
-                        currentCalculatedTotal = grandItemsTotal + currentShippingFee;
+                        currentCalculatedTotal = discountedSubtotal + currentShippingFee;
                     }
                 }
             } catch (e) {
@@ -598,7 +658,8 @@
                 if (i.consigne > 0) text += ` (avec consigne ${i.consigne}€)`;
                 return text;
             }).join(', ');
-            const priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison) [Type: ${subFreq}]`;
+            let priceString = currentCalculatedTotal.toFixed(2) + ` € (dont ${currentShippingFee.toFixed(2)} € de livraison) [Type: ${subFreq}]`;
+            if (discountPercent > 0) priceString += ` [Code Promo: novembre10 appliqué (-10%)]`;
 
             emailjs.send("service_988n3j9", "template_p6qhejv", {
                 to_email: "thomanathan@outlook.fr",
@@ -617,7 +678,10 @@
             document.getElementById('modal-success').classList.add('hidden');
             selectedCart = {};
             shownConsignePopups = {};
+            discountPercent = 0;
             document.getElementById('order-form').reset();
+            document.getElementById('promo-code-input').value = '';
+            document.getElementById('promo-feedback').classList.add('hidden');
             document.getElementById('sub-options').classList.add('hidden');
             catalogProducts.forEach(p => {
                 const el = document.getElementById(`qty-${p.id}`);
