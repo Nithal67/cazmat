@@ -249,55 +249,50 @@
         return;
     }
 
-    feedbackEl.textContent = "Localisation en cours...";
+    feedbackEl.textContent = "Localisation et calcul en cours...";
     feedbackEl.className = "text-[11px] font-semibold text-yellow-400";
 
-    // Utilisation d'un AbortController pour stopper la requête si elle dépasse 5 secondes (évite le blocage 504)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-
     try {
-        const res = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(addressInput)}&limit=1`, {
-            signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+        // 1. On récupère les coordonnées GPS via l'API Nominatim (OpenStreetMap), très stable
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressInput)}&limit=1`);
+        const geoData = await geoRes.json();
 
-        if (!res.ok) {
-            throw new Error(`Erreur serveur (${res.status})`);
+        if (!geoData || geoData.length === 0) {
+            isLocated = false;
+            feedbackEl.textContent = "Adresse introuvable. Précisez la rue et la ville.";
+            feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+            updateTotalDisplay();
+            validateCheckoutState();
+            return;
         }
 
-        const data = await res.json();
+        const clientLat = parseFloat(geoData[0].lat);
+        const clientLon = parseFloat(geoData[0].lon);
 
-        if (data.features && data.features.length > 0) {
-            const coords = data.features[0].geometry.coordinates;
-            const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, coords[1], coords[0]));
+        // 2. On calcule la distance à vol d'oiseau ou on utilise la formule Haversine depuis Duppigheim
+        const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, clientLat, clientLon));
 
-            if (distance > 30) {
-                isDeliverable = false;
-                isLocated = true;
-                currentShippingFee = 0;
-                feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
-                feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-                document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
-            } else {
-                isDeliverable = true;
-                isLocated = true;
-                if (distance <= 10) currentShippingFee = 1.50;
-                else if (distance <= 20) currentShippingFee = 3.00;
-                else currentShippingFee = 6.00;
-
-                feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
-                feedbackEl.className = "text-[11px] font-semibold text-green-400";
-                document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
-            }
-        } else {
-            isLocated = false;
-            feedbackEl.textContent = "Adresse introuvable. Veuillez vérifier l'orthographe.";
+        if (distance > 30) {
+            isDeliverable = false;
+            isLocated = true;
+            currentShippingFee = 0;
+            feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
             feedbackEl.className = "text-[11px] font-semibold text-brand-red";
+            document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
+        } else {
+            isDeliverable = true;
+            isLocated = true;
+            if (distance <= 10) currentShippingFee = 1.50;
+            else if (distance <= 20) currentShippingFee = 3.00;
+            else currentShippingFee = 6.00;
+
+            feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
+            feedbackEl.className = "text-[11px] font-semibold text-green-400";
+            document.getElementById('shipping-status-label').textContent = `Livraison (~${distance} km)`;
         }
     } catch(e) {
         isLocated = false;
-        feedbackEl.textContent = "Le service de géolocalisation est temporairement indisponible (504). Réessayez dans un instant.";
+        feedbackEl.textContent = "Erreur lors de la localisation. Réessayez.";
         feedbackEl.className = "text-[11px] font-semibold text-brand-red";
     }
 
