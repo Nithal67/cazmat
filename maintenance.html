@@ -29,19 +29,49 @@
 </head>
 <body class="bg-brand-dark text-gray-200 font-sans antialiased flex flex-col min-h-screen">
 
+<!-- NAVIGATION -->
     <header class="bg-black/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <!-- LOGO -->
             <a href="index.html" class="flex items-center gap-3 group">
                 <img src="images/logo.png" alt="Logo CAZMAT" class="w-9 h-9 object-contain group-hover:scale-105 transition-transform duration-300">
                 <span class="font-bold tracking-wider text-white text-xl uppercase">CAZMAT</span>
             </a>
+
+            <!-- MENU ORDINATEUR -->
             <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-gray-300">
                 <a href="index.html" class="hover:text-brand-red transition-colors">Accueil</a>
-                <a href="packs.html" class="hover:text-brand-red transition-colors">Catalogue</a>
-                <a href="maintenance.html" class="text-brand-red font-bold">Maintenance</a>
+                <a href="packs.html" class="text-brand-red font-bold">Catalogue</a>
+                <a href="maintenance.html" class="hover:text-brand-red transition-colors">Maintenance</a>
                 <a href="faq.html" class="hover:text-brand-red transition-colors">FAQ</a>
                 <a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a>
             </nav>
+
+            <!-- BOUTON RÉSILIER (ORDINATEUR) -->
+            <a href="dashboard.html" class="hidden md:inline-block border border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition duration-300">
+                Résilier
+            </a>
+
+            <!-- BOUTON BURGER (TÉLÉPHONE) -->
+            <button type="button" id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu" class="md:hidden text-white hover:text-brand-red text-2xl focus:outline-none p-2">
+                <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- MENU DÉROULANT (TÉLÉPHONE) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-card border-b border-brand-border px-6 py-6 space-y-4">
+            <nav class="flex flex-col space-y-4 text-xs font-semibold uppercase tracking-widest text-gray-300">
+                <a href="index.html" class="hover:text-brand-red transition-colors py-1">Accueil</a>
+                <a href="packs.html" class="text-brand-red font-bold py-1">Catalogue</a>
+                <a href="maintenance.html" class="hover:text-brand-red transition-colors py-1">Maintenance</a>
+                <a href="faq.html" class="hover:text-brand-red transition-colors py-1">FAQ</a>
+                <a href="contact.html" class="hover:text-brand-red transition-colors py-1">Contact</a>
+            </nav>
+            <div class="pt-4 border-t border-brand-border">
+                <a href="dashboard.html" class="block text-center border border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-5 py-3 text-xs font-bold uppercase tracking-wider transition duration-300">
+                    Résilier
+                </a>
+            </div>
         </div>
     </header>
 
@@ -148,6 +178,22 @@
     </footer>
 
     <script>
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            
+            menu.classList.toggle('hidden');
+            
+            if (menu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        }
+        
         let reparationsData = {};
 
         async function loadReparationsData() {
