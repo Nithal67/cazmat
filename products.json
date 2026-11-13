@@ -4,87 +4,61 @@
         "name": "Éponge à l'unité",
         "price_week": 0.66,
         "image": "images/eponge.jpg",
-        "icon": "fa-basket-shopping",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "Éponges avec côté grantant. Qualité professionelle"
     },
     {
         "id": 2,
         "name": "Rouleau papier toilette à l'unité",
         "price_week": 0.33,
         "image": "images/pq.jpg",
-        "icon": "fa-pump-soap",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "Rouleau de papier toilette recyclé 2 plis. Qualité profesionnelle garantie.",
     },
     {
         "id": 3,
         "name": "Gros rouleau essuie-tout ultra absorbant l'unité",
         "price_week": 1.63,
-        "image": "images/essuie-tout.jpg",
-        "icon": "fa-bottle-water",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "image": "images/essuie-tout.jpg",,
+        "description": "Gros Rouleau essuie-tout ultra absorbant 2 plis. Un gros rouleau est environ égale à 2 rouleaux classiques.Recylclé à 80%. Qualité professionnelle garantie.",
     },
     {
         "id": 4,
-        "name": "Flacon 350ml liquide vaisselle citron",
+        "name": "Flacon 350ml liquide vaisselle ultra dégraissant",
         "price_week": 1.74,
         "image": "images/vaiselle.jpg",
-        "icon": "fa-basket-shopping",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "Liquide vaiselle senteur citron ultra dégraissant dans un contenant d'environ 350ml. Le contenant est consigné. Qualité professionnelle garantie.",
+        "composants": "Sodium, Laureth sulfate, cocamidopropylamine oxide, cocamidopropylamine betaine.",
+        "danger": "Tenir hors de la portée des enfants. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes."
     },
     {
         "id": 5,
         "name": "Flacon 800ml nettoyant sol",
         "price_week": 1.90,
         "image": "images/sol.jpg",
-        "icon": "fa-basket-shopping",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "Nettoyant multi surface senteur Pin dans un contenant d'environ 800ml. Le contenant est consigné. S'utilise à raison de 50ml pour 5l d'eau. Vendu avec une seringue doseuse de 10ml également consigné. Qualité professionnelle garantie.",
+        "composants": "Agents de surface cationiques, agents de surface non ioniques, parfums.",
+        "danger": "Tenir hors de la portée des enfants. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes. Nocif pour les organismes aquatique, ne pas le rejetter dans l'environnement."
     },
     {
         "id": 6,
         "name": "Flacon 350ml savon main amande",
         "price_week": 1.58,
         "image": "images/20261110_142828.jpg",
-        "icon": "fa-basket-shopping",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "crème lanvante senteur amande, conçu pour un lavage des mains fréquent, Ph neutre. Qualité professionnelle garantie.",
+        "composants": "Aqua, sodium chloride, sodium laureth sulfate, parfum, glycol cetearate, citric acid, cocamidopropyl betaine, methylchloroisothiazolinone, methylisothiazolinone, sodium hydroxide",
+        "danger": "Ne pas avaler. Ne pas laisser à la porter d'un enfant sans surveillance. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes."
     },
     {
         "id": 7,
         "name": "Sac poubelle 30L ultra résistant à l'unité",
         "price_week": 0.14,
         "image": "images/30l.jpg",
-        "icon": "fa-basket-shopping",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "Sac poubelle d'une contenance de 30l ultra résistant. Qualité professionnelle garantie. ",
     },
     {
         "id": 8,
         "name": "Sac poubelle 50L ultra résistant à l'unité",
         "price_week": 0.19,
         "image": "images/50l.jpg",
-        "icon": "fa-basket-shopping",
-        "description": "Courte description visible sur la carte.",
-        "provenance": "Fabriqué en France (Alsace)",
-        "composants": "Tensioactifs biodégradables, agents nettoyants doux.",
-        "danger": "Tenir hors de portée des enfants. En cas de contact avec les yeux, rincer abondamment."
+        "description": "Sac poubelle d'une contenance de 50l ultra résistant. Fermeture à ficelle. Qualité professionnelle garantie.",
     }
 ]
