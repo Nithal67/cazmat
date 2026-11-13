@@ -4,7 +4,7 @@
         "name": "Éponge à l'unité",
         "price_week": 0.66,
         "image": "images/eponge.jpg",
-        "description": "Éponges avec côté grattant. Qualité professionnelle"
+        "description": "Éponge avec côté grattant. Qualité professionnelle"
     },
     {
         "id": 2,
@@ -18,7 +18,7 @@
         "name": "Gros rouleau essuie-tout ultra absorbant l'unité",
         "price_week": 1.63,
         "image": "images/essuie-tout.jpg",
-        "description": "Gros Rouleau essuie-tout ultra absorbant 2 plis. Un gros rouleau est environ égal à 2 rouleaux classiques. Recyclé à 80%. Qualité professionnelle garantie."
+        "description": "Gros Rouleau d'essuie-tout ultra absorbant 2 plis. Un gros rouleau est environ égal à 2 rouleaux classiques. Recyclé à 80%. Qualité professionnelle garantie."
     },
     {
         "id": 4,
