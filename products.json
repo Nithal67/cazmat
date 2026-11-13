@@ -4,7 +4,7 @@
         "name": "Éponge à l'unité",
         "price_week": 0.66,
         "image": "images/eponge.jpg",
-        "description": "Éponges avec côté grantant. Qualité professionelle"
+        "description": "Éponges avec côté grantant. Qualité professionelle",
     },
     {
         "id": 2,
@@ -27,7 +27,7 @@
         "image": "images/vaiselle.jpg",
         "description": "Liquide vaiselle senteur citron ultra dégraissant dans un contenant d'environ 350ml. Le contenant est consigné. Qualité professionnelle garantie.",
         "composants": "Sodium, Laureth sulfate, cocamidopropylamine oxide, cocamidopropylamine betaine.",
-        "danger": "Tenir hors de la portée des enfants. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes."
+        "danger": "Tenir hors de la portée des enfants. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes.",
     },
     {
         "id": 5,
@@ -36,7 +36,7 @@
         "image": "images/sol.jpg",
         "description": "Nettoyant multi surface senteur Pin dans un contenant d'environ 800ml. Le contenant est consigné. S'utilise à raison de 50ml pour 5l d'eau. Vendu avec une seringue doseuse de 10ml également consigné. Qualité professionnelle garantie.",
         "composants": "Agents de surface cationiques, agents de surface non ioniques, parfums.",
-        "danger": "Tenir hors de la portée des enfants. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes. Nocif pour les organismes aquatique, ne pas le rejetter dans l'environnement."
+        "danger": "Tenir hors de la portée des enfants. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes. Nocif pour les organismes aquatique, ne pas le rejetter dans l'environnement.",
     },
     {
         "id": 6,
@@ -45,7 +45,7 @@
         "image": "images/20261110_142828.jpg",
         "description": "crème lanvante senteur amande, conçu pour un lavage des mains fréquent, Ph neutre. Qualité professionnelle garantie.",
         "composants": "Aqua, sodium chloride, sodium laureth sulfate, parfum, glycol cetearate, citric acid, cocamidopropyl betaine, methylchloroisothiazolinone, methylisothiazolinone, sodium hydroxide",
-        "danger": "Ne pas avaler. Ne pas laisser à la porter d'un enfant sans surveillance. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes."
+        "danger": "Ne pas avaler. Ne pas laisser à la porter d'un enfant sans surveillance. Peut provoquer des lésions si le produit entre en contact avec les yeux. En cas de contact, rincer à l'eau pendant plusieurs minutes.",
     },
     {
         "id": 7,
