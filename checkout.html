@@ -282,20 +282,19 @@
                 const clientLon = parseFloat(geoData[0].lon);
                 const distance = Math.round(calculateHaversineDistance(DUPPIGHEIM_LAT, DUPPIGHEIM_LON, clientLat, clientLon));
 
-                if (distance > 30) {
+                if (distance > 20) {
                     isDeliverable = false;
                     isLocated = true;
                     currentShippingFee = 0;
-                    feedbackEl.textContent = `Zone non livrable (${distance} km > 30 km max).`;
+                    feedbackEl.textContent = `Zone non livrable (${distance} km > 20 km max).`;
                     feedbackEl.className = "text-[11px] font-semibold text-brand-red";
-                    document.getElementById('shipping-status-label').textContent = "Hors zone (> 30 km)";
+                    document.getElementById('shipping-status-label').textContent = "Hors zone (> 20 km)";
                 } else {
                     isDeliverable = true;
                     isLocated = true;
                     if (distance <= 1) currentShippingFee = 0.50;
                     else if (distance <= 10) currentShippingFee = 1.50;
-                    else if (distance <= 20) currentShippingFee = 3.00;
-                    else currentShippingFee = 6.00;
+                    else currentShippingFee = 3.00;
 
                     feedbackEl.textContent = `Adresse localisée : ~${distance} km (Frais : ${currentShippingFee.toFixed(2)} €)`;
                     feedbackEl.className = "text-[11px] font-semibold text-green-400";
