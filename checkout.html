@@ -293,6 +293,7 @@
                     isDeliverable = true;
                     isLocated = true;
                     if (distance <= 10) currentShippingFee = 1.50;
+                    else if (distance <= 1) currentShippingFee = 0.00;
                     else if (distance <= 20) currentShippingFee = 3.00;
                     else currentShippingFee = 6.00;
 
